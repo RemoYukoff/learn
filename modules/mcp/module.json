@@ -1,0 +1,22 @@
+{
+  "slug": "mcp",
+  "title": "Model Context Protocol (MCP)",
+  "summary": "El protocolo estándar para conectar aplicaciones con LLMs a tools, datos y prompts externos: arquitectura, servidores, clientes, uso en agentes y seguridad.",
+  "tags": [
+    "mcp",
+    "model-context-protocol",
+    "tools",
+    "agentes",
+    "oauth",
+    "seguridad"
+  ],
+  "versions": {
+    "mcp": "2.3.0",
+    "anthropic": "1.13.0",
+    "langchain-mcp-adapters": "0.3.2",
+    "openai-agents": "0.23.1"
+  },
+  "recommended": [
+    "tool-use"
+  ]
+}
