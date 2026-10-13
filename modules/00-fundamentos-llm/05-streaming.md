@@ -18,9 +18,30 @@ Por qué importa:
 
 El flujo de eventos tiene la misma forma en todos los proveedores:
 
-```text
-message_start → content_block_start → content_block_delta × N → content_block_stop → message_delta (stop_reason, usage) → message_stop
-```
+<figure class="diagram">
+<svg viewBox="0 0 730 180" role="img" aria-label="Secuencia de eventos de streaming">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line" x1="210" y1="45.0" x2="250" y2="45.0" marker-end="url(#ah)"/>
+<line class="line" x1="210" y1="135.0" x2="250" y2="135.0" marker-end="url(#ah)"/>
+<line class="line" x1="450" y1="45.0" x2="490" y2="45.0" marker-end="url(#ah)"/>
+<line class="line" x1="450" y1="135.0" x2="490" y2="135.0" marker-end="url(#ah)"/>
+<path class="line" d="M590.0,70 V90.0 H110.0 V110" marker-end="url(#ah)"/>
+<rect class="node" x="10" y="20" width="200" height="50" rx="8"/>
+<text x="110.0" y="50.0" text-anchor="middle" class="mono">message_start</text>
+<rect class="node" x="250" y="20" width="200" height="50" rx="8"/>
+<text x="350.0" y="50.0" text-anchor="middle" class="mono">content_block_start</text>
+<rect class="input" x="490" y="20" width="200" height="50" rx="8"/>
+<text x="590.0" y="42.0" text-anchor="middle" class="mono">content_block_delta × N</text>
+<text x="590.0" y="59.0" text-anchor="middle" class="sub">texto que va llegando</text>
+<rect class="node" x="10" y="110" width="200" height="50" rx="8"/>
+<text x="110.0" y="140.0" text-anchor="middle" class="mono">content_block_stop</text>
+<rect class="store" x="250" y="110" width="200" height="50" rx="8"/>
+<text x="350.0" y="132.0" text-anchor="middle" class="mono">message_delta</text>
+<text x="350.0" y="149.0" text-anchor="middle" class="sub">stop_reason, usage</text>
+<rect class="node" x="490" y="110" width="200" height="50" rx="8"/>
+<text x="590.0" y="140.0" text-anchor="middle" class="mono">message_stop</text>
+</svg>
+</figure>
 
 Lo que tenés que resolver vos: acumular los deltas, saber cuándo terminó y con qué `stop_reason`, y manejar un corte de conexión a mitad de camino. Los SDKs traen helpers que acumulan por vos.
 

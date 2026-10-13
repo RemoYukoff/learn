@@ -10,12 +10,30 @@ type: implementacion
 
 Un agente con tools es el loop del módulo anterior:
 
-```text
-mensajes ──> modelo ──¿pidió tools?── no ──> respuesta final
-               ▲            │ sí
-               │            ▼
-               └──── ejecutar tools, agregar resultados
-```
+<figure class="diagram">
+<svg viewBox="0 0 700 225" role="img" aria-label="Loop de agente con tools">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line" x1="140" y1="94" x2="190" y2="94" marker-end="url(#ah)"/>
+<line class="line" x1="310" y1="94" x2="360" y2="94" marker-end="url(#ah)"/>
+<line class="line" x1="480" y1="94" x2="540" y2="94" marker-end="url(#ah)"/>
+<text x="510" y="86" text-anchor="middle" class="sub">no</text>
+<line class="line" x1="420" y1="129" x2="420" y2="165" marker-end="url(#ah)"/>
+<text x="432" y="152" text-anchor="start" class="sub">sí</text>
+<path class="line" d="M360,185 H250 V118" marker-end="url(#ah)"/>
+<rect class="input" x="20" y="70" width="120" height="48" rx="8"/>
+<text x="80.0" y="99.0" text-anchor="middle" class="title">Mensajes</text>
+<rect class="process" x="190" y="70" width="120" height="48" rx="8"/>
+<text x="250.0" y="99.0" text-anchor="middle" class="title">Modelo</text>
+<polygon class="risk" points="420,59 480,94 420,129 360,94"/>
+<text x="420" y="92" text-anchor="middle" class="title">¿pidió</text>
+<text x="420" y="108" text-anchor="middle" class="title">tools?</text>
+<rect class="store" x="540" y="70" width="140" height="48" rx="8"/>
+<text x="610.0" y="99.0" text-anchor="middle" class="title">Respuesta final</text>
+<rect class="node" x="360" y="165" width="120" height="42" rx="8"/>
+<text x="420.0" y="191.0" text-anchor="middle" class="title">Ejecutar tools</text>
+<text x="305" y="178" text-anchor="middle" class="sub">agregar resultados</text>
+</svg>
+</figure>
 
 Cualquier framework necesita resolver lo mismo:
 

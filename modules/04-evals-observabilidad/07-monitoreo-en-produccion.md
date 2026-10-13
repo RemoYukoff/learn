@@ -43,12 +43,33 @@ Alertá sobre tendencias, no sobre casos sueltos (un juez que falla una vez es r
 
 ### Cerrar el ciclo
 
-```text
-producción ──▶ traces + feedback + evals online ──▶ casos que fallan
-     ▲                                                      │
-     │                                                      ▼
- deploy ◀── evals offline en CI (gate) ◀── dataset ◀── etiquetar y agregar
-```
+<figure class="diagram">
+<svg viewBox="0 0 810 220" role="img" aria-label="Ciclo entre producción, dataset y evals">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line" x1="230" y1="48" x2="300" y2="48" marker-end="url(#ah)"/>
+<line class="line" x1="510" y1="48" x2="580" y2="48" marker-end="url(#ah)"/>
+<line class="line" x1="685.0" y1="76" x2="685.0" y2="150" marker-end="url(#ah)"/>
+<line class="line" x1="580" y1="178" x2="510" y2="178" marker-end="url(#ah)"/>
+<line class="line" x1="300" y1="178" x2="230" y2="178" marker-end="url(#ah)"/>
+<line class="line" x1="125.0" y1="150" x2="125.0" y2="76" marker-end="url(#ah)"/>
+<rect class="process" x="20" y="20" width="210" height="56" rx="8"/>
+<text x="125.0" y="53.0" text-anchor="middle" class="title">Producción</text>
+<rect class="node" x="300" y="20" width="210" height="56" rx="8"/>
+<text x="405.0" y="45.0" text-anchor="middle" class="title">Traces y feedback</text>
+<text x="405.0" y="62.0" text-anchor="middle" class="sub">evals online</text>
+<rect class="risk" x="580" y="20" width="210" height="56" rx="8"/>
+<text x="685.0" y="53.0" text-anchor="middle" class="title">Casos que fallan</text>
+<rect class="store" x="580" y="150" width="210" height="56" rx="8"/>
+<text x="685.0" y="175.0" text-anchor="middle" class="title">Dataset</text>
+<text x="685.0" y="192.0" text-anchor="middle" class="sub">se etiquetan y se suman</text>
+<rect class="node" x="300" y="150" width="210" height="56" rx="8"/>
+<text x="405.0" y="175.0" text-anchor="middle" class="title">Evals offline en CI</text>
+<text x="405.0" y="192.0" text-anchor="middle" class="sub">gate de cada cambio</text>
+<rect class="process" x="20" y="150" width="210" height="56" rx="8"/>
+<text x="125.0" y="183.0" text-anchor="middle" class="title">Deploy</text>
+</svg>
+<figcaption>Cada falla de producción que se entiende termina como caso del dataset.</figcaption>
+</figure>
 
 Cada falla de producción que se entiende se convierte en un caso del dataset. Con el tiempo el dataset refleja la realidad y la suite de CI atrapa las regresiones que importan.
 

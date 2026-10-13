@@ -232,3 +232,54 @@ a:hover { text-decoration: underline; }
   .chapter-foot { grid-template-columns: 1fr; text-align: center; }
   .chapter-foot .next { text-align: center; }
 }
+
+/* ---------- diagrams (inline SVG in chapters) ---------- */
+:root {
+  --d-line: #8a8478;
+  --d-node: #ffffff;
+  --d-node-stroke: #d6d1c4;
+  --d-input: #e3edf9;   --d-input-stroke: #8fb3e0;
+  --d-process: #f6e6dc; --d-process-stroke: #e0a888;
+  --d-store: #e2f1e7;   --d-store-stroke: #8cc4a0;
+  --d-human: #efe6f6;   --d-human-stroke: #b89ad4;
+  --d-risk: #faefd6;    --d-risk-stroke: #dfb75e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --d-line: #8f8a7e;
+    --d-node: #23221c;
+    --d-node-stroke: #3a382f;
+    --d-input: #1d2a3a;   --d-input-stroke: #4a6f9c;
+    --d-process: #3a2519; --d-process-stroke: #9a5f3f;
+    --d-store: #1b2e22;   --d-store-stroke: #4f8c63;
+    --d-human: #2b2236;   --d-human-stroke: #7d5fa0;
+    --d-risk: #33291a;    --d-risk-stroke: #a0803c;
+  }
+}
+:root[data-theme="dark"] {
+  --d-line: #8f8a7e;
+  --d-node: #23221c;
+  --d-node-stroke: #3a382f;
+  --d-input: #1d2a3a;   --d-input-stroke: #4a6f9c;
+  --d-process: #3a2519; --d-process-stroke: #9a5f3f;
+  --d-store: #1b2e22;   --d-store-stroke: #4f8c63;
+  --d-human: #2b2236;   --d-human-stroke: #7d5fa0;
+  --d-risk: #33291a;    --d-risk-stroke: #a0803c;
+}
+.prose figure.diagram { margin: 0 0 1.4em; overflow-x: auto; }
+.prose figure.diagram svg { display: block; width: 100%; height: auto; min-width: 520px; margin: 0 auto; }
+.prose figure.diagram figcaption { font-size: 13px; color: var(--fg-muted); text-align: center; margin-top: 6px; }
+.diagram text { font-family: var(--font); font-size: 14px; fill: var(--fg); }
+.diagram text.sub { font-size: 12px; fill: var(--fg-muted); }
+.diagram text.title { font-weight: 700; }
+.diagram text.mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .line { stroke: var(--d-line); stroke-width: 1.6; fill: none; }
+.diagram .line.dash { stroke-dasharray: 5 4; }
+.diagram .arrowhead { fill: var(--d-line); }
+.diagram .node { fill: var(--d-node); stroke: var(--d-node-stroke); stroke-width: 1.2; }
+.diagram .input { fill: var(--d-input); stroke: var(--d-input-stroke); stroke-width: 1.2; }
+.diagram .process { fill: var(--d-process); stroke: var(--d-process-stroke); stroke-width: 1.2; }
+.diagram .store { fill: var(--d-store); stroke: var(--d-store-stroke); stroke-width: 1.2; }
+.diagram .human { fill: var(--d-human); stroke: var(--d-human-stroke); stroke-width: 1.2; }
+.diagram .risk { fill: var(--d-risk); stroke: var(--d-risk-stroke); stroke-width: 1.2; }
+.diagram .zone { fill: none; stroke: var(--d-node-stroke); stroke-width: 1.2; stroke-dasharray: 6 5; }

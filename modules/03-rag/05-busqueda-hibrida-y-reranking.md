@@ -37,9 +37,37 @@ Correr las dos y **fusionar** los rankings:
 
 Los embeddings comparan vectores calculados **por separado** (bi-encoder). Un **cross-encoder** lee pregunta y chunk **juntos** y devuelve un score de relevancia. Es mucho más preciso y mucho más lento, así que se usa en dos etapas:
 
-```text
-retrieval barato (híbrida, top 20–100)  ──▶  reranker caro (cross-encoder)  ──▶  top 3–5 al LLM
-```
+<figure class="diagram">
+<svg viewBox="0 0 850 165" role="img" aria-label="Retrieval en dos etapas: búsqueda híbrida y reranking">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line" x1="110" y1="85" x2="150" y2="44" marker-end="url(#ah)"/>
+<line class="line" x1="110" y1="85" x2="150" y2="128" marker-end="url(#ah)"/>
+<line class="line" x1="280" y1="42" x2="320" y2="78" marker-end="url(#ah)"/>
+<line class="line" x1="280" y1="128" x2="320" y2="92" marker-end="url(#ah)"/>
+<line class="line" x1="420" y1="85" x2="480" y2="85" marker-end="url(#ah)"/>
+<text x="450" y="76" text-anchor="middle" class="sub">20–100</text>
+<line class="line" x1="630" y1="85" x2="690" y2="85" marker-end="url(#ah)"/>
+<text x="660" y="76" text-anchor="middle" class="sub">3–5</text>
+<rect class="input" x="10" y="63" width="100" height="44" rx="8"/>
+<text x="60.0" y="90.0" text-anchor="middle" class="title">Pregunta</text>
+<rect class="process" x="150" y="20" width="130" height="44" rx="8"/>
+<text x="215.0" y="39.0" text-anchor="middle" class="title">Densa</text>
+<text x="215.0" y="56.0" text-anchor="middle" class="sub">embeddings</text>
+<rect class="process" x="150" y="106" width="130" height="44" rx="8"/>
+<text x="215.0" y="125.0" text-anchor="middle" class="title">Léxica</text>
+<text x="215.0" y="142.0" text-anchor="middle" class="sub">BM25</text>
+<rect class="node" x="320" y="63" width="100" height="44" rx="8"/>
+<text x="370.0" y="82.0" text-anchor="middle" class="title">RRF</text>
+<text x="370.0" y="99.0" text-anchor="middle" class="sub">fusión</text>
+<rect class="risk" x="480" y="63" width="150" height="44" rx="8"/>
+<text x="555.0" y="82.0" text-anchor="middle" class="title">Reranker</text>
+<text x="555.0" y="99.0" text-anchor="middle" class="sub">cross-encoder</text>
+<rect class="store" x="690" y="63" width="150" height="44" rx="8"/>
+<text x="765.0" y="82.0" text-anchor="middle" class="title">LLM</text>
+<text x="765.0" y="99.0" text-anchor="middle" class="sub">contexto final</text>
+</svg>
+<figcaption>Etapa barata con muchos candidatos, etapa cara y precisa con pocos.</figcaption>
+</figure>
 
 Opciones: cross-encoders abiertos de Hugging Face, APIs de reranking, o un LLM que ordena (caro, útil con pocos candidatos).
 

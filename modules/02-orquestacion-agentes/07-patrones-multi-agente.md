@@ -29,6 +29,101 @@ El costo: más llamadas al modelo, más latencia, errores que se propagan entre 
 | **Group chat** | Varios agentes comparten una conversación; un orquestador elige quién habla en cada ronda | Debate, revisión cruzada, brainstorming |
 | **Planner + ledger (Magentic)** | Un manager arma un plan, asigna pasos, lleva un registro de progreso y re-planifica si se traba | Tareas abiertas y largas |
 
+<figure class="diagram">
+<svg viewBox="0 0 780 360" role="img" aria-label="Patrones multi-agente">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="zone" x="6" y="6" width="248" height="168" rx="10"/>
+<text x="130.0" y="30" text-anchor="middle" class="title">Pipeline secuencial</text>
+<rect class="process" x="24" y="80" width="56" height="28" rx="8"/>
+<text x="52.0" y="99.0" text-anchor="middle" class="title">A</text>
+<rect class="process" x="100" y="80" width="56" height="28" rx="8"/>
+<text x="128.0" y="99.0" text-anchor="middle" class="title">B</text>
+<rect class="process" x="176" y="80" width="56" height="28" rx="8"/>
+<text x="204.0" y="99.0" text-anchor="middle" class="title">C</text>
+<line class="line" x1="80" y1="94" x2="100" y2="94" marker-end="url(#ah)"/>
+<line class="line" x1="156" y1="94" x2="176" y2="94" marker-end="url(#ah)"/>
+<rect class="zone" x="266" y="6" width="248" height="168" rx="10"/>
+<text x="390.0" y="30" text-anchor="middle" class="title">Paralelo (fan-out / fan-in)</text>
+<rect class="input" x="278" y="94" width="44" height="28" rx="8"/>
+<text x="300.0" y="113.0" text-anchor="middle" class="title">In</text>
+<rect class="process" x="362" y="48" width="56" height="28" rx="8"/>
+<text x="390.0" y="67.0" text-anchor="middle" class="title">A</text>
+<line class="line" x1="322" y1="108" x2="362" y2="62" marker-end="url(#ah)"/>
+<line class="line" x1="418" y1="62" x2="450" y2="108" marker-end="url(#ah)"/>
+<rect class="process" x="362" y="88" width="56" height="28" rx="8"/>
+<text x="390.0" y="107.0" text-anchor="middle" class="title">B</text>
+<line class="line" x1="322" y1="108" x2="362" y2="102" marker-end="url(#ah)"/>
+<line class="line" x1="418" y1="102" x2="450" y2="108" marker-end="url(#ah)"/>
+<rect class="process" x="362" y="128" width="56" height="28" rx="8"/>
+<text x="390.0" y="147.0" text-anchor="middle" class="title">C</text>
+<line class="line" x1="322" y1="108" x2="362" y2="142" marker-end="url(#ah)"/>
+<line class="line" x1="418" y1="142" x2="450" y2="108" marker-end="url(#ah)"/>
+<rect class="store" x="450" y="94" width="50" height="28" rx="8"/>
+<text x="475.0" y="113.0" text-anchor="middle" class="title">Σ</text>
+<rect class="zone" x="526" y="6" width="248" height="168" rx="10"/>
+<text x="650.0" y="30" text-anchor="middle" class="title">Supervisor</text>
+<rect class="risk" x="622" y="48" width="56" height="28" rx="8"/>
+<text x="650.0" y="67.0" text-anchor="middle" class="title">S</text>
+<rect class="process" x="546" y="124" width="56" height="28" rx="8"/>
+<text x="574.0" y="143.0" text-anchor="middle" class="title">A</text>
+<line class="line" x1="636" y1="76" x2="574" y2="124" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<rect class="process" x="622" y="124" width="56" height="28" rx="8"/>
+<text x="650.0" y="143.0" text-anchor="middle" class="title">B</text>
+<line class="line" x1="650" y1="76" x2="650" y2="124" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<rect class="process" x="698" y="124" width="56" height="28" rx="8"/>
+<text x="726.0" y="143.0" text-anchor="middle" class="title">C</text>
+<line class="line" x1="664" y1="76" x2="726" y2="124" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<rect class="zone" x="6" y="186" width="248" height="168" rx="10"/>
+<text x="130.0" y="210" text-anchor="middle" class="title">Jerárquico</text>
+<rect class="risk" x="102" y="222" width="56" height="28" rx="8"/>
+<text x="130.0" y="241.0" text-anchor="middle" class="title">S</text>
+<rect class="risk" x="40" y="268" width="56" height="28" rx="8"/>
+<text x="68.0" y="287.0" text-anchor="middle" class="title">S1</text>
+<line class="line" x1="130" y1="250" x2="68" y2="268" marker-end="url(#ah)"/>
+<rect class="process" x="18" y="316" width="44" height="24" rx="8"/>
+<line class="line" x1="68" y1="296" x2="40" y2="316" marker-end="url(#ah)"/>
+<rect class="process" x="68" y="316" width="44" height="24" rx="8"/>
+<line class="line" x1="68" y1="296" x2="90" y2="316" marker-end="url(#ah)"/>
+<rect class="risk" x="164" y="268" width="56" height="28" rx="8"/>
+<text x="192.0" y="287.0" text-anchor="middle" class="title">S2</text>
+<line class="line" x1="130" y1="250" x2="192" y2="268" marker-end="url(#ah)"/>
+<rect class="process" x="142" y="316" width="44" height="24" rx="8"/>
+<line class="line" x1="192" y1="296" x2="164" y2="316" marker-end="url(#ah)"/>
+<rect class="process" x="192" y="316" width="44" height="24" rx="8"/>
+<line class="line" x1="192" y1="296" x2="214" y2="316" marker-end="url(#ah)"/>
+<rect class="zone" x="266" y="186" width="248" height="168" rx="10"/>
+<text x="390.0" y="210" text-anchor="middle" class="title">Handoff</text>
+<rect class="human" x="278" y="276" width="70" height="28" rx="8"/>
+<text x="313.0" y="295.0" text-anchor="middle" class="title">Usuario</text>
+<rect class="process" x="420" y="236" width="56" height="28" rx="8"/>
+<text x="448.0" y="255.0" text-anchor="middle" class="title">A</text>
+<rect class="process" x="420" y="312" width="56" height="28" rx="8"/>
+<text x="448.0" y="331.0" text-anchor="middle" class="title">B</text>
+<line class="line" x1="348" y1="284" x2="420" y2="252" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<line class="line" x1="448" y1="264" x2="448" y2="312" marker-end="url(#ah)"/>
+<text x="490" y="292" text-anchor="middle" class="sub">transfiere</text>
+<line class="line dash" x1="348" y1="296" x2="420" y2="324" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<rect class="zone" x="526" y="186" width="248" height="168" rx="10"/>
+<text x="650.0" y="210" text-anchor="middle" class="title">Group chat</text>
+<line class="line" x1="590" y1="236" x2="602" y2="264"/>
+<line class="line" x1="712" y1="236" x2="700" y2="264"/>
+<line class="line" x1="590" y1="316" x2="602" y2="294"/>
+<line class="line" x1="712" y1="316" x2="700" y2="294"/>
+<rect class="store" x="600" y="262" width="100" height="34" rx="8"/>
+<text x="650.0" y="284.0" text-anchor="middle" class="title">chat</text>
+<rect class="process" x="534" y="222" width="56" height="28" rx="8"/>
+<text x="562.0" y="241.0" text-anchor="middle" class="title">A</text>
+<rect class="process" x="712" y="222" width="56" height="28" rx="8"/>
+<text x="740.0" y="241.0" text-anchor="middle" class="title">B</text>
+<rect class="process" x="534" y="302" width="56" height="28" rx="8"/>
+<text x="562.0" y="321.0" text-anchor="middle" class="title">C</text>
+<rect class="process" x="712" y="302" width="56" height="28" rx="8"/>
+<text x="740.0" y="321.0" text-anchor="middle" class="title">D</text>
+<text x="650.0" y="346" text-anchor="middle" class="sub">un orquestador elige quién habla</text>
+</svg>
+<figcaption>Supervisor: los especialistas devuelven resultados al coordinador. Handoff: el control pasa a otro agente.</figcaption>
+</figure>
+
 Diferencia clave entre **supervisor** y **handoff**: en el supervisor los especialistas trabajan "por debajo" y devuelven un resultado al coordinador, que mantiene la conversación. En el handoff el control se transfiere y el nuevo agente pasa a hablar con el usuario.
 
 El ejemplo de los tabs: armar un briefing del cliente C-001 (plan, país, tickets abiertos) con un agente de cuentas y uno de tickets, o con un pipeline analista y redactor.

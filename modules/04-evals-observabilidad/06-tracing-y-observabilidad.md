@@ -10,14 +10,34 @@ type: implementacion
 
 Con un LLM, los logs de "request recibido / respuesta enviada" no alcanzan. Necesitás ver adentro: qué prompt exacto se mandó, qué devolvió el modelo, qué tools llamó con qué argumentos, cuánto tardó y costó cada paso. Eso es **tracing**, con el mismo modelo que OpenTelemetry usa para microservicios:
 
-```text
-trace  (un request de usuario)
-└─ span: agent run                         2.8 s   $0.031
-   ├─ span: llm call  (claude-opus-5-5)    1.1 s   in 2,340 / out 180 tokens
-   ├─ span: tool find_customer             0.04 s  input {"name": "Acme"}
-   ├─ span: retriever search_handbook      0.09 s  3 docs
-   └─ span: llm call  (claude-opus-5-5)    1.5 s   in 3,910 / out 240 tokens
-```
+<figure class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Trace de un request con sus spans en línea de tiempo">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text x="20" y="35" text-anchor="start" class="mono">agent run</text>
+<text x="20" y="51" text-anchor="start" class="sub">2.8 s · $0.031</text>
+<rect class="process" x="270.0" y="22" width="434.0" height="20" rx="4"/>
+<text x="42" y="75" text-anchor="start" class="mono">llm call</text>
+<text x="42" y="91" text-anchor="start" class="sub">1.1 s · 2,340 in / 180 out</text>
+<rect class="input" x="270.0" y="62" width="170.5" height="20" rx="4"/>
+<text x="42" y="115" text-anchor="start" class="mono">tool find_customer</text>
+<text x="42" y="131" text-anchor="start" class="sub">0.04 s</text>
+<rect class="store" x="443.6" y="102" width="6.199999999999971" height="20" rx="4"/>
+<text x="42" y="155" text-anchor="start" class="mono">retriever search</text>
+<text x="42" y="171" text-anchor="start" class="sub">0.09 s · 3 docs</text>
+<rect class="store" x="451.35" y="142" width="13.950000000000012" height="20" rx="4"/>
+<text x="42" y="195" text-anchor="start" class="mono">llm call</text>
+<text x="42" y="211" text-anchor="start" class="sub">1.5 s · 3,910 in / 240 out</text>
+<rect class="input" x="471.5" y="182" width="232.49999999999997" height="20" rx="4"/>
+<line class="line" x1="270" y1="222" x2="704.0" y2="222"/>
+<line class="line" x1="270" y1="218" x2="270" y2="226"/>
+<text x="270" y="242" text-anchor="middle" class="sub">0 s</text>
+<line class="line" x1="425" y1="218" x2="425" y2="226"/>
+<text x="425" y="242" text-anchor="middle" class="sub">1 s</text>
+<line class="line" x1="580" y1="218" x2="580" y2="226"/>
+<text x="580" y="242" text-anchor="middle" class="sub">2 s</text>
+</svg>
+<figcaption>Un trace con sus spans: cada llamada al modelo, tool y retrieval con duración y tokens.</figcaption>
+</figure>
 
 | Concepto | Qué es |
 |---|---|

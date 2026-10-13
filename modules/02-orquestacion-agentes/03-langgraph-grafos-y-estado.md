@@ -103,6 +103,33 @@ Es el estilo habitual en sistemas multi-agente, donde un agente "le pasa la post
 
 Un triage de tickets sin LLM: un clasificador por palabras clave, dos ramas y un loop de revisión que obliga a reintentar una vez. El campo `log` usa el reducer `operator.add`; `draft` y `attempts` se reemplazan.
 
+<figure class="diagram">
+<svg viewBox="0 0 520 312" role="img" aria-label="Grafo del triage: START, classify, technical o billing, END">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line" x1="260" y1="42" x2="260" y2="70" marker-end="url(#ah)"/>
+<line class="line dash" x1="225" y1="114" x2="160" y2="160" marker-end="url(#ah)"/>
+<text x="170" y="134" text-anchor="middle" class="sub">technical</text>
+<line class="line dash" x1="295" y1="114" x2="360" y2="160" marker-end="url(#ah)"/>
+<text x="352" y="134" text-anchor="middle" class="sub">billing</text>
+<line class="line dash" x1="160" y1="204" x2="235" y2="270" marker-end="url(#ah)"/>
+<text x="178" y="246" text-anchor="middle" class="sub">done</text>
+<line class="line" x1="390" y1="204" x2="285" y2="270" marker-end="url(#ah)"/>
+<path class="line dash" d="M90,172 C30,172 30,196 90,196" marker-end="url(#ah)"/>
+<text x="28" y="166" text-anchor="start" class="sub">retry</text>
+<rect class="input" x="200" y="10" width="120" height="32" rx="16"/>
+<text x="260" y="31" text-anchor="middle" class="mono">START</text>
+<rect class="process" x="190" y="70" width="140" height="44" rx="8"/>
+<text x="260.0" y="97.0" text-anchor="middle" class="mono">classify</text>
+<rect class="node" x="90" y="160" width="140" height="44" rx="8"/>
+<text x="160.0" y="187.0" text-anchor="middle" class="mono">technical</text>
+<rect class="node" x="320" y="160" width="140" height="44" rx="8"/>
+<text x="390.0" y="187.0" text-anchor="middle" class="mono">billing</text>
+<rect class="store" x="200" y="270" width="120" height="32" rx="16"/>
+<text x="260" y="291" text-anchor="middle" class="mono">END</text>
+</svg>
+<figcaption>Aristas punteadas: condicionales (las decide una función sobre el estado). Sólidas: fijas.</figcaption>
+</figure>
+
 ```python
 import operator
 from typing import Annotated, Literal, TypedDict

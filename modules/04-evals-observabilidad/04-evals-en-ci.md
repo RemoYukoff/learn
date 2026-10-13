@@ -10,18 +10,35 @@ type: implementacion
 
 Una suite de evals en CI tiene las mismas piezas que una suite de tests, con dos diferencias: el resultado es un puntaje contra un umbral, y cuesta plata (llamadas al modelo).
 
-```text
-dataset versionado
-   │
-   ▼
-correr el sistema (target) en cada caso
-   │
-   ▼
-evaluadores ──▶ puntajes ──▶ comparar con umbral y versión anterior
-                                   │
-                                   ▼
-                     pasa / falla el pipeline + reporte
-```
+<figure class="diagram">
+<svg viewBox="0 0 840 190" role="img" aria-label="Flujo de evals en CI">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line" x1="146" y1="52" x2="180" y2="52" marker-end="url(#ah)"/>
+<line class="line" x1="316" y1="52" x2="350" y2="52" marker-end="url(#ah)"/>
+<line class="line" x1="486" y1="52" x2="520" y2="52" marker-end="url(#ah)"/>
+<line class="line" x1="656" y1="52" x2="690" y2="52" marker-end="url(#ah)"/>
+<line class="line dash" x1="760" y1="130" x2="760" y2="80" marker-end="url(#ah)"/>
+<rect class="store" x="10" y="26" width="136" height="52" rx="8"/>
+<text x="78.0" y="49.0" text-anchor="middle" class="title">Dataset</text>
+<text x="78.0" y="66.0" text-anchor="middle" class="sub">versionado</text>
+<rect class="process" x="180" y="26" width="136" height="52" rx="8"/>
+<text x="248.0" y="49.0" text-anchor="middle" class="title">Sistema</text>
+<text x="248.0" y="66.0" text-anchor="middle" class="sub">target por caso</text>
+<rect class="node" x="350" y="26" width="136" height="52" rx="8"/>
+<text x="418.0" y="49.0" text-anchor="middle" class="title">Evaluadores</text>
+<text x="418.0" y="66.0" text-anchor="middle" class="sub">código + juez LLM</text>
+<rect class="node" x="520" y="26" width="136" height="52" rx="8"/>
+<text x="588.0" y="49.0" text-anchor="middle" class="title">Puntajes</text>
+<text x="588.0" y="66.0" text-anchor="middle" class="sub">por métrica</text>
+<rect class="risk" x="690" y="26" width="140" height="52" rx="8"/>
+<text x="760.0" y="49.0" text-anchor="middle" class="title">Gate</text>
+<text x="760.0" y="66.0" text-anchor="middle" class="sub">umbral, regresiones</text>
+<rect class="node" x="690" y="130" width="140" height="44" rx="8"/>
+<text x="760.0" y="157.0" text-anchor="middle" class="title">Versión anterior</text>
+<text x="676" y="146" text-anchor="end" class="sub">pasa: se mergea</text>
+<text x="676" y="164" text-anchor="end" class="sub">falla: bloquea y reporta</text>
+</svg>
+</figure>
 
 ### Decisiones de diseño
 

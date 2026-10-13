@@ -15,16 +15,31 @@ Un LLM solo produce texto. **Function calling** (Anthropic lo llama *tool use*) 
 3. **Tu código** ejecuta la función, con tus credenciales y tus reglas.
 4. Le devolvés el resultado al modelo, que sigue razonando: responde o pide otra tool.
 
-```text
- tu app                         modelo
-   │  mensajes + tools  ───────▶  │
-   │                              │ decide: necesito datos
-   │  ◀─────── tool_use(name,input)
-   │ ejecuta list_tickets()        │
-   │  tool_result  ─────────────▶  │
-   │                              │ decide: ya puedo responder
-   │  ◀─────────────── texto final │
-```
+<figure class="diagram">
+<svg viewBox="0 0 720 340" role="img" aria-label="Secuencia de function calling entre tu app y el modelo">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="line dash" x1="150" y1="54" x2="150" y2="330"/>
+<line class="line dash" x1="490" y1="54" x2="490" y2="330"/>
+<line class="line" x1="150" y1="90" x2="490" y2="90" marker-end="url(#ah)"/>
+<text x="320.0" y="82" text-anchor="middle" class="title">mensajes + tools</text>
+<line class="line" x1="490" y1="140" x2="150" y2="140" marker-end="url(#ah)"/>
+<text x="320.0" y="132" text-anchor="middle" class="mono">tool_use(name, input)</text>
+<text x="502" y="124" text-anchor="start" class="sub">decide que necesita datos</text>
+<rect class="process" x="55" y="165" width="190" height="50" rx="8"/>
+<text x="150.0" y="187.0" text-anchor="middle" class="title">ejecuta list_tickets()</text>
+<text x="150.0" y="204.0" text-anchor="middle" class="sub">tu código, tus permisos</text>
+<line class="line" x1="150" y1="245" x2="490" y2="245" marker-end="url(#ah)"/>
+<text x="320.0" y="237" text-anchor="middle" class="mono">tool_result</text>
+<line class="line" x1="490" y1="300" x2="150" y2="300" marker-end="url(#ah)"/>
+<text x="320.0" y="292" text-anchor="middle" class="title">texto final</text>
+<text x="502" y="284" text-anchor="start" class="sub">ya puede responder</text>
+<rect class="input" x="70" y="10" width="160" height="44" rx="8"/>
+<text x="150.0" y="37.0" text-anchor="middle" class="title">Tu app</text>
+<rect class="process" x="410" y="10" width="160" height="44" rx="8"/>
+<text x="490.0" y="37.0" text-anchor="middle" class="title">Modelo</text>
+</svg>
+<figcaption>El modelo solo pide la tool; tu código la ejecuta y le devuelve el resultado.</figcaption>
+</figure>
 
 El modelo **nunca ejecuta nada**. Elige qué tool usar y con qué argumentos. Eso tiene dos consecuencias que las entrevistas preguntan:
 
