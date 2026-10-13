@@ -11,5 +11,8 @@
     "anthropic": "1.13.0",
     "openai": "3.29.0",
     "pydantic": "2.14.1"
-  }
+  },
+  "recommended": [
+    "fundamentos-llm"
+  ]
 }

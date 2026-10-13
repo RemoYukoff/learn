@@ -277,3 +277,4 @@ a:hover { text-decoration: underline; }
 .prose figure.diagram.mermaid svg { min-width: 0; max-width: 100%; }
 .prose figure.diagram.mermaid { display: flex; justify-content: center; }
 .diagram-error { color: var(--warn); white-space: pre-wrap; }
+.recommended { font-size: 14px; color: var(--fg-muted); margin: -4px 0 0; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--bg-sunk); border-radius: 0 var(--radius) var(--radius) 0; }

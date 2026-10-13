@@ -16,5 +16,9 @@
     "langfuse": "4.17.0",
     "opentelemetry-sdk": "1.45.1",
     "anthropic": "1.13.0"
-  }
+  },
+  "recommended": [
+    "fundamentos-llm",
+    "tool-use"
+  ]
 }

@@ -114,11 +114,13 @@ def validate_module(path: Path, report: Report) -> dict | None:
         return None
     if meta.get("slug", slug) != slug:
         report.error(f"{where}/module.json", f"slug '{meta['slug']}' does not match folder")
-    for key in ("status", "planned_chapters", "order", "level", "prereqs"):
+    for key in ("status", "planned_chapters", "order", "level", "prereqs"):  # "recommended" replaces prereqs
         if key in meta:
             report.error(f"{where}/module.json", f"'{key}' is not used: modules are standalone, unordered and exist only when written")
     if not isinstance(meta["tags"], list):
         report.error(f"{where}/module.json", "tags must be a list")
+    if not isinstance(meta.get("recommended", []), list):
+        report.error(f"{where}/module.json", "recommended must be a list of module slugs")
     if not isinstance(meta["versions"], dict):
         report.error(f"{where}/module.json", "versions must be an object {package: version}")
 
@@ -168,6 +170,7 @@ def validate_module(path: Path, report: Report) -> dict | None:
         "summary": meta["summary"],
         "tags": meta["tags"],
         "versions": meta["versions"],
+        "recommended": meta.get("recommended", []),
         "chapters": chapters,
     }
     return entry
@@ -185,6 +188,12 @@ def main() -> int:
         if entry:
             entries.append(entry)
 
+
+    slugs = {e["slug"] for e in entries}
+    for e in entries:
+        for rec in e["recommended"]:
+            if rec == e["slug"] or rec not in slugs:
+                report.error(f"modules/{e['slug']}/module.json", f"recommended '{rec}' is not another existing module")
 
     for line in report.warnings + report.errors:
         print(line)

@@ -413,9 +413,15 @@
   }
 
   function moduleHeader(mod) {
+    const recommended = (mod.recommended || [])
+      .map(findModule)
+      .filter(Boolean)
+      .map((m) => `<a href="#/${m.slug}">${escapeHtml(m.title)}</a>`)
+      .join(", ");
     return `<div class="mod-header">
       <h1>${escapeHtml(mod.title)}</h1>
       <p class="lead">${escapeHtml(mod.summary || "")}</p>
+      ${recommended ? `<p class="recommended">Conviene leer antes: ${recommended}</p>` : ""}
     </div>`;
   }
 

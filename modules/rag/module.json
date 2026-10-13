@@ -29,5 +29,8 @@
     "pymilvus": "3.0.2",
     "elasticsearch": "9.5.1",
     "langgraph": "1.2.15"
-  }
+  },
+  "recommended": [
+    "fundamentos-llm"
+  ]
 }

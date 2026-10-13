@@ -11,7 +11,7 @@ Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). Cr
 
 ## Purpose of the site (shapes every decision)
 
-- Each module stands on its own: RAG teaches RAG, MCP teaches MCP. Do not frame a module as part of a career path, course or role (no "AI Engineer", no "lo que piden las búsquedas"). Modules have no order, level or prerequisites: React, RAG or Kubernetes are just modules to search and study. Mention another module only by name and only if it exists ("ver el módulo de RAG"), never by number.
+- Each module stands on its own: RAG teaches RAG, MCP teaches MCP. Do not frame a module as part of a career path, course or role (no "AI Engineer", no "lo que piden las búsquedas"). Modules have no order or level: React, RAG or Kubernetes are just modules to search and study. A module may recommend other existing modules to read first (`recommended`), only when they give the base needed to follow it. Mention another module only by name and only if it exists ("ver el módulo de RAG"), never by number.
 - The reader is a senior engineer with production Python, TypeScript, REST, SQL, Docker, CI/CD and testing experience. Do not teach those basics.
 - **No projects, no "build X at the end", no exercises.** The site is flat study material: read-only chapters. Code appears only as snippets inside the chapter to illustrate the idea. Nothing in the repo is meant to be run, and nothing requires the reader's API keys, accounts, subscriptions or Docker. If the reader wants to try something, they write and set it up in their own project.
 - Cover everything important about the technology, without padding. No time estimates.
@@ -30,7 +30,7 @@ modules/<slug>/
 
 No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The validator rejects them.
 
-`module.json` fields: `slug` (= folder name), `title`, `summary` (one sentence, shown on the module card), `tags` (used by search), `versions` ({package: version} the snippets were checked against; not shown on the site).
+`module.json` fields: `slug` (= folder name), `title`, `summary` (one sentence, shown on the module card), `tags` (used by search), `versions` ({package: version} the snippets were checked against; not shown on the site), optional `recommended` (slugs of existing modules worth reading first; shown as "Conviene leer antes").
 
 ## Chapter rules
 
@@ -47,7 +47,7 @@ No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The 
    :::
    ```
 
-   - Use these exact labels so the reader's choice carries across pages: `Anthropic`, `OpenAI`, `OpenRouter`, `LangGraph`, `LangChain`, `CrewAI`, `MS Agent Framework`, `Hugging Face`, `pgvector`, `Chroma`, `Pinecone`, `Weaviate`, `FAISS`, `Milvus`, `Elasticsearch`, `LangSmith`, `DeepEval`, `Langfuse`, `OpenTelemetry`, `HubSpot`, `Salesforce`, `Odoo`, `Ollama`, `vLLM`, `FastAPI`. New label only for a technology not in this list.
+   - Use these exact labels so the reader's choice carries across pages: `Anthropic`, `OpenAI`, `OpenRouter`, `LangGraph`, `LangChain`, `CrewAI`, `MS Agent Framework`, `Amazon Bedrock`, `Google Vertex AI`, `Microsoft Foundry`, `Hugging Face`, `pgvector`, `Chroma`, `Pinecone`, `Weaviate`, `FAISS`, `Milvus`, `Elasticsearch`, `LangSmith`, `DeepEval`, `Langfuse`, `OpenTelemetry`, `HubSpot`, `Salesforce`, `Odoo`, `Ollama`, `vLLM`, `FastAPI`. New label only for a technology not in this list.
    - Same example in every tab, so the reader compares the shape, not the problem.
    - First tab = the most widely used one.
    - At least two tabs per block, no nested tabs.
