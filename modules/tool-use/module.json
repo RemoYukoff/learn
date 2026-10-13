@@ -1,16 +1,11 @@
 {
-  "slug": "01-tool-use",
+  "slug": "tool-use",
   "title": "Tool use / function calling",
-  "order": 1,
-  "level": "intermedio",
   "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
   "tags": [
     "tool-use",
     "function-calling",
     "agentes"
-  ],
-  "prereqs": [
-    "00-fundamentos-llm"
   ],
   "versions": {
     "anthropic": "1.13.0",

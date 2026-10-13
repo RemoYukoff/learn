@@ -1,8 +1,6 @@
 {
-  "slug": "00-fundamentos-llm",
+  "slug": "fundamentos-llm",
   "title": "Fundamentos de LLMs",
-  "order": 0,
-  "level": "basico",
   "summary": "Cómo funciona un LLM desde el lado de quien lo integra: tokens, contexto, sampling, prompts, salida estructurada, SDKs y costos.",
   "tags": [
     "anthropic",
@@ -10,7 +8,6 @@
     "openrouter",
     "prompting"
   ],
-  "prereqs": [],
   "versions": {
     "anthropic": "1.13.0",
     "openai": "3.29.0",

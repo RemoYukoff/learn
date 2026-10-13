@@ -102,4 +102,4 @@ Verificá en la página del modelo en OpenRouter que soporte `structured_outputs
 
 - **¿Cómo garantizás que el LLM devuelva JSON válido?** Structured outputs con JSON Schema (constrained decoding), validado con Pydantic. Pedirlo en el prompt no alcanza.
 - **¿Diferencia entre JSON mode y structured outputs?** JSON mode garantiza sintaxis JSON; structured outputs garantiza el esquema.
-- **¿Qué hacés si el modelo no soporta structured outputs?** Tool use con `strict: true` (módulo 01) o validar con Pydantic y reintentar pasando el error al modelo.
+- **¿Qué hacés si el modelo no soporta structured outputs?** Tool use con `strict: true` (módulo de Tool use) o validar con Pydantic y reintentar pasando el error al modelo.

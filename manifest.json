@@ -1,10 +1,72 @@
 {
   "modules": [
     {
-      "slug": "00-fundamentos-llm",
+      "slug": "evals-observabilidad",
+      "title": "Evals y observabilidad",
+      "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
+      "tags": [
+        "evals",
+        "llm-as-judge",
+        "langsmith",
+        "deepeval",
+        "langfuse",
+        "opentelemetry"
+      ],
+      "versions": {
+        "langsmith": "0.14.8",
+        "deepeval": "4.2.8",
+        "langfuse": "4.17.0",
+        "opentelemetry-sdk": "1.45.1",
+        "anthropic": "1.13.0"
+      },
+      "chapters": [
+        {
+          "file": "01-por-que-evaluar-llms.md",
+          "title": "Por qué evaluar LLMs es distinto a testear",
+          "order": 1,
+          "type": "concepto"
+        },
+        {
+          "file": "02-datasets-y-metricas.md",
+          "title": "Datasets y métricas",
+          "order": 2,
+          "type": "concepto"
+        },
+        {
+          "file": "03-llm-as-judge.md",
+          "title": "LLM-as-judge",
+          "order": 3,
+          "type": "implementacion"
+        },
+        {
+          "file": "04-evals-en-ci.md",
+          "title": "Evals en CI",
+          "order": 4,
+          "type": "implementacion"
+        },
+        {
+          "file": "05-evaluar-agentes.md",
+          "title": "Evaluar agentes",
+          "order": 5,
+          "type": "implementacion"
+        },
+        {
+          "file": "06-tracing-y-observabilidad.md",
+          "title": "Tracing y observabilidad",
+          "order": 6,
+          "type": "implementacion"
+        },
+        {
+          "file": "07-monitoreo-en-produccion.md",
+          "title": "Monitoreo en producción",
+          "order": 7,
+          "type": "concepto"
+        }
+      ]
+    },
+    {
+      "slug": "fundamentos-llm",
       "title": "Fundamentos de LLMs",
-      "order": 0,
-      "level": "basico",
       "summary": "Cómo funciona un LLM desde el lado de quien lo integra: tokens, contexto, sampling, prompts, salida estructurada, SDKs y costos.",
       "tags": [
         "anthropic",
@@ -12,7 +74,6 @@
         "openrouter",
         "prompting"
       ],
-      "prereqs": [],
       "versions": {
         "anthropic": "1.13.0",
         "openai": "3.29.0",
@@ -58,68 +119,8 @@
       ]
     },
     {
-      "slug": "01-tool-use",
-      "title": "Tool use / function calling",
-      "order": 1,
-      "level": "intermedio",
-      "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
-      "tags": [
-        "tool-use",
-        "function-calling",
-        "agentes"
-      ],
-      "prereqs": [
-        "00-fundamentos-llm"
-      ],
-      "versions": {
-        "anthropic": "1.13.0",
-        "openai": "3.29.0",
-        "pydantic": "2.14.1"
-      },
-      "chapters": [
-        {
-          "file": "01-que-es-function-calling.md",
-          "title": "Qué es function calling",
-          "order": 1,
-          "type": "concepto"
-        },
-        {
-          "file": "02-definir-tools.md",
-          "title": "Definir tools",
-          "order": 2,
-          "type": "implementacion"
-        },
-        {
-          "file": "03-loop-de-agente.md",
-          "title": "Loop de agente desde cero",
-          "order": 3,
-          "type": "implementacion"
-        },
-        {
-          "file": "04-errores-reintentos-y-validacion.md",
-          "title": "Errores, reintentos y validación",
-          "order": 4,
-          "type": "concepto"
-        },
-        {
-          "file": "05-human-in-the-loop.md",
-          "title": "Human-in-the-loop",
-          "order": 5,
-          "type": "concepto"
-        },
-        {
-          "file": "06-contexto-y-memoria.md",
-          "title": "Contexto y memoria del agente",
-          "order": 6,
-          "type": "concepto"
-        }
-      ]
-    },
-    {
-      "slug": "02-orquestacion-agentes",
+      "slug": "orquestacion-agentes",
       "title": "Orquestación de agentes",
-      "order": 2,
-      "level": "intermedio",
       "summary": "Estado, grafos, memoria, human-in-the-loop y patrones multi-agente, con LangGraph a fondo y LangChain, CrewAI y Microsoft Agent Framework (ex AutoGen + Semantic Kernel) en tabs.",
       "tags": [
         "langgraph",
@@ -128,9 +129,6 @@
         "ms-agent-framework",
         "autogen",
         "semantic-kernel"
-      ],
-      "prereqs": [
-        "01-tool-use"
       ],
       "versions": {
         "langgraph": "1.2.15",
@@ -190,10 +188,8 @@
       ]
     },
     {
-      "slug": "03-rag",
+      "slug": "rag",
       "title": "RAG",
-      "order": 3,
-      "level": "intermedio",
       "summary": "Retrieval-Augmented Generation de punta a punta: chunking, embeddings, bases vectoriales, búsqueda híbrida, reranking y evaluación del retrieval.",
       "tags": [
         "rag",
@@ -210,10 +206,6 @@
         "faiss",
         "milvus",
         "elasticsearch"
-      ],
-      "prereqs": [
-        "00-fundamentos-llm",
-        "02-orquestacion-agentes"
       ],
       "versions": {
         "openai": "3.29.0",
@@ -279,70 +271,54 @@
       ]
     },
     {
-      "slug": "04-evals-observabilidad",
-      "title": "Evals y observabilidad",
-      "order": 4,
-      "level": "intermedio",
-      "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
+      "slug": "tool-use",
+      "title": "Tool use / function calling",
+      "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
       "tags": [
-        "evals",
-        "llm-as-judge",
-        "langsmith",
-        "deepeval",
-        "langfuse",
-        "opentelemetry"
-      ],
-      "prereqs": [
-        "01-tool-use"
+        "tool-use",
+        "function-calling",
+        "agentes"
       ],
       "versions": {
-        "langsmith": "0.14.8",
-        "deepeval": "4.2.8",
-        "langfuse": "4.17.0",
-        "opentelemetry-sdk": "1.45.1",
-        "anthropic": "1.13.0"
+        "anthropic": "1.13.0",
+        "openai": "3.29.0",
+        "pydantic": "2.14.1"
       },
       "chapters": [
         {
-          "file": "01-por-que-evaluar-llms.md",
-          "title": "Por qué evaluar LLMs es distinto a testear",
+          "file": "01-que-es-function-calling.md",
+          "title": "Qué es function calling",
           "order": 1,
           "type": "concepto"
         },
         {
-          "file": "02-datasets-y-metricas.md",
-          "title": "Datasets y métricas",
+          "file": "02-definir-tools.md",
+          "title": "Definir tools",
           "order": 2,
-          "type": "concepto"
+          "type": "implementacion"
         },
         {
-          "file": "03-llm-as-judge.md",
-          "title": "LLM-as-judge",
+          "file": "03-loop-de-agente.md",
+          "title": "Loop de agente desde cero",
           "order": 3,
           "type": "implementacion"
         },
         {
-          "file": "04-evals-en-ci.md",
-          "title": "Evals en CI",
+          "file": "04-errores-reintentos-y-validacion.md",
+          "title": "Errores, reintentos y validación",
           "order": 4,
-          "type": "implementacion"
+          "type": "concepto"
         },
         {
-          "file": "05-evaluar-agentes.md",
-          "title": "Evaluar agentes",
+          "file": "05-human-in-the-loop.md",
+          "title": "Human-in-the-loop",
           "order": 5,
-          "type": "implementacion"
+          "type": "concepto"
         },
         {
-          "file": "06-tracing-y-observabilidad.md",
-          "title": "Tracing y observabilidad",
+          "file": "06-contexto-y-memoria.md",
+          "title": "Contexto y memoria del agente",
           "order": 6,
-          "type": "implementacion"
-        },
-        {
-          "file": "07-monitoreo-en-produccion.md",
-          "title": "Monitoreo en producción",
-          "order": 7,
           "type": "concepto"
         }
       ]

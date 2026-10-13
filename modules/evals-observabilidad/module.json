@@ -1,8 +1,6 @@
 {
-  "slug": "04-evals-observabilidad",
+  "slug": "evals-observabilidad",
   "title": "Evals y observabilidad",
-  "order": 4,
-  "level": "intermedio",
   "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
   "tags": [
     "evals",
@@ -11,9 +9,6 @@
     "deepeval",
     "langfuse",
     "opentelemetry"
-  ],
-  "prereqs": [
-    "01-tool-use"
   ],
   "versions": {
     "langsmith": "0.14.8",

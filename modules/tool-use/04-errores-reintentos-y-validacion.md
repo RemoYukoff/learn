@@ -44,7 +44,7 @@ Los reintentos son seguros en lecturas. En escrituras (`issue_refund`), un reint
 
 ### Observabilidad mínima
 
-Por cada tool call registrá: tool, input, resultado o error, latencia, y el id de la conversación. Con eso se calcula la tasa de éxito de tool calls y se alimentan las evals (módulo 04).
+Por cada tool call registrá: tool, input, resultado o error, latencia, y el id de la conversación. Con eso se calcula la tasa de éxito de tool calls y se alimentan las evals (módulo de Evals y observabilidad).
 
 ## Cómo se ve en código
 

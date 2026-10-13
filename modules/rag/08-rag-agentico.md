@@ -18,7 +18,7 @@ Dos patrones resuelven esto:
 
 | Patrón | Quién decide | Cómo |
 |---|---|---|
-| **Retrieval como tool** | El modelo | El agente tiene una tool `search` y la llama cuantas veces quiera, con las queries que quiera. Es el loop del módulo 01 |
+| **Retrieval como tool** | El modelo | El agente tiene una tool `search` y la llama cuantas veces quiera, con las queries que quiera. Es el loop del módulo de Tool use |
 | **Grafo con control** (corrective / self-RAG) | Vos, con nodos LLM | Pasos fijos con decisiones: recuperar → evaluar relevancia → si no alcanza, reescribir la query y volver a buscar → generar |
 
 El primero es más flexible; el segundo más predecible, barato y fácil de evaluar. En producción es común un grafo con pocas decisiones del LLM.

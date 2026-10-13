@@ -8,7 +8,7 @@ type: implementacion
 
 ## La idea, sin framework
 
-Un agente con tools es el loop del módulo anterior:
+Un agente con tools es el loop del módulo de Tool use:
 
 <figure class="diagram">
 <svg viewBox="0 0 700 225" role="img" aria-label="Loop de agente con tools">

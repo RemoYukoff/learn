@@ -33,7 +33,7 @@ La negativa vuelve al modelo como un `tool_result` normal: "El operador rechazó
 ### Sincrónico vs asincrónico
 
 - **Sincrónico**: el agente espera la respuesta (CLI, chat con el usuario presente). Es lo que hace el ejemplo.
-- **Asincrónico**: la aprobación llega minutos u horas después (Slack, un panel). El agente tiene que **guardar su estado** y reanudar. Eso necesita persistencia, que es justamente lo que dan los frameworks del módulo 02 (`interrupt` en LangGraph, approval requests en Agent Framework).
+- **Asincrónico**: la aprobación llega minutos u horas después (Slack, un panel). El agente tiene que **guardar su estado** y reanudar. Eso necesita persistencia, que es justamente lo que dan los frameworks del módulo de Orquestación de agentes (`interrupt` en LangGraph, approval requests en Agent Framework).
 
 ### Auditoría
 

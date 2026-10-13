@@ -21,12 +21,11 @@ ROOT = Path(__file__).resolve().parents[4]
 MODULES = ROOT / "modules"
 MANIFEST = ROOT / "manifest.json"
 
-SLUG_RE = re.compile(r"^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$")
+SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_RE = re.compile(r"^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 FRONTMATTER_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n", re.S)
-LEVELS = {"basico", "intermedio", "avanzado"}
 CHAPTER_TYPES = {"concepto", "implementacion"}
-REQUIRED_MODULE_KEYS = {"title", "order", "level", "summary", "tags", "prereqs", "versions"}
+REQUIRED_MODULE_KEYS = {"title", "summary", "tags", "versions"}
 
 
 class Report:
@@ -99,7 +98,7 @@ def validate_module(path: Path, report: Report) -> dict | None:
     slug = path.name
     where = f"modules/{slug}"
     if not SLUG_RE.match(slug):
-        report.error(where, "folder must be NN-kebab-case, e.g. 03-rag")
+        report.error(where, "folder must be kebab-case without numbers prefix, e.g. rag")
     meta_file = path / "module.json"
     if not meta_file.exists():
         report.error(where, "missing module.json")
@@ -116,16 +115,11 @@ def validate_module(path: Path, report: Report) -> dict | None:
         return None
     if meta.get("slug", slug) != slug:
         report.error(f"{where}/module.json", f"slug '{meta['slug']}' does not match folder")
-    if not isinstance(meta["order"], int) or meta["order"] != int(slug[:2]):
-        report.error(f"{where}/module.json", "order must be an int equal to the folder prefix")
-    if meta["level"] not in LEVELS:
-        report.error(f"{where}/module.json", f"level must be one of {sorted(LEVELS)}")
-    for key in ("status", "planned_chapters"):
+    for key in ("status", "planned_chapters", "order", "level", "prereqs"):
         if key in meta:
-            report.error(f"{where}/module.json", f"'{key}' is not used: a module exists only when its chapters exist")
-    for key in ("tags", "prereqs"):
-        if not isinstance(meta[key], list):
-            report.error(f"{where}/module.json", f"{key} must be a list")
+            report.error(f"{where}/module.json", f"'{key}' is not used: modules are standalone, unordered and exist only when written")
+    if not isinstance(meta["tags"], list):
+        report.error(f"{where}/module.json", "tags must be a list")
     if not isinstance(meta["versions"], dict):
         report.error(f"{where}/module.json", "versions must be an object {package: version}")
 
@@ -174,11 +168,8 @@ def validate_module(path: Path, report: Report) -> dict | None:
     entry = {
         "slug": slug,
         "title": meta["title"],
-        "order": meta["order"],
-        "level": meta["level"],
         "summary": meta["summary"],
         "tags": meta["tags"],
-        "prereqs": meta["prereqs"],
         "versions": meta["versions"],
         "chapters": chapters,
     }
@@ -197,17 +188,6 @@ def main() -> int:
         if entry:
             entries.append(entry)
 
-    slugs = {e["slug"] for e in entries}
-    orders = [e["order"] for e in entries]
-    if len(set(orders)) != len(orders):
-        report.error("modules", f"duplicate module orders {sorted(orders)}")
-    for e in entries:
-        for pre in e["prereqs"]:
-            if pre not in slugs:
-                report.error(f"modules/{e['slug']}/module.json", f"prereq '{pre}' is not a module slug")
-
-    if not (ROOT / "home.md").exists():
-        report.error("home.md", "missing")
 
     for line in report.warnings + report.errors:
         print(line)
@@ -216,7 +196,7 @@ def main() -> int:
         print(f"\n{len(report.errors)} error(s). manifest.json not written.")
         return 1
 
-    entries.sort(key=lambda e: e["order"])
+    entries.sort(key=lambda e: e["title"].lower())
     if not args.check:
         MANIFEST.write_text(json.dumps({"modules": entries}, ensure_ascii=False, indent=2) + "\n")
     chapters = sum(len(e["chapters"]) for e in entries)

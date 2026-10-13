@@ -1,8 +1,6 @@
 {
-  "slug": "02-orquestacion-agentes",
+  "slug": "orquestacion-agentes",
   "title": "Orquestación de agentes",
-  "order": 2,
-  "level": "intermedio",
   "summary": "Estado, grafos, memoria, human-in-the-loop y patrones multi-agente, con LangGraph a fondo y LangChain, CrewAI y Microsoft Agent Framework (ex AutoGen + Semantic Kernel) en tabs.",
   "tags": [
     "langgraph",
@@ -11,9 +9,6 @@
     "ms-agent-framework",
     "autogen",
     "semantic-kernel"
-  ],
-  "prereqs": [
-    "01-tool-use"
   ],
   "versions": {
     "langgraph": "1.2.15",

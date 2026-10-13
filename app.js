@@ -1,7 +1,7 @@
 /* Viewer for the learn site. No build step: plain browser JS.
  *
  * Routes (hash based):
- *   #/                      home (home.md + module grid)
+ *   #/                      home (module grid)
  *   #/<module-slug>         module overview
  *   #/<module-slug>/<file>  chapter
  *
@@ -328,8 +328,6 @@
   }
 
   const findModule = (slug) => manifest.modules.find((m) => m.slug === slug);
-  const LEVELS = { basico: "básico", intermedio: "intermedio", avanzado: "avanzado" };
-  const levelLabel = (level) => LEVELS[level] || level || "";
 
   // ---------- sidebar ----------
   function moduleProgress(mod) {
@@ -345,7 +343,7 @@
     moduleList.innerHTML = "";
     for (const mod of manifest.modules) {
       const chapters = mod.chapters.filter(
-        (c) => !filter || c.title.toLowerCase().includes(filter) || mod.title.toLowerCase().includes(filter)
+        (c) => !filter || c.title.toLowerCase().includes(filter) || mod.title.toLowerCase().includes(filter) || (mod.tags || []).some((t) => t.includes(filter))
       );
       if (filter && !chapters.length) continue;
       const li = document.createElement("li");
@@ -355,8 +353,7 @@
       const head = document.createElement("a");
       head.className = "mod-head";
       head.href = `#/${mod.slug}`;
-      head.innerHTML = `<span class="mod-num">${String(mod.order).padStart(2, "0")}</span>
-        <span class="mod-title"></span>
+      head.innerHTML = `<span class="mod-title"></span>
         <span class="mod-meta">${done}/${total}</span>
         <span class="bar"><span style="width:${pct}%"></span></span>`;
       $(".mod-title", head).textContent = mod.title;
@@ -411,51 +408,23 @@
     return { slug: parts[0] || null, file: parts[1] || null };
   }
 
-  function chips(items, cls = "chip") {
-    return items.map((t) => `<span class="${cls}">${escapeHtml(t)}</span>`).join("");
-  }
-
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   }
 
   function moduleHeader(mod) {
-    const versions = Object.entries(mod.versions || {});
-    const prereqs = (mod.prereqs || [])
-      .map((slug) => {
-        const p = findModule(slug);
-        return p ? `<a href="#/${p.slug}">${escapeHtml(p.title)}</a>` : escapeHtml(slug);
-      })
-      .join(", ");
     return `<div class="mod-header">
-      <div class="eyebrow">Módulo ${String(mod.order).padStart(2, "0")} · ${escapeHtml(levelLabel(mod.level))}</div>
       <h1>${escapeHtml(mod.title)}</h1>
       <p class="lead">${escapeHtml(mod.summary || "")}</p>
-      <div class="meta-row">${chips(mod.tags || [])}</div>
-      ${prereqs ? `<div class="meta-line"><strong>Antes:</strong> ${prereqs}</div>` : ""}
-      ${
-        versions.length
-          ? `<div class="meta-line"><strong>Versiones:</strong> ${versions
-              .map(([k, v]) => `<code>${escapeHtml(k)}==${escapeHtml(v)}</code>`)
-              .join(" ")}</div>`
-          : ""
-      }
     </div>`;
   }
 
-  async function renderHome() {
+  function renderHome() {
     document.title = "Learn";
-    let homeHtml = "";
-    try {
-      homeHtml = renderMarkdown(parseFrontmatter(await fetchText("home.md")).body).innerHTML;
-    } catch {
-      homeHtml = "<h1>Learn</h1>";
-    }
     const cards = manifest.modules
       .map((m) => {
         const { done, total, pct } = moduleProgress(m);
         return `<a class="card" href="#/${m.slug}">
-          <div class="eyebrow">${String(m.order).padStart(2, "0")} · ${escapeHtml(levelLabel(m.level))}</div>
           <h3>${escapeHtml(m.title)}</h3>
           <p>${escapeHtml(m.summary || "")}</p>
           <div class="card-foot">${done}/${total} capítulos
@@ -463,7 +432,7 @@
         </a>`;
       })
       .join("");
-    content.innerHTML = `<article class="prose">${homeHtml}</article><div class="cards">${cards}</div>`;
+    content.innerHTML = `<div class="cards">${cards}</div>`;
   }
 
   function renderModule(mod) {
@@ -530,7 +499,7 @@
     renderSidebar();
     const { slug, file } = parseRoute();
     try {
-      if (!slug) await renderHome();
+      if (!slug) renderHome();
       else {
         const mod = findModule(slug);
         if (!mod) renderNotFound();
@@ -549,7 +518,7 @@
     marked.setOptions({ gfm: true });
     try {
       manifest = JSON.parse(await fetchText("manifest.json"));
-      manifest.modules.sort((a, b) => a.order - b.order);
+      manifest.modules.sort((a, b) => a.title.localeCompare(b.title, "es"));
     } catch (err) {
       renderError(err);
       return;

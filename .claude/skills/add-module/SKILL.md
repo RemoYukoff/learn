@@ -7,11 +7,11 @@ description: Write a new standalone learning module for this study site - resear
 
 Adds one module to `modules/` so the site at `index.html` shows it. One module per invocation.
 
-Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). Create a new module with the next free `NN`. If a module on that topic already exists, extend or rewrite it instead of creating a duplicate.
+Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). Create `modules/<slug>/` (kebab-case, no number prefix). If a module on that topic already exists, extend or rewrite it instead of creating a duplicate.
 
 ## Purpose of the site (shapes every decision)
 
-- Each module stands on its own: RAG teaches RAG, MCP teaches MCP. Do not frame a module as part of a career path, course or role (no "AI Engineer", no "lo que piden las búsquedas"). Cross-references to other existing modules are fine; never reference modules that do not exist.
+- Each module stands on its own: RAG teaches RAG, MCP teaches MCP. Do not frame a module as part of a career path, course or role (no "AI Engineer", no "lo que piden las búsquedas"). Modules have no order, level or prerequisites: React, RAG or Kubernetes are just modules to search and study. Mention another module only by name and only if it exists ("ver el módulo de RAG"), never by number.
 - The reader is a senior engineer with production Python, TypeScript, REST, SQL, Docker, CI/CD and testing experience. Do not teach those basics.
 - **No projects, no "build X at the end", no exercises.** The site is flat study material: read-only chapters. Code appears only as snippets inside the chapter to illustrate the idea. Nothing in the repo is meant to be run, and nothing requires the reader's API keys, accounts, subscriptions or Docker. If the reader wants to try something, they write and set it up in their own project.
 - Cover everything important about the technology, without padding. No time estimates.
@@ -22,7 +22,7 @@ Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). Cr
 ## Module structure
 
 ```
-modules/NN-slug/
+modules/<slug>/
   module.json          # copy template/module.json
   01-chapter.md        # chapters, NN-kebab-case.md, frontmatter title/order/type
   02-chapter.md
@@ -30,7 +30,7 @@ modules/NN-slug/
 
 No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The validator rejects them.
 
-`module.json` fields: `slug`, `title`, `order` (int = folder prefix), `level` (basico | intermedio | avanzado), `summary`, `tags`, `prereqs` (slugs of existing modules), `versions` ({package: version} for the main libraries).
+`module.json` fields: `slug` (= folder name), `title`, `summary` (one sentence, shown on the module card), `tags` (used by search), `versions` ({package: version} the snippets were checked against; not shown on the site).
 
 ## Chapter rules
 

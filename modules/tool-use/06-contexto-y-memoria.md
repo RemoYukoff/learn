@@ -39,9 +39,9 @@ Medí `usage.input_tokens` por vuelta: es la primera métrica de salud de un age
 | Ejemplo | "el cliente que buscaste recién es C-100" | "este usuario prefiere respuestas en inglés" |
 | Cómo se lee | Va entera en cada llamada | Se busca lo relevante y se inyecta, o el agente la consulta con una tool |
 
-La de largo plazo se implementa de dos maneras: **retrieval automático** (antes de cada llamada buscás recuerdos relevantes y los agregás al prompt, como RAG en el módulo 03) o **memoria como tool** (el agente decide cuándo leer y escribir, por ejemplo la memory tool de Anthropic que expone un directorio de archivos).
+La de largo plazo se implementa de dos maneras: **retrieval automático** (antes de cada llamada buscás recuerdos relevantes y los agregás al prompt, como RAG en el módulo de RAG) o **memoria como tool** (el agente decide cuándo leer y escribir, por ejemplo la memory tool de Anthropic que expone un directorio de archivos).
 
-Los frameworks del módulo 02 le dan nombre a esto: *checkpointer* (corto plazo, por thread) y *store* (largo plazo) en LangGraph; *sessions* y *context providers* en Agent Framework; *memory* en CrewAI.
+Los frameworks del módulo de Orquestación de agentes le dan nombre a esto: *checkpointer* (corto plazo, por thread) y *store* (largo plazo) en LangGraph; *sessions* y *context providers* en Agent Framework; *memory* en CrewAI.
 
 ## Cómo se ve en código
 

@@ -73,12 +73,17 @@ def main() -> int:
         page.on("pageerror", lambda e: errors.append(str(e)))
 
         page.goto(base)
-        page.wait_for_selector("#content h1")
+        page.wait_for_selector("#content .cards")
 
         for route in routes:
             errors.clear()
             page.goto(base + route)
             try:
+                if route == "#/":
+                    page.wait_for_selector("#content .card", timeout=8000)
+                    page.wait_for_load_state("networkidle")
+                    print("ok  #/")
+                    continue
                 page.wait_for_selector("#content article h1", timeout=8000)
                 page.wait_for_load_state("networkidle")
             except Exception:

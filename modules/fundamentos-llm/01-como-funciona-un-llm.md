@@ -114,7 +114,7 @@ Cada respuesta dice **por qué** terminó. Ignorarlo es la fuente número uno de
 |---|---|---|
 | `end_turn` | `stop` | Terminó normalmente |
 | `max_tokens` | `length` | Se cortó por tu tope: la salida está incompleta |
-| `tool_use` | `tool_calls` | Quiere ejecutar una tool (módulo 01) |
+| `tool_use` | `tool_calls` | Quiere ejecutar una tool (módulo de Tool use) |
 | `refusal` | `content_filter` | Se negó por políticas de seguridad |
 | `pause_turn` | — | Tool de servidor larga en pausa, hay que reenviar |
 

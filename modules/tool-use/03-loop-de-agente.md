@@ -37,7 +37,7 @@ Se termina cuando `stop_reason` deja de ser `tool_use`. Revisá cuál fue: `end_
 
 Los SDKs y frameworks traen el loop hecho. El tool runner de Anthropic genera el esquema desde la firma y el docstring de una función decorada, ejecuta las tools y vuelve a llamar hasta terminar. Te deja engancharte en cada vuelta para loguear, aprobar o modificar resultados.
 
-Cuándo escribir el loop a mano: control total del flujo, formatos no estándar, o cuando querés entender qué pasa (como acá). En producción, tool runner o framework (módulo 02), salvo que tengas una razón.
+Cuándo escribir el loop a mano: control total del flujo, formatos no estándar, o cuando querés entender qué pasa (como acá). En producción, tool runner o framework (módulo de Orquestación de agentes), salvo que tengas una razón.
 
 ## Cómo se implementa
 

@@ -55,7 +55,7 @@ En producción casi todo es una mezcla: un workflow con algunos nodos donde un a
 
 ## Cuándo no usar un framework
 
-- El caso es una sola llamada o un loop de tools sin pausas ni persistencia. El loop de 40 líneas del módulo anterior es más fácil de leer, testear y debuggear.
+- El caso es una sola llamada o un loop de tools sin pausas ni persistencia. El loop de 40 líneas del módulo de Tool use es más fácil de leer, testear y debuggear.
 - Necesitás control fino sobre cada request (caching, thinking, formatos nuevos de la API) y el framework todavía no expone esa opción. Los SDKs de los proveedores cambian más rápido que las capas encima.
 - El equipo no conoce el framework y el sistema es chico. Cada capa extra es una abstracción más para entender cuando algo falla.
 

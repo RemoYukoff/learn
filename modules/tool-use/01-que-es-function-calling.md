@@ -72,7 +72,7 @@ Este módulo trata las client tools: conectar agentes a tus APIs, bases de datos
 
 ### De tool use a agente
 
-Una llamada con tools es un paso. Un **agente** es un loop: llamar al modelo, ejecutar las tools que pide, devolver resultados, repetir hasta que responda sin pedir tools. Ese loop es el capítulo 3, y los frameworks del módulo 02 lo empaquetan.
+Una llamada con tools es un paso. Un **agente** es un loop: llamar al modelo, ejecutar las tools que pide, devolver resultados, repetir hasta que responda sin pedir tools. Ese loop es el capítulo 3, y los frameworks del módulo de Orquestación de agentes lo empaquetan.
 
 ## Errores comunes
 
