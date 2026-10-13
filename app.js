@@ -84,6 +84,7 @@
     const next = isDark ? "light" : "dark";
     store.set(THEME_KEY, next);
     applyTheme(next);
+    renderDiagrams(content, true);
   });
   applyTheme(store.get(THEME_KEY, null));
 
@@ -203,6 +204,13 @@
   }
 
   function decorate(root) {
+    // ```mermaid blocks become diagram placeholders, rendered after insertion (renderDiagrams)
+    root.querySelectorAll("pre > code.language-mermaid").forEach((code) => {
+      const fig = document.createElement("figure");
+      fig.className = "diagram mermaid";
+      fig.dataset.src = code.textContent;
+      code.parentElement.replaceWith(fig);
+    });
     // syntax highlight + copy buttons
     root.querySelectorAll("pre > code").forEach((code) => {
       try {
@@ -244,6 +252,72 @@
       a.target = "_blank";
       a.rel = "noopener";
     });
+  }
+
+  // ---------- mermaid diagrams ----------
+  let diagramSeq = 0;
+  const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  function mermaidTheme() {
+    return {
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      fontFamily: getComputedStyle(document.body).fontFamily,
+      themeCSS: "g.node rect, rect.actor, rect.note { rx: 8px; ry: 8px; }",
+      themeVariables: {
+        fontSize: "14px",
+        background: cssVar("--bg"),
+        mainBkg: cssVar("--d-node"),
+        primaryColor: cssVar("--d-node"),
+        primaryBorderColor: cssVar("--d-node-stroke"),
+        primaryTextColor: cssVar("--fg"),
+        secondaryColor: cssVar("--d-input"),
+        tertiaryColor: cssVar("--d-store"),
+        lineColor: cssVar("--d-line"),
+        textColor: cssVar("--fg"),
+        edgeLabelBackground: cssVar("--bg"),
+        clusterBkg: "transparent",
+        clusterBorder: cssVar("--d-node-stroke"),
+        noteBkgColor: cssVar("--d-risk"),
+        noteBorderColor: cssVar("--d-risk-stroke"),
+        noteTextColor: cssVar("--fg"),
+        actorBkg: cssVar("--d-input"),
+        actorBorder: cssVar("--d-input-stroke"),
+        actorTextColor: cssVar("--fg"),
+        signalColor: cssVar("--d-line"),
+        signalTextColor: cssVar("--fg"),
+        labelBoxBkgColor: cssVar("--d-node"),
+        labelBoxBorderColor: cssVar("--d-node-stroke"),
+        activationBkgColor: cssVar("--d-process"),
+        activationBorderColor: cssVar("--d-process-stroke"),
+      },
+    };
+  }
+
+  /* Site palette as Mermaid classes, so authors write A:::process, B:::store... */
+  function withSiteClasses(src) {
+    if (!/^\s*(flowchart|graph|stateDiagram)/.test(src)) return src;
+    const cls = ["input", "process", "store", "human", "risk"]
+      .map((c) => `classDef ${c} fill:${cssVar(`--d-${c}`)},stroke:${cssVar(`--d-${c}-stroke`)},color:${cssVar("--fg")}`)
+      .join("\n");
+    return `${src.trimEnd()}\n${cls}`;
+  }
+
+  async function renderDiagrams(root, force = false) {
+    const figs = [...root.querySelectorAll("figure.diagram.mermaid")].filter((f) => force || !f.dataset.done);
+    if (!figs.length || !window.mermaid) return;
+    mermaid.initialize(mermaidTheme());
+    for (const fig of figs) {
+      try {
+        const { svg } = await mermaid.render(`mmd-${++diagramSeq}`, withSiteClasses(fig.dataset.src));
+        fig.innerHTML = svg;
+        fig.dataset.done = "1";
+      } catch (err) {
+        console.error("mermaid:", err.message || err);
+        fig.innerHTML = `<pre class="diagram-error">${escapeHtml(String(err.message || err))}</pre>`;
+      }
+    }
   }
 
   // ---------- data ----------
@@ -463,6 +537,7 @@
         else if (!file) renderModule(mod);
         else await renderChapter(mod, file);
       }
+      await renderDiagrams(content);
     } catch (err) {
       renderError(err);
     }

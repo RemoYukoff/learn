@@ -15,6 +15,23 @@ Human-in-the-loop es la confirmación de una persona antes de ejecutar acciones 
 3. **Decisión**: una persona aprueba, rechaza, edita los argumentos o responde en lugar de la tool. Puede tardar segundos o días, por otro canal (UI, Slack, mail).
 4. **Reanudación**: el sistema sigue desde donde quedó con la decisión, sin repetir lo que ya hizo.
 
+```mermaid
+sequenceDiagram
+    participant M as Modelo
+    participant G as Grafo / runtime
+    participant S as Checkpointer
+    participant H as Persona
+    M->>G: tool_call update_ticket_status(T-1, closed)
+    G->>G: la política exige aprobación
+    G->>S: guarda el estado (pausa)
+    G-->>H: pedido de aprobación (UI, Slack, mail)
+    Note over G,H: puede pasar mucho tiempo, el proceso puede reiniciarse
+    H->>G: decisión: aprobar, rechazar, editar o responder
+    G->>S: carga el estado
+    G->>G: ejecuta la tool (o no) según la decisión
+    G->>M: tool_result con el resultado o el rechazo
+```
+
 Lo que separa una demo de algo de producción es el paso 2: si la pausa vive en memoria del proceso (un `input()` dentro del loop), un deploy o un timeout la pierden. Por eso la pausa va de la mano del checkpointing.
 
 Tipos de decisión que conviene soportar:

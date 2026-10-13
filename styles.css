@@ -282,3 +282,6 @@ a:hover { text-decoration: underline; }
 .diagram .human { fill: var(--d-human); stroke: var(--d-human-stroke); stroke-width: 1.2; }
 .diagram .risk { fill: var(--d-risk); stroke: var(--d-risk-stroke); stroke-width: 1.2; }
 .diagram .zone { fill: none; stroke: var(--d-node-stroke); stroke-width: 1.2; stroke-dasharray: 6 5; }
+.prose figure.diagram.mermaid svg { min-width: 0; max-width: 100%; }
+.prose figure.diagram.mermaid { display: flex; justify-content: center; }
+.diagram-error { color: var(--warn); white-space: pre-wrap; }

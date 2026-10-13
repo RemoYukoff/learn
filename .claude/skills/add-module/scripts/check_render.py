@@ -88,6 +88,8 @@ def main() -> int:
             if h1.strip() in {"Error", "No encontrado"}:
                 body = page.inner_text("#content article")
                 failures.append(f"{route}: viewer error view: {body[:200]!r}")
+            if page.locator(".diagram-error").count():
+                failures.append(f"{route}: mermaid diagram failed to render")
             for err in errors:
                 failures.append(f"{route}: console: {err}")
             if page.locator(".tabs").count() and "Error" not in h1:

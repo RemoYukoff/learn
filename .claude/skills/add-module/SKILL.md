@@ -55,19 +55,28 @@ No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The 
 5. Close with `## Errores comunes` and `## Preguntas de repaso` (key questions about the topic with short answers).
 6. Callouts: `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!IMPORTANT]`.
 7. Tables over long lists when comparing technologies.
-8. **Diagrams as inline SVG, never ASCII art.** Use one whenever a structure, flow, sequence, hierarchy or architecture is easier to see than to read. Write it as raw HTML in the Markdown, with no blank lines inside:
+8. **Diagrams, never ASCII art.** Studying is easier with pictures: add a diagram whenever a structure, flow, sequence, hierarchy, state machine or comparison is easier to see than to read. Two options:
+   - **Mermaid (default).** A fenced ```` ```mermaid ```` block; the viewer renders it with the site palette and re-renders on theme change. Use it for `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `timeline`, `mindmap`, `classDiagram`. Color nodes with the site classes `:::input`, `:::process`, `:::store`, `:::human`, `:::risk` (flowcharts and state diagrams). Never set colors or themes inside the diagram.
 
-   ```html
-   <figure class="diagram">
-   <svg viewBox="0 0 W H" role="img" aria-label="what it shows">
-   <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
-   ...connectors first (class="line" or "line dash", marker-end="url(#ah)"), then boxes and text...
-   </svg>
-   <figcaption>One sentence.</figcaption>
-   </figure>
-   ```
+     ```mermaid
+     flowchart LR
+         Q[Pregunta]:::input --> R[Retriever]:::process --> L[LLM]:::process --> A[Respuesta]:::store
+     ```
+   - **Inline SVG** for custom visuals Mermaid cannot draw well (pyramids, token chips, timelines with bars). Raw HTML in the Markdown, no blank lines inside:
 
-   Use only the site classes so diagrams follow light/dark theme: boxes `node`, `input`, `process`, `store`, `human`, `risk`, group borders `zone`, text `title`, `sub`, `mono`. No hard-coded colors or fonts. Keep 5–9 main elements, short labels, viewBox width 500–860. Check it in light and dark with a screenshot.
+     ```html
+     <figure class="diagram">
+     <svg viewBox="0 0 W H" role="img" aria-label="what it shows">
+     <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+     ...connectors first (class="line" or "line dash", marker-end="url(#ah)"), then boxes and text...
+     </svg>
+     <figcaption>One sentence.</figcaption>
+     </figure>
+     ```
+
+     Only site classes, no hard-coded colors or fonts: boxes `node`, `input`, `process`, `store`, `human`, `risk`, group borders `zone`, text `title`, `sub`, `mono`. viewBox width 500–860.
+
+   Keep 5–9 main elements and short labels. Check every diagram with a screenshot in light and dark.
 
 See `template/chapter.md` and the existing modules `00-fundamentos-llm`, `01-tool-use`, `02-orquestacion-agentes` for the expected depth and tone.
 

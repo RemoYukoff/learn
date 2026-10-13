@@ -24,11 +24,69 @@ Lo que importa para integrarlo:
 
 Cada proveedor (y cada familia de modelos) parte el texto a su manera, así que la misma frase cuesta distinta cantidad de tokens según el modelo. Para contar, se usa el conteo del propio proveedor.
 
-```text
-"tokenización"  →  ["token", "ización"]        (ejemplo ilustrativo)
-"   " (espacios) → también son tokens
-JSON con mucha indentación → más tokens que el mismo JSON compacto
-```
+<figure class="diagram">
+<svg viewBox="0 0 760 260" role="img" aria-label="Texto partido en tokens con sus ids, y el mismo JSON compacto e indentado con distinta cantidad de tokens">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text x="20" y="28" class="title">Texto</text>
+<text x="120" y="28" class="mono">"La tokenización no es obvia"</text>
+<line class="line" x1="230" y1="40" x2="230" y2="62" marker-end="url(#ah)"/>
+<text x="20" y="88" class="title">Tokens</text>
+<rect class="input" x="120" y="68" width="31" height="30" rx="6"/>
+<text x="136" y="88" text-anchor="middle" class="mono">La</text>
+<text x="136" y="116" text-anchor="middle" class="sub">4723</text>
+<rect class="process" x="157" y="68" width="62" height="30" rx="6"/>
+<text x="188" y="88" text-anchor="middle" class="mono">␣token</text>
+<text x="188" y="116" text-anchor="middle" class="sub">4037</text>
+<rect class="input" x="225" y="68" width="69" height="30" rx="6"/>
+<text x="259" y="88" text-anchor="middle" class="mono">ización</text>
+<text x="259" y="116" text-anchor="middle" class="sub">22881</text>
+<rect class="process" x="300" y="68" width="39" height="30" rx="6"/>
+<text x="319" y="88" text-anchor="middle" class="mono">␣no</text>
+<text x="319" y="116" text-anchor="middle" class="sub">912</text>
+<rect class="input" x="345" y="68" width="39" height="30" rx="6"/>
+<text x="364" y="88" text-anchor="middle" class="mono">␣es</text>
+<text x="364" y="116" text-anchor="middle" class="sub">1560</text>
+<rect class="process" x="390" y="68" width="39" height="30" rx="6"/>
+<text x="409" y="88" text-anchor="middle" class="mono">␣ob</text>
+<text x="409" y="116" text-anchor="middle" class="sub">3394</text>
+<rect class="input" x="434" y="68" width="39" height="30" rx="6"/>
+<text x="454" y="88" text-anchor="middle" class="mono">via</text>
+<text x="454" y="116" text-anchor="middle" class="sub">6129</text>
+<text x="487" y="88" class="sub" text-anchor="start">7 tokens</text>
+<text x="20" y="116" class="sub">ids</text>
+<text x="20" y="186" class="title">Compacto</text>
+<rect class="store" x="120" y="166" width="31" height="30" rx="6"/>
+<text x="136" y="186" text-anchor="middle" class="mono">{&quot;</text>
+<rect class="store" x="157" y="166" width="26" height="30" rx="6"/>
+<text x="170" y="186" text-anchor="middle" class="mono">a</text>
+<rect class="store" x="189" y="166" width="31" height="30" rx="6"/>
+<text x="205" y="186" text-anchor="middle" class="mono">&quot;:</text>
+<rect class="store" x="226" y="166" width="26" height="30" rx="6"/>
+<text x="239" y="186" text-anchor="middle" class="mono">1</text>
+<rect class="store" x="258" y="166" width="26" height="30" rx="6"/>
+<text x="271" y="186" text-anchor="middle" class="mono">}</text>
+<text x="298" y="186" class="sub" text-anchor="start">5 tokens</text>
+<text x="20" y="236" class="title">Indentado</text>
+<rect class="risk" x="120" y="216" width="26" height="30" rx="6"/>
+<text x="133" y="236" text-anchor="middle" class="mono">{</text>
+<rect class="risk" x="152" y="216" width="31" height="30" rx="6"/>
+<text x="168" y="236" text-anchor="middle" class="mono">\n</text>
+<rect class="risk" x="189" y="216" width="31" height="30" rx="6"/>
+<text x="205" y="236" text-anchor="middle" class="mono">␣␣</text>
+<rect class="risk" x="226" y="216" width="39" height="30" rx="6"/>
+<text x="246" y="236" text-anchor="middle" class="mono">&quot;a&quot;</text>
+<rect class="risk" x="271" y="216" width="26" height="30" rx="6"/>
+<text x="284" y="236" text-anchor="middle" class="mono">:</text>
+<rect class="risk" x="303" y="216" width="31" height="30" rx="6"/>
+<text x="319" y="236" text-anchor="middle" class="mono">␣1</text>
+<rect class="risk" x="340" y="216" width="31" height="30" rx="6"/>
+<text x="356" y="236" text-anchor="middle" class="mono">\n</text>
+<rect class="risk" x="378" y="216" width="26" height="30" rx="6"/>
+<text x="391" y="236" text-anchor="middle" class="mono">}</text>
+<text x="418" y="236" class="sub" text-anchor="start">8 tokens: espacios y saltos también cuentan</text>
+</svg>
+<figcaption>Un tokenizer parte el texto en piezas frecuentes, no en palabras. ␣ marca un espacio. La partición y los ids son ilustrativos: cada modelo tiene su propio vocabulario.</figcaption>
+</figure>
 
 ### Sampling: de distribución a texto
 
