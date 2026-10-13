@@ -1,0 +1,13 @@
+{
+  "slug": "NN-kebab-slug",
+  "title": "Nombre visible del módulo",
+  "order": 0,
+  "level": "intermedio",
+  "status": "ready",
+  "summary": "Una o dos frases: qué permite hacer esta tecnología y por qué la piden en las búsquedas.",
+  "tags": ["tecnologia-1", "tecnologia-2"],
+  "prereqs": ["00-fundamentos-llm"],
+  "versions": {
+    "paquete": "1.2.3"
+  }
+}
