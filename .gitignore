@@ -7,3 +7,5 @@ venv/
 *.db
 .DS_Store
 node_modules/
+*.faiss
+chroma_data/
