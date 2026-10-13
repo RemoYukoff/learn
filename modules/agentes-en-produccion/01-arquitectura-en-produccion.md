@@ -112,6 +112,50 @@ def worker_loop() -> None:
 - Estado del agente en memoria: un reinicio pierde todas las conversaciones en curso.
 - Sin límite de concurrencia: un pico de tráfico se convierte en una tormenta de 429 del proveedor.
 
+### Cómo diseñar un worker idempotente
+
+Un worker es idempotente si procesar el mismo job dos veces deja el mundo igual que procesarlo una. No hace falta que todo el trabajo sea idempotente: volver a llamar al modelo o releer un documento no rompe nada. Lo que hay que proteger son las **acciones con efectos**: cobrar, reembolsar, mandar un mail, crear un ticket.
+
+La receta tiene tres partes:
+
+1. **Una clave por acción.** Cada acción con efectos recibe un id estable que sale del job y del paso, por ejemplo `job_id:paso:reembolso`. Un reintento genera la misma clave; una acción nueva genera otra.
+2. **Un registro de acciones, escrito de forma atómica.** Antes de actuar, el worker intenta crear el registro de esa clave con una escritura condicional ("creá solo si no existe"). La base garantiza que entre dos workers solo uno gana. Si el registro ya existe y dice `done`, el worker devuelve el resultado guardado sin repetir la acción.
+3. **La misma clave hacia afuera.** Si el worker se cae entre "registré que voy a actuar" y "terminé", el reintento va a encontrar el registro en `pending` sin saber si la acción llegó a ejecutarse. Por eso la clave se le pasa también al servicio externo como *idempotency key*: un id que el servicio usa para reconocer un pedido repetido y devolver la respuesta original en vez de ejecutarlo de nuevo. Si el servicio no acepta una clave, el worker consulta primero si la acción ya ocurrió (por ejemplo, si ya existe un reembolso para ese pedido) antes de reintentarla.
+
+```mermaid
+flowchart LR
+    W[Worker]:::process --> C{¿Existe el registro<br/>de la acción?}:::process
+    C -->|no| P[Crear en pending]:::store --> A[Llamar al servicio<br/>con la clave]:::risk
+    C -->|pending| A
+    C -->|done| R[Devolver resultado guardado]:::process
+    A --> D[Marcar done<br/>con el resultado]:::store
+```
+
+```python
+from botocore.exceptions import ClientError
+
+actions = boto3.resource("dynamodb").Table("agent-actions")
+
+def refund_once(job_id: str, step: int, order_id: str, amount: int) -> dict:
+    action_id = f"{job_id}:{step}:refund"
+    try:
+        actions.put_item(Item={"action_id": action_id, "status": "pending"},
+                         ConditionExpression="attribute_not_exists(action_id)")  # only one worker creates it
+    except ClientError as e:
+        if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
+            raise
+        existing = actions.get_item(Key={"action_id": action_id})["Item"]
+        if existing["status"] == "done":
+            return existing["result"]                     # already executed: do not repeat
+    result = payments.refund(order_id, amount, idempotency_key=action_id)  # provider deduplicates
+    actions.update_item(Key={"action_id": action_id}, UpdateExpression="SET #s = :s, #r = :r",
+                        ExpressionAttributeNames={"#s": "status", "#r": "result"},
+                        ExpressionAttributeValues={":s": "done", ":r": result})
+    return result
+```
+
+Las tools del agente que tienen efectos se envuelven así; el resto del agente puede reintentarse libremente porque el checkpoint y este registro evitan que se repita lo que ya pasó.
+
 ## Preguntas de repaso
 
 - **¿Por qué separar API y workers en un servicio con agentes?** Porque el trabajo dura más de lo que una conexión HTTP tolera; el API responde rápido con un id y los workers procesan con reintentos, escalado propio y estado persistido.
