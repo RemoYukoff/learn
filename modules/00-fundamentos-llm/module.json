@@ -3,7 +3,7 @@
   "title": "Fundamentos de LLMs",
   "order": 0,
   "level": "basico",
-  "status": "pending",
+  "status": "ready",
   "summary": "Cómo funciona un LLM desde el lado de quien lo integra: tokens, contexto, sampling, prompts, salida estructurada, SDKs y costos.",
   "tags": [
     "anthropic",
@@ -16,13 +16,5 @@
     "anthropic": "1.13.0",
     "openai": "3.29.0",
     "pydantic": "2.14.1"
-  },
-  "planned_chapters": [
-    "Cómo funciona un LLM: tokens, contexto y sampling",
-    "Prompt engineering",
-    "Salida estructurada",
-    "SDKs en Python (tabs: Anthropic / OpenAI / OpenRouter)",
-    "Streaming",
-    "Costos, rate limits y caching"
-  ]
+  }
 }
