@@ -4,19 +4,7 @@ order: 2
 type: concepto
 ---
 
-**Objetivo:** ubicar cada framework que nombran las búsquedas, saber qué modelo mental usa cada uno y poder responder por AutoGen y Semantic Kernel aunque hoy se usen con otro nombre.
-
-## Qué piden las búsquedas
-
-| Framework | Búsquedas que lo nombran | Cómo lo piden |
-|---|---|---|
-| LangGraph | 4 de 4 | Requisito en todas |
-| LangChain | 4 de 4 | Casi siempre junto a LangGraph |
-| CrewAI | 2 de 4 | Alternativa válida (AYI), deseable (Baires HR) |
-| AutoGen | 2 de 4 | Alternativa válida (AYI), deseable (Baires HR) |
-| Semantic Kernel | 1 de 4 | Alternativa válida (AYI) |
-
-Conclusión práctica: **LangGraph a fondo**, y el resto a nivel de poder leer código, comparar y explicar cuándo elegiría cada uno. Este módulo sigue esa proporción.
+**Objetivo:** ubicar los frameworks de orquestación más usados, saber qué modelo mental usa cada uno y entender AutoGen y Semantic Kernel aunque hoy se usen con otro nombre.
 
 ## Los modelos mentales
 
@@ -70,7 +58,7 @@ Cómo traducir lo que pide una búsqueda que dice AutoGen o Semantic Kernel:
 
 - **OpenAI Agents SDK** (`openai-agents`): agentes, handoffs, guardrails, sesiones y tracing con foco en modelos de OpenAI. Minimalista.
 - **Claude Agent SDK** (`claude-agent-sdk`): el harness de Claude Code como librería, con tools de archivos, bash, búsqueda web, subagentes y MCP ya incluidos. Para agentes que trabajan sobre un filesystem o un repo.
-- **LlamaIndex**: fuerte en RAG; también tiene workflows y agentes. Aparece en búsquedas centradas en RAG.
+- **LlamaIndex**: fuerte en RAG; también tiene workflows y agentes.
 
 ## Cómo elegir
 
@@ -99,7 +87,7 @@ def update_ticket_status(ticket_id: str, status: str) -> str: ...   # the sensit
 - Elegir framework por popularidad en vez de por el tipo de control que necesitás.
 - Mezclar dos frameworks de orquestación en el mismo servicio. Elegí uno; integraciones sueltas (un vector store de LangChain dentro de un Flow de CrewAI) sí están bien.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿LangChain o LangGraph?** LangGraph es el runtime de grafos con estado y persistencia; `create_agent` de LangChain es un agente prearmado construido sobre LangGraph. Empiezo con `create_agent` y bajo a un grafo propio cuando necesito controlar el flujo.
 - **¿Qué ventaja tiene CrewAI?** Modelar rápido un equipo de agentes por rol y tarea. Para producción uso Flows por el control del orden y del estado.

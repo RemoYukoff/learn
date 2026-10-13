@@ -127,7 +127,7 @@ Un grafo que combina las piezas de este capítulo: carga los tickets de un clien
 - Olvidar el reducer en la clave que juntan las ramas de `Send`: `InvalidUpdateError`.
 - Creer que `update_state` reescribe la historia: crea una rama nueva desde ese punto.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo mostrás progreso de un agente en una UI?** `stream_mode=["updates", "messages", "custom"]`: pasos por nodo, tokens del modelo y eventos propios.
 - **¿Para qué sirve `Send`?** Para fan-out dinámico: una ejecución del nodo por elemento, en paralelo, con un reducer que junta resultados.

@@ -97,7 +97,7 @@ Los `tool_calls` de los mensajes del resultado muestran qué buscó el agente. C
 - Evaluar solo la respuesta final de un RAG agéntico: logueá cada búsqueda para saber si el problema es la query, el retrieval o la síntesis.
 - Usar un agente donde un pipeline fijo con híbrida y rerank ya resolvía.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es agentic RAG?** RAG donde un LLM decide cuándo y qué buscar (retrieval como tool) o evalúa lo recuperado y reintenta (corrective RAG), en vez de una sola búsqueda fija.
 - **¿Qué es corrective RAG?** Agregar un paso que evalúa la relevancia de lo recuperado y, si no alcanza, reescribe la consulta o busca en otra fuente antes de generar.

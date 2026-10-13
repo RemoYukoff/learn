@@ -56,7 +56,7 @@ print(r.usage.cache_creation_input_tokens, r.usage.cache_read_input_tokens)
 - Elegir el modelo más barato sin evals.
 - No registrar `usage` y descubrir el gasto a fin de mes.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo bajarías el costo de un sistema LLM?** Medir primero (usage por feature), después caching, contexto más chico, batch para lo asíncrono, effort por ruta, y recién al final un modelo más chico validado con evals.
 - **¿Cómo funciona el prompt caching?** El proveedor reutiliza el cómputo de un prefijo idéntico durante un TTL; se cobra mucho menos la lectura. Requiere prefijo estable byte a byte.

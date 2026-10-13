@@ -113,7 +113,7 @@ def to_openai(tools: list[dict]) -> list[dict]:
 - Descripciones que se contradicen con el system prompt.
 - Una tool "god mode" con un parámetro `action` que hace cinco cosas distintas.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué hace que una tool sea fácil de usar para el modelo?** Nombre claro, descripción con cuándo usarla y qué devuelve, parámetros descritos y con enums, resultados cortos y errores que indican cómo corregirse.
 - **¿Qué es strict mode?** Garantía de que los argumentos validan contra el esquema, por constrained decoding.

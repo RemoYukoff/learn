@@ -81,6 +81,8 @@ a:hover { text-decoration: underline; }
   width: 34px; height: 34px; border-radius: var(--radius); cursor: pointer; font-size: 16px;
 }
 .icon-btn:hover { background: var(--bg-sunk); }
+.icon-btn { display: inline-grid; place-items: center; }
+.icon-btn svg { display: block; }
 #menu-toggle { display: none; }
 
 /* ---------- layout ---------- */
@@ -104,7 +106,6 @@ a:hover { text-decoration: underline; }
 }
 .mod-head:hover { background: var(--bg-elev); text-decoration: none; }
 .mod-head.active { background: var(--accent-soft); }
-.mod-head.pending { color: var(--fg-muted); font-weight: 500; }
 .mod-num { font-family: var(--mono); font-size: 12px; color: var(--fg-muted); }
 .mod-meta { font-size: 12px; color: var(--fg-muted); font-weight: 500; }
 .mod-head .bar { grid-column: 2 / 4; margin-top: 4px; }
@@ -191,7 +192,6 @@ a:hover { text-decoration: underline; }
 .toc .check { color: var(--ok); font-weight: 700; }
 .type { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); }
 .type-implementacion { color: var(--accent); }
-.pending-box { padding: 18px 20px; border: 1px dashed var(--border); border-radius: var(--radius); background: var(--bg-sunk); }
 
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; max-width: 1100px; margin: 32px auto 0; }
 .card {
@@ -201,7 +201,6 @@ a:hover { text-decoration: underline; }
 .card:hover { border-color: var(--accent); text-decoration: none; }
 .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
 .card p { margin: 0 0 14px; font-size: 14px; color: var(--fg-muted); flex: 1; }
-.card.pending { opacity: .65; }
 .card-foot { font-size: 12px; color: var(--fg-muted); display: grid; gap: 6px; }
 
 /* ---------- chapter ---------- */

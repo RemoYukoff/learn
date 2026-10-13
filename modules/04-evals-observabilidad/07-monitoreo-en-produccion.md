@@ -75,7 +75,7 @@ Cada falla de producción que se entiende se convierte en un caso del dataset. C
 
 ### Guardrails en runtime
 
-Parte del monitoreo actúa en línea, antes de responder: validar esquema de salida, bloquear PII, detectar injection en la entrada, limitar acciones por umbral (montos, cantidad de llamadas), y degradar a una respuesta segura o a un humano cuando algo no cumple. Se ve en detalle en el módulo 07.
+Parte del monitoreo actúa en línea, antes de responder: validar esquema de salida, bloquear PII, detectar injection en la entrada, limitar acciones por umbral (montos, cantidad de llamadas), y degradar a una respuesta segura o a un humano cuando algo no cumple.
 
 ## Cómo se ve en código
 
@@ -109,7 +109,7 @@ Con esas series, la tasa de éxito de tool calls es `ok / total` por tool, y el 
 - Juntar feedback de usuarios y no convertirlo nunca en casos de evaluación.
 - No fijar versión del modelo y descubrir un cambio de comportamiento por las quejas.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué monitorearías de un agente en producción?** Latencia y errores, costo por tarea y por cliente, tasa de éxito de tool calls y pasos por tarea, scores de evals online sobre una muestra, y feedback de usuarios, con alertas sobre tendencias.
 - **¿Cómo detectás que la calidad bajó?** Evals online muestreadas comparadas contra una línea base, feedback negativo por categoría, y la suite offline corrida periódicamente contra el modelo en producción.

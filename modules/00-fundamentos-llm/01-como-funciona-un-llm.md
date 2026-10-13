@@ -82,7 +82,7 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
 - Asumir que el modelo "recuerda" la conversación anterior sin reenviarla.
 - Estimar costos con palabras en vez de tokens.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es la ventana de contexto y qué pasa si la superás?** El máximo de tokens que el modelo procesa por llamada. Si la superás, la API devuelve error; antes de eso, la calidad baja porque la información relevante se diluye. Se maneja con truncado, resumen o retrieval.
 - **¿Para qué sirve temperature?** Controla la aleatoriedad del sampling. Bajo para tareas deterministas (extracción), alto para creatividad.

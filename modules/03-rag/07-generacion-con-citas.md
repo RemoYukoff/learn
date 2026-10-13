@@ -94,7 +94,7 @@ for claim in answer.claims:
 - Confiar en ids citados sin validarlos.
 - Mezclar instrucciones dentro del texto de las fuentes (prompt injection desde documentos): delimitá y tratá las fuentes como datos.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo reducís alucinaciones en RAG?** Mejor retrieval, instrucción de responder solo con el contexto y decir cuando no alcanza, citas verificables, y medir faithfulness.
 - **¿Cómo implementás citas?** Con citas nativas del proveedor si existen (pasaje literal); si no, fuentes con ids y salida estructurada, validando los ids en código.

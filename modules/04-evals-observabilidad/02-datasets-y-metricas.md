@@ -81,7 +81,7 @@ En CI no se exige 100%. Se fija un umbral por métrica (por ejemplo, correctness
 - Métricas de similitud de texto como juez de calidad.
 - No versionar el dataset.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo armás un dataset de evaluación?** Casos reales de producción y de expertos, completados con sintéticos para cobertura, incluyendo casos borde, adversarios y "no sé"; etiquetados y versionados.
 - **¿Qué métricas usarías para un chatbot de soporte?** Deterministas para formato y tools, LLM-as-judge para correctness y faithfulness, tasa de resolución y escalamiento en producción, más latencia y costo.

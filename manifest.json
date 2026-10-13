@@ -5,7 +5,6 @@
       "title": "Fundamentos de LLMs",
       "order": 0,
       "level": "basico",
-      "status": "ready",
       "summary": "Cómo funciona un LLM desde el lado de quien lo integra: tokens, contexto, sampling, prompts, salida estructurada, SDKs y costos.",
       "tags": [
         "anthropic",
@@ -63,7 +62,6 @@
       "title": "Tool use / function calling",
       "order": 1,
       "level": "intermedio",
-      "status": "ready",
       "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
       "tags": [
         "tool-use",
@@ -122,7 +120,6 @@
       "title": "Orquestación de agentes",
       "order": 2,
       "level": "intermedio",
-      "status": "ready",
       "summary": "Estado, grafos, memoria, human-in-the-loop y patrones multi-agente, con LangGraph a fondo y LangChain, CrewAI y Microsoft Agent Framework (ex AutoGen + Semantic Kernel) en tabs.",
       "tags": [
         "langgraph",
@@ -197,7 +194,6 @@
       "title": "RAG",
       "order": 3,
       "level": "intermedio",
-      "status": "ready",
       "summary": "Retrieval-Augmented Generation de punta a punta: chunking, embeddings, bases vectoriales, búsqueda híbrida, reranking y evaluación del retrieval.",
       "tags": [
         "rag",
@@ -287,7 +283,6 @@
       "title": "Evals y observabilidad",
       "order": 4,
       "level": "intermedio",
-      "status": "ready",
       "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
       "tags": [
         "evals",
@@ -350,118 +345,6 @@
           "order": 7,
           "type": "concepto"
         }
-      ]
-    },
-    {
-      "slug": "05-mcp",
-      "title": "Model Context Protocol (MCP)",
-      "order": 5,
-      "level": "intermedio",
-      "status": "pending",
-      "summary": "El estándar para conectar agentes con herramientas y datos externos: protocolo, servidores, clientes e integración con agentes.",
-      "tags": [
-        "mcp",
-        "tools",
-        "protocolo"
-      ],
-      "prereqs": [
-        "01-tool-use"
-      ],
-      "versions": {},
-      "chapters": [],
-      "planned_chapters": [
-        "Qué es MCP y qué problema resuelve",
-        "Arquitectura: host, cliente, servidor, transports",
-        "Escribir un servidor MCP en Python",
-        "Cliente MCP",
-        "Conectar MCP a un agente (tabs: Anthropic / LangGraph)",
-        "Seguridad y permisos"
-      ]
-    },
-    {
-      "slug": "06-integraciones-empresariales",
-      "title": "Integraciones empresariales",
-      "order": 6,
-      "level": "intermedio",
-      "status": "pending",
-      "summary": "Conectar agentes a sistemas reales: OAuth2, webhooks, rate limits, paginación, CRMs y ERPs, exponer agentes por API y automatizar con n8n.",
-      "tags": [
-        "oauth2",
-        "webhooks",
-        "fastapi",
-        "hubspot",
-        "salesforce",
-        "odoo",
-        "n8n"
-      ],
-      "prereqs": [
-        "01-tool-use"
-      ],
-      "versions": {},
-      "chapters": [],
-      "planned_chapters": [
-        "OAuth2 para agentes",
-        "Webhooks",
-        "Rate limits, paginación y reintentos",
-        "APIs de CRM y ERP (tabs: HubSpot / Salesforce / Odoo)",
-        "Exponer un agente por API con FastAPI",
-        "n8n y agentes"
-      ]
-    },
-    {
-      "slug": "07-deploy-produccion",
-      "title": "Deploy y producción",
-      "order": 7,
-      "level": "avanzado",
-      "status": "pending",
-      "summary": "Llevar un agente a producción: contenedores, serverless en AWS, Bedrock, guardrails y prompt injection, control de costos, logging y auditoría.",
-      "tags": [
-        "docker",
-        "aws-lambda",
-        "bedrock",
-        "guardrails",
-        "seguridad"
-      ],
-      "prereqs": [
-        "06-integraciones-empresariales"
-      ],
-      "versions": {},
-      "chapters": [],
-      "planned_chapters": [
-        "Empaquetar un agente con Docker",
-        "Serverless: Lambda, API Gateway, Step Functions",
-        "Claude en Bedrock",
-        "Guardrails y prompt injection",
-        "Costos y límites",
-        "Logging y auditoría de acciones"
-      ]
-    },
-    {
-      "slug": "08-modelos-oss-finetuning",
-      "title": "Modelos open source y fine-tuning",
-      "order": 8,
-      "level": "avanzado",
-      "status": "pending",
-      "summary": "Correr modelos abiertos localmente o en servidor, cuándo conviene fine-tunear y cómo hacerlo con LoRA.",
-      "tags": [
-        "ollama",
-        "vllm",
-        "huggingface",
-        "lora",
-        "fine-tuning"
-      ],
-      "prereqs": [
-        "00-fundamentos-llm"
-      ],
-      "versions": {},
-      "chapters": [],
-      "planned_chapters": [
-        "Panorama de modelos abiertos",
-        "Servir modelos (tabs: Ollama / vLLM)",
-        "Hugging Face: transformers y hub",
-        "Cuándo fine-tunear y cuándo no",
-        "LoRA y QLoRA",
-        "Comparar un modelo fine-tuneado contra prompting con evals"
       ]
     }
   ]

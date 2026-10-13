@@ -25,9 +25,8 @@ SLUG_RE = re.compile(r"^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_RE = re.compile(r"^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 FRONTMATTER_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n", re.S)
 LEVELS = {"basico", "intermedio", "avanzado"}
-STATUSES = {"ready", "pending"}
 CHAPTER_TYPES = {"concepto", "implementacion"}
-REQUIRED_MODULE_KEYS = {"title", "order", "level", "status", "summary", "tags", "prereqs", "versions"}
+REQUIRED_MODULE_KEYS = {"title", "order", "level", "summary", "tags", "prereqs", "versions"}
 
 
 class Report:
@@ -121,8 +120,9 @@ def validate_module(path: Path, report: Report) -> dict | None:
         report.error(f"{where}/module.json", "order must be an int equal to the folder prefix")
     if meta["level"] not in LEVELS:
         report.error(f"{where}/module.json", f"level must be one of {sorted(LEVELS)}")
-    if meta["status"] not in STATUSES:
-        report.error(f"{where}/module.json", f"status must be one of {sorted(STATUSES)}")
+    for key in ("status", "planned_chapters"):
+        if key in meta:
+            report.error(f"{where}/module.json", f"'{key}' is not used: a module exists only when its chapters exist")
     for key in ("tags", "prereqs"):
         if not isinstance(meta[key], list):
             report.error(f"{where}/module.json", f"{key} must be a list")
@@ -168,29 +168,20 @@ def validate_module(path: Path, report: Report) -> dict | None:
     if extra:
         report.error(where, f"only module.json and chapter .md files are allowed, found {extra}")
 
-    if meta["status"] == "ready":
-        if not chapters:
-            report.error(where, "status is ready but there are no chapters")
-    else:
-        if chapters:
-            report.warn(where, "status is pending but chapters exist; set status to ready when done")
-        if not meta.get("planned_chapters"):
-            report.warn(where, "pending module without planned_chapters")
+    if not chapters:
+        report.error(where, "module has no chapters")
 
     entry = {
         "slug": slug,
         "title": meta["title"],
         "order": meta["order"],
         "level": meta["level"],
-        "status": meta["status"],
         "summary": meta["summary"],
         "tags": meta["tags"],
         "prereqs": meta["prereqs"],
         "versions": meta["versions"],
-        "chapters": chapters if meta["status"] == "ready" else [],
+        "chapters": chapters,
     }
-    if meta.get("planned_chapters"):
-        entry["planned_chapters"] = meta["planned_chapters"]
     return entry
 
 
@@ -228,10 +219,9 @@ def main() -> int:
     entries.sort(key=lambda e: e["order"])
     if not args.check:
         MANIFEST.write_text(json.dumps({"modules": entries}, ensure_ascii=False, indent=2) + "\n")
-    ready = sum(1 for e in entries if e["status"] == "ready")
     chapters = sum(len(e["chapters"]) for e in entries)
     action = "checked" if args.check else "manifest.json written"
-    print(f"OK: {len(entries)} modules ({ready} ready, {chapters} chapters). {action}.")
+    print(f"OK: {len(entries)} modules, {chapters} chapters. {action}.")
     return 0
 
 

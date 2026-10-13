@@ -23,7 +23,7 @@ Todos los proveedores exponen el mismo concepto: mandás una lista de mensajes c
 
 ### Multi-proveedor: por qué y cómo
 
-Las búsquedas piden "integrar múltiples proveedores eligiendo según costo, latencia y calidad". Opciones:
+En producción es común usar más de un proveedor y elegir según costo, latencia y calidad. Opciones:
 
 1. **SDK nativo por proveedor**: acceso a todas las features (caching, thinking, citations), más código.
 2. **Gateway compatible con OpenAI** (OpenRouter, LiteLLM): un SDK, cambiás el modelo con un string; perdés algunas features específicas o llegan tarde.
@@ -131,7 +131,7 @@ for model in ["anthropic/claude-opus-5.5", "google/gemini-3.8-flash"]:
 - Hardcodear la API key en el código.
 - Mezclar formatos: mandar `role: "system"` en `messages` de Anthropic esperando que sea el system prompt principal.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo integrarías varios proveedores de LLM?** Interfaz propia delgada o gateway compatible con OpenAI; elección por costo, latencia y calidad medida con evals; fallback ante 429/5xx.
 - **¿Qué errores reintentás?** 429, 5xx, timeouts y errores de red, con backoff exponencial y respetando `retry-after`. Nunca 400/401/404.

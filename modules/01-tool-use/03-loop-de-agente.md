@@ -127,7 +127,7 @@ def agent(task: str) -> str:
 - Loop sin límite de vueltas.
 - Confundir `max_tokens` con fin normal.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **Describí el loop de un agente.** Llamar al modelo con tools, si pide tools ejecutarlas y devolver resultados, repetir hasta que responda sin tools o se alcance un límite.
 - **¿Qué pasa si una tool falla?** Se devuelve el error como `tool_result` con `is_error`, con un mensaje que le permita corregirse; el loop sigue.

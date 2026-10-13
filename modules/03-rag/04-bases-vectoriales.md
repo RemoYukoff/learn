@@ -4,7 +4,7 @@ order: 4
 type: implementacion
 ---
 
-**Objetivo:** entender qué hace una base vectorial por dentro, cómo elegir una, y usar las siete que aparecen en las búsquedas con el mismo ejemplo.
+**Objetivo:** entender qué hace una base vectorial por dentro, cómo elegir una, y usar las siete más usadas con el mismo ejemplo.
 
 ## Idea
 
@@ -43,7 +43,7 @@ Multi-tenancy (un índice para muchos clientes) es un filtro más, o namespaces 
 | **Elasticsearch** | Motor de búsqueda con vectores | Self-hosted o Elastic Cloud | Full-text maduro + vectores + filtros | Ya tenés ES, o la búsqueda léxica pesa mucho |
 
 > [!TIP]
-> En una entrevista, "¿qué base vectorial usarías?" casi nunca tiene respuesta única. Una buena respuesta: "pgvector si ya hay Postgres y el volumen es moderado; Pinecone o Weaviate si quiero managed o híbrida nativa; FAISS para batch". Y mencionar que el retrieval se mide igual en todas.
+> "¿Qué base vectorial usar?" casi nunca tiene respuesta única. Una regla razonable: "pgvector si ya hay Postgres y el volumen es moderado; Pinecone o Weaviate si quiero managed o híbrida nativa; FAISS para batch". Y mencionar que el retrieval se mide igual en todas.
 
 ## Cómo se implementa
 
@@ -217,7 +217,7 @@ res = es.search(index="handbook", knn={
 - Reindexar sin versionar: mezclar chunks de dos estrategias o dos modelos.
 - Elegir un sistema distribuido para 50.000 vectores.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo funciona HNSW?** Un grafo jerárquico de vecinos: se entra por capas con pocos nodos y se baja refinando hacia los más cercanos. Da búsqueda aproximada con recall alto y latencia baja a cambio de memoria.
 - **¿Qué es ANN y por qué no búsqueda exacta?** Búsqueda aproximada de vecinos: con millones de vectores la exacta es demasiado lenta; ANN pierde un poco de recall a cambio de órdenes de magnitud de velocidad.

@@ -99,7 +99,7 @@ print(model.similarity(query, docs))                        # cosine similarity 
 - Confiar en embeddings para buscar códigos, IDs o números exactos.
 - Elegir el modelo por el primer puesto de un benchmark sin medir con tus datos.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es un embedding?** Una representación vectorial del significado de un texto, donde textos similares quedan cerca según una métrica como coseno.
 - **¿Cómo elegís un modelo de embeddings?** Por calidad medida en mis datos e idioma, dimensiones, largo máximo, costo y si puede correr local. MTEB sirve para preseleccionar.

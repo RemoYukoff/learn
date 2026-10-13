@@ -3,7 +3,6 @@
   "title": "Orquestación de agentes",
   "order": 2,
   "level": "intermedio",
-  "status": "ready",
   "summary": "Estado, grafos, memoria, human-in-the-loop y patrones multi-agente, con LangGraph a fondo y LangChain, CrewAI y Microsoft Agent Framework (ex AutoGen + Semantic Kernel) en tabs.",
   "tags": [
     "langgraph",

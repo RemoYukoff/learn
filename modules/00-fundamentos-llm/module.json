@@ -3,7 +3,6 @@
   "title": "Fundamentos de LLMs",
   "order": 0,
   "level": "basico",
-  "status": "ready",
   "summary": "Cómo funciona un LLM desde el lado de quien lo integra: tokens, contexto, sampling, prompts, salida estructurada, SDKs y costos.",
   "tags": [
     "anthropic",

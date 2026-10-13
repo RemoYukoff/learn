@@ -41,7 +41,7 @@ Un LLM solo produce texto. **Function calling** (Anthropic lo llama *tool use*) 
 <figcaption>El modelo solo pide la tool; tu código la ejecuta y le devuelve el resultado.</figcaption>
 </figure>
 
-El modelo **nunca ejecuta nada**. Elige qué tool usar y con qué argumentos. Eso tiene dos consecuencias que las entrevistas preguntan:
+El modelo **nunca ejecuta nada**. Elige qué tool usar y con qué argumentos. Eso tiene dos consecuencias:
 
 - **Seguridad**: los permisos son los de tu código, no los del modelo. Validás y autorizás cada llamada vos.
 - **Confiabilidad**: el modelo puede elegir mal la tool o pasar argumentos inválidos. Tu ejecutor tiene que tolerarlo y devolver errores útiles.
@@ -66,9 +66,9 @@ En un mismo turno el modelo puede pedir **varias tools a la vez** (por ejemplo, 
 |---|---|---|
 | Client tools | Tu código | Tu CRM, tu base de datos, tu API |
 | Server tools | El proveedor | Web search, code execution de Anthropic u OpenAI |
-| Tools vía MCP | Un servidor MCP | Módulo 05 |
+| Tools vía MCP | Un servidor MCP | Protocolo estándar para exponer tools |
 
-Este módulo trata las client tools, que son el 90% del trabajo en las búsquedas ("conectar agentes a ERPs, CRMs y APIs de clientes").
+Este módulo trata las client tools: conectar agentes a tus APIs, bases de datos y sistemas de terceros.
 
 ### De tool use a agente
 
@@ -81,7 +81,7 @@ Una llamada con tools es un paso. Un **agente** es un loop: llamar al modelo, ej
 - Exponer tools demasiado poderosas (`run_sql(query)`) cuando alcanzaba con tools específicas.
 - Devolver resultados enormes (todo el JSON de la API) que llenan el contexto.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo funciona function calling?** Definís tools con JSON Schema, el modelo devuelve un pedido estructurado con nombre y argumentos, tu código ejecuta y le devuelve el resultado. El modelo nunca ejecuta.
 - **¿Cómo hace el modelo para elegir la tool correcta?** Por la descripción, el nombre, el esquema y el contexto. Por eso las descripciones se escriben como prompts y se evalúan.

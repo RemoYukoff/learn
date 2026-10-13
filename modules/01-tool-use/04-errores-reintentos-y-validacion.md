@@ -44,7 +44,7 @@ Los reintentos son seguros en lecturas. En escrituras (`issue_refund`), un reint
 
 ### Observabilidad mínima
 
-Por cada tool call registrá: tool, input, resultado o error, latencia, y el id de la conversación. Es lo que piden las búsquedas como "tasa de éxito de tool calls" y lo que vas a usar en evals (módulo 04).
+Por cada tool call registrá: tool, input, resultado o error, latencia, y el id de la conversación. Con eso se calcula la tasa de éxito de tool calls y se alimentan las evals (módulo 04).
 
 ## Cómo se ve en código
 
@@ -78,7 +78,7 @@ def run_tool(name, args, calls):
 - Reintentar escrituras sin idempotencia.
 - No distinguir error de la tool (se lo contás al modelo) de error del sistema (alertás a un humano).
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo evitás que un agente ejecute una acción inválida?** Validación en código antes de ejecutar (esquema, reglas de negocio, permisos), y confirmación humana para lo irreversible.
 - **¿Cómo evitás loops infinitos?** Límite de vueltas, de llamadas por tool y de presupuesto; detectar llamadas repetidas con los mismos argumentos.

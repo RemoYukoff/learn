@@ -8,7 +8,7 @@ type: concepto
 
 ## Idea
 
-Las búsquedas lo piden explícitamente: "human-in-the-loop para acciones críticas", "políticas de confirmación antes de ejecutar acciones sensibles". La idea es simple: algunas tools no se ejecutan hasta que una persona dice que sí.
+Cuando un agente puede ejecutar acciones críticas, hace falta una política de confirmación. La idea es simple: algunas tools no se ejecutan hasta que una persona dice que sí.
 
 ### Qué requiere aprobación
 
@@ -64,7 +64,7 @@ def run_tool(name, args):
 - Tratar el rechazo como excepción y cortar el agente.
 - Aprobación asincrónica sin persistencia: si el proceso se reinicia, se pierde la tarea.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo implementás human-in-the-loop?** Interceptando la ejecución de tools sensibles en el código, pidiendo aprobación con los argumentos exactos y devolviendo la decisión al modelo como resultado. Para aprobaciones diferidas, persistir el estado del agente y reanudar.
 - **¿Qué acciones deberían requerir aprobación?** Las irreversibles, las que mueven dinero o datos fuera, y las de alto impacto, con umbrales de negocio.

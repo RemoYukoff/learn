@@ -132,7 +132,7 @@ response = client.messages.create(
 - No guardar metadata (documento, sección, fecha, permisos) junto a cada chunk: después no podés filtrar ni citar.
 - Usar fine-tuning para que el modelo "sepa" los documentos.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es RAG?** Recuperar fragmentos relevantes de una base de conocimiento y pasárselos al LLM en el prompt para que responda con esa información, idealmente citando las fuentes.
 - **¿RAG o fine-tuning?** RAG para conocimiento (hechos actualizables y citables); fine-tuning para comportamiento (formato, estilo, tareas). Se pueden combinar.

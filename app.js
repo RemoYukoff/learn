@@ -57,6 +57,12 @@
   }
 
   // ---------- theme ----------
+  const SUN_ICON =
+    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+  const MOON_ICON =
+    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>';
   function applyTheme(theme) {
     const root = document.documentElement;
     if (theme) root.dataset.theme = theme;
@@ -66,6 +72,10 @@
       (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches);
     $("#hl-dark").disabled = !dark;
     $("#hl-light").disabled = dark;
+    const btn = $("#theme-toggle");
+    btn.innerHTML = dark ? SUN_ICON : MOON_ICON;
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+    btn.title = btn.getAttribute("aria-label");
   }
   $("#theme-toggle").addEventListener("click", () => {
     const current = document.documentElement.dataset.theme;
@@ -244,6 +254,8 @@
   }
 
   const findModule = (slug) => manifest.modules.find((m) => m.slug === slug);
+  const LEVELS = { basico: "básico", intermedio: "intermedio", avanzado: "avanzado" };
+  const levelLabel = (level) => LEVELS[level] || level || "";
 
   // ---------- sidebar ----------
   function moduleProgress(mod) {
@@ -271,10 +283,9 @@
       head.href = `#/${mod.slug}`;
       head.innerHTML = `<span class="mod-num">${String(mod.order).padStart(2, "0")}</span>
         <span class="mod-title"></span>
-        <span class="mod-meta">${mod.status === "pending" ? "pendiente" : `${done}/${total}`}</span>
+        <span class="mod-meta">${done}/${total}</span>
         <span class="bar"><span style="width:${pct}%"></span></span>`;
       $(".mod-title", head).textContent = mod.title;
-      if (mod.status === "pending") head.classList.add("pending");
       if (route.slug === mod.slug && !route.file) head.classList.add("active");
       li.appendChild(head);
       if (chapters.length && (filter || route.slug === mod.slug)) {
@@ -343,7 +354,7 @@
       })
       .join(", ");
     return `<div class="mod-header">
-      <div class="eyebrow">Módulo ${String(mod.order).padStart(2, "0")} · ${escapeHtml(mod.level || "")}</div>
+      <div class="eyebrow">Módulo ${String(mod.order).padStart(2, "0")} · ${escapeHtml(levelLabel(mod.level))}</div>
       <h1>${escapeHtml(mod.title)}</h1>
       <p class="lead">${escapeHtml(mod.summary || "")}</p>
       <div class="meta-row">${chips(mod.tags || [])}</div>
@@ -359,21 +370,21 @@
   }
 
   async function renderHome() {
-    document.title = "Learn: AI Engineer";
+    document.title = "Learn";
     let homeHtml = "";
     try {
       homeHtml = renderMarkdown(parseFrontmatter(await fetchText("home.md")).body).innerHTML;
     } catch {
-      homeHtml = "<h1>Learn: AI Engineer</h1>";
+      homeHtml = "<h1>Learn</h1>";
     }
     const cards = manifest.modules
       .map((m) => {
         const { done, total, pct } = moduleProgress(m);
-        return `<a class="card ${m.status === "pending" ? "pending" : ""}" href="#/${m.slug}">
-          <div class="eyebrow">${String(m.order).padStart(2, "0")} · ${escapeHtml(m.level || "")}</div>
+        return `<a class="card" href="#/${m.slug}">
+          <div class="eyebrow">${String(m.order).padStart(2, "0")} · ${escapeHtml(levelLabel(m.level))}</div>
           <h3>${escapeHtml(m.title)}</h3>
           <p>${escapeHtml(m.summary || "")}</p>
-          <div class="card-foot">${m.status === "pending" ? "pendiente" : `${done}/${total} capítulos`}
+          <div class="card-foot">${done}/${total} capítulos
             <span class="bar"><span style="width:${pct}%"></span></span></div>
         </a>`;
       })
@@ -383,25 +394,15 @@
 
   function renderModule(mod) {
     document.title = `${mod.title} · learn`;
-    let body;
-    if (mod.status === "pending") {
-      const planned = (mod.planned_chapters || []).map((t) => `<li>${escapeHtml(t)}</li>`).join("");
-      body = `<div class="pending-box">
-        <p>Este módulo todavía no tiene contenido. Generalo desde Claude Code:</p>
-        <pre><code>/add-module ${escapeHtml(mod.slug.replace(/^\d+-/, ""))}</code></pre>
-        ${planned ? `<p>Capítulos planificados:</p><ol>${planned}</ol>` : ""}
-      </div>`;
-    } else {
-      const items = mod.chapters
-        .map(
-          (c) => `<li><a href="#/${mod.slug}/${c.file}">
-            <span class="check">${isDone(mod.slug, c.file) ? "✓" : ""}</span>
-            <span>${escapeHtml(c.title)}</span>
-            <span class="type type-${escapeHtml(c.type)}">${escapeHtml(c.type)}</span></a></li>`
-        )
-        .join("");
-      body = `<ol class="toc">${items}</ol>`;
-    }
+    const items = mod.chapters
+      .map(
+        (c) => `<li><a href="#/${mod.slug}/${c.file}">
+          <span class="check">${isDone(mod.slug, c.file) ? "✓" : ""}</span>
+          <span>${escapeHtml(c.title)}</span>
+          <span class="type type-${escapeHtml(c.type)}">${escapeHtml(c.type)}</span></a></li>`
+      )
+      .join("");
+    const body = `<ol class="toc">${items}</ol>`;
     content.innerHTML = `<article class="prose">${moduleHeader(mod)}${body}</article>`;
   }
 

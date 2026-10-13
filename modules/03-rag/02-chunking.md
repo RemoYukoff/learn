@@ -72,7 +72,7 @@ El tamaño fijo pierde porque corta frases y separa la evidencia de su contexto.
 - Ignorar tablas: partirlas por filas pierde los encabezados de columna.
 - No versionar la estrategia: si la cambiás, hay que reindexar todo y las evaluaciones viejas no son comparables.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo elegís el tamaño de chunk?** Según la estructura del contenido y midiendo recall con un set de preguntas. Empiezo por estructura (headings) y ajusto.
 - **¿Para qué sirve el overlap?** Para que una idea cortada en el borde aparezca completa en al menos un chunk. Con chunking por estructura importa menos.

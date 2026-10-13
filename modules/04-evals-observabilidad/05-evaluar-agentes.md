@@ -37,7 +37,7 @@ Las capas fallan de forma independiente. Un agente puede llamar exactamente a la
 
 ### Métricas de agentes en producción
 
-Tasa de tareas completadas, pasos promedio por tarea, tasa de errores por tool, tasa de escalamiento a humano, costo y latencia por tarea. Son las que aparecen en las búsquedas como "tasa de éxito de tool calls".
+Tasa de tareas completadas, pasos promedio por tarea, tasa de errores por tool, tasa de escalamiento a humano, costo y latencia por tarea.
 
 ### Simulación de usuarios
 
@@ -104,7 +104,7 @@ assert_test(case, [
 - No medir pasos por tarea: un agente que acierta en 15 pasos cuesta 5 veces más que uno que acierta en 3.
 - Correr evals de agentes contra sistemas reales con efectos: usá tools simuladas o un entorno de prueba.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo evaluás un agente?** En tres capas: cada tool call (tool y argumentos), la trayectoria (pasos obligatorios, sin acciones no permitidas, tope de pasos) y el resultado (estado final del sistema o juez LLM).
 - **¿Qué es trajectory evaluation?** Comparar la secuencia de pasos del agente con una referencia, en modo estricto, sin orden, subset o superset según cuánto importe el camino.

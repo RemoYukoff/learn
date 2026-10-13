@@ -4,7 +4,7 @@ order: 6
 type: concepto
 ---
 
-**Objetivo:** controlar cuánto contexto consume un agente a medida que trabaja y distinguir los tipos de memoria que se mencionan en las búsquedas.
+**Objetivo:** controlar cuánto contexto consume un agente a medida que trabaja y distinguir los tipos de memoria de un agente.
 
 ## Idea
 
@@ -30,7 +30,7 @@ Medí `usage.input_tokens` por vuelta: es la primera métrica de salud de un age
 
 ### Tipos de memoria
 
-"Memoria" en las búsquedas suele mezclar dos cosas:
+"Memoria" suele mezclar dos cosas:
 
 | | Memoria de corto plazo | Memoria de largo plazo |
 |---|---|---|
@@ -80,7 +80,7 @@ client.beta.messages.create(..., betas=["context-management-2025-06-27"], contex
 - Meter toda la "memoria de largo plazo" en el system prompt en cada llamada.
 - Borrar resultados que el modelo todavía necesita (por ejemplo IDs) sin dejar un resumen.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo manejás el contexto en un agente de larga duración?** Resultados de tools compactos, recorte o context editing de resultados viejos, resumen del historial, y sub-agentes para trabajo de lectura intensiva.
 - **¿Diferencia entre memoria de corto y largo plazo?** Corto plazo es el historial de la tarea actual; largo plazo persiste entre sesiones en un store y se recupera por relevancia o vía tool.

@@ -74,7 +74,7 @@ Los dos se alimentan: las fallas de producción se convierten en casos del datas
 
 ### Eval-driven development
 
-El flujo que esperan las búsquedas ("construir evaluaciones de LLM para medir calidad"):
+El flujo de trabajo:
 
 1. Definir qué es "bueno" para esta tarea, con ejemplos.
 2. Armar el dataset y las métricas **antes** de iterar el prompt.
@@ -90,7 +90,7 @@ El flujo que esperan las búsquedas ("construir evaluaciones de LLM para medir c
 - Usar un juez LLM para algo que un `assert` resuelve.
 - No guardar los casos de producción que fallaron.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿En qué se diferencia evaluar un LLM de testear software?** La salida no es determinista y hay muchas respuestas válidas, así que se mide estadísticamente sobre un dataset y se compara entre versiones, combinando checks deterministas, jueces LLM y revisión humana.
 - **¿Qué es una eval?** Un dataset de casos más una o varias métricas que producen un puntaje agregado para una versión del sistema.

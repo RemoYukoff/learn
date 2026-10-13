@@ -188,7 +188,7 @@ El reducer conserva el historial de pasos a través del ciclo, mientras que `dra
 - Ciclos sin condición de salida en el estado: un agente trabado sigue llamando al modelo hasta que algo lo corta.
 - Olvidar `add_edge(START, ...)`: `compile()` falla con "Graph must have an entrypoint".
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es un reducer en LangGraph?** La función que combina la actualización de un nodo con el valor actual de una clave. Por defecto reemplaza; `add_messages` agrega o reemplaza por id; `operator.add` concatena.
 - **¿Cómo se hace un loop?** Con una arista condicional que vuelve a un nodo anterior, más una condición de salida en el estado.

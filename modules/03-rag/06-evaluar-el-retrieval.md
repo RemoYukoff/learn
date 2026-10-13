@@ -109,7 +109,7 @@ grade = client.messages.parse(model="claude-opus-5-5", ..., output_format=Grade)
 - Comparar métricas entre runs con distinto chunking usando ids de chunk como etiqueta.
 - Confiar ciegamente en el juez LLM.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo evaluás un sistema RAG?** Separando retrieval (recall@k, MRR, nDCG sobre preguntas etiquetadas) de generación (correctness y faithfulness con LLM-as-judge revisado por humanos), con un dataset fijo y corriendo en CI.
 - **¿Qué es faithfulness?** Que todas las afirmaciones de la respuesta estén respaldadas por el contexto recuperado. Mide alucinación, no corrección.

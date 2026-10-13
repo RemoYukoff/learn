@@ -173,7 +173,7 @@ Ventaja: los traces del LLM quedan en el mismo sistema que los de tu API y tu ba
 - Traces que no se pueden convertir en casos de evaluación (falta input completo o contexto).
 - Mezclar convenciones de atributos de versiones distintas de la instrumentación.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué observabilidad pondrías en un sistema con LLM?** Tracing por request con spans de cada llamada al modelo, tool y retrieval; atributos de modelo, tokens, costo, latencia y versión de prompt; feedback y evals online sobre los traces; métricas agregadas con alertas.
 - **¿Qué son las convenciones GenAI de OpenTelemetry?** Nombres estándar (`gen_ai.*`) para atributos y métricas de llamadas a modelos, para que cualquier backend las interprete.

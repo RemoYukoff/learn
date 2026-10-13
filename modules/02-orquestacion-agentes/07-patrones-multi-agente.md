@@ -238,7 +238,7 @@ for output in result.get_outputs():
 - Group chats sin límite de rondas ni condición de terminación.
 - No poder rastrear qué agente hizo qué. Nombrá los agentes (`name=`) y usá tracing.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Supervisor o handoff?** Supervisor si el coordinador debe integrar resultados y mantener la conversación; handoff si el especialista toma el control y sigue con el usuario.
 - **¿Cómo paralelizás en LangGraph?** Con `Send` desde una arista condicional (map) y un reducer en el estado para juntar resultados (reduce).

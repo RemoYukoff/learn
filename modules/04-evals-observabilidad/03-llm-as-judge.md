@@ -107,7 +107,7 @@ print(correctness.score, correctness.reason)
 - Pairwise en un solo orden.
 - El mismo modelo como generador y juez sin validar el sesgo.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es LLM-as-judge y cuáles son sus riesgos?** Usar un LLM para calificar salidas con una rúbrica. Riesgos: sesgos de posición, verbosidad y auto-preferencia, y errores propios; se mitigan con rúbricas binarias, salida estructurada y calibración contra etiquetas humanas.
 - **¿Cómo sabés si tu juez es confiable?** Midiendo acuerdo con etiquetas humanas sobre una muestra y revisando los desacuerdos antes de usarlo como gate.

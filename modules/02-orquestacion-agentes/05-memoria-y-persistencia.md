@@ -17,7 +17,7 @@ La API de un LLM no tiene memoria: cada request manda todo el contexto. "Memoria
 | Cómo vuelve al prompt | Se reenvía el historial (recortado o resumido) | Se busca lo relevante y se inyecta en el system prompt o como tool |
 | Riesgo típico | El historial crece hasta llenar el contexto | Guardar basura o datos de otro usuario |
 
-Más vocabulario que aparece en entrevistas:
+Más vocabulario:
 
 - **Persistencia del estado** (checkpointing) no es lo mismo que memoria de largo plazo: guarda todo el estado del grafo para retomar o auditar, no hechos curados.
 - **Gestión del contexto**: recortar mensajes viejos, resumirlos, o borrar resultados de tools largos. Es la otra cara de la memoria de corto plazo.
@@ -126,7 +126,7 @@ Para persistir el historial fuera del proceso se usa un history provider respald
 - Dejar crecer el historial sin recorte ni resumen. Sube el costo de cada request y en algún momento rompe el límite de contexto.
 - Meter en el estado objetos no serializables (clientes HTTP, conexiones). El checkpointer tiene que poder serializarlo.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Corto vs largo plazo?** Corto plazo es el historial de un thread, persistido con un checkpointer; largo plazo son hechos curados en un store con namespaces, que se recuperan en cualquier thread.
 - **¿Cómo manejás conversaciones largas?** Recorte por tokens, resumen de mensajes viejos o limpieza de resultados de tools, más memoria de largo plazo para lo importante.

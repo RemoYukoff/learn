@@ -8,7 +8,7 @@ type: implementacion
 
 ## La idea
 
-Las búsquedas lo piden explícitamente: "human-in-the-loop para acciones críticas" y "políticas de confirmación antes de ejecutar acciones sensibles". El patrón tiene cuatro partes:
+Human-in-the-loop es la confirmación de una persona antes de ejecutar acciones sensibles. El patrón tiene cuatro partes:
 
 1. **Política**: qué acciones requieren aprobación. Lecturas no; escrituras con efectos (cerrar un ticket, emitir una nota de crédito, mandar un mail) sí. Puede depender de los argumentos (montos, clientes VIP).
 2. **Pausa**: el sistema se detiene **antes** del efecto y guarda el estado.
@@ -154,7 +154,7 @@ while response.user_input_requests:
 - Efectos antes de `interrupt()` en LangGraph: el nodo se re-ejecuta al reanudar y los duplica.
 - Aprobaciones sin auditoría. Guardá quién aprobó qué, con qué argumentos y cuándo.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo implementás aprobación humana en LangGraph?** `interrupt()` dentro del nodo o tool sensible, checkpointer persistente, y reanudación con `Command(resume=...)` en el mismo `thread_id`.
 - **¿Qué pasa con el código anterior al `interrupt()` al reanudar?** Se ejecuta de nuevo, así que tiene que ser idempotente.

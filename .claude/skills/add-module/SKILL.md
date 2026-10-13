@@ -1,21 +1,22 @@
 ---
 name: add-module
-description: Write a new learning module (or fill a pending one) for this AI Engineer study site - research current library versions, write Spanish reading chapters with technology tabs and inline code snippets, validate, regenerate manifest.json, check the render and commit. Use when the user says "/add-module <tech>", "agregá un módulo de X", "completá el módulo X", or asks to add a technology or concept to the site.
+description: Write a new standalone learning module for this study site - research current library versions, write Spanish reading chapters with technology tabs and inline code snippets, validate, regenerate manifest.json, check the render and commit. Use when the user says "/add-module <tech>", "agregá un módulo de X", or asks to add a technology or concept to the site.
 ---
 
 # add-module
 
 Adds one module to `modules/` so the site at `index.html` shows it. One module per invocation.
 
-Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). If it matches a module whose `module.json` has `"status": "pending"`, fill that module and keep its slug and order. Otherwise create a new one with the next free `NN`.
+Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). Create a new module with the next free `NN`. If a module on that topic already exists, extend or rewrite it instead of creating a duplicate.
 
 ## Purpose of the site (shapes every decision)
 
-- The reader is a senior QA / test-automation engineer with production Python, TypeScript, REST, SQL, Docker, CI/CD and one shipped tool-calling agent (Vercel AI SDK). Do not teach Python, HTTP, Docker or testing basics.
-- Goal: learn skills and technologies that AI Engineer job descriptions require. **No projects, no "build X at the end", no exercises.** The site is flat study material: read-only chapters. Code appears only as snippets inside the chapter to illustrate the idea. Nothing in the repo is meant to be run, and nothing requires the reader's API keys, accounts, subscriptions or Docker. If the reader wants to try something, they write and set it up in their own project.
+- Each module stands on its own: RAG teaches RAG, MCP teaches MCP. Do not frame a module as part of a career path, course or role (no "AI Engineer", no "lo que piden las búsquedas"). Cross-references to other existing modules are fine; never reference modules that do not exist.
+- The reader is a senior engineer with production Python, TypeScript, REST, SQL, Docker, CI/CD and testing experience. Do not teach those basics.
+- **No projects, no "build X at the end", no exercises.** The site is flat study material: read-only chapters. Code appears only as snippets inside the chapter to illustrate the idea. Nothing in the repo is meant to be run, and nothing requires the reader's API keys, accounts, subscriptions or Docker. If the reader wants to try something, they write and set it up in their own project.
 - Cover everything important about the technology, without padding. No time estimates.
 - **Theory, then code.** Each chapter explains what the thing does and how it works, then shows in code how it is implemented. Nothing else. No implementation gotchas: no notes about which model accepts which parameter, library bugs, version quirks, deprecated aliases, default values, env var names, licenses or install problems. If a library needs a workaround, just write the working code without commenting on it.
-- **Only what jobs ask for.** Cover the technologies most AI Engineer job descriptions name, and only maintained ones (a release in the last ~6 months). No name-dropping of niche or alternative libraries.
+- **Only mainstream, maintained libraries.** Cover the libraries most used in industry for the topic, and only maintained ones (a release in the last ~6 months). No name-dropping of niche or alternative libraries.
 - Prose in Spanish (rioplatense neutral, "vos" is fine). Code, identifiers and comments in code in English.
 
 ## Module structure
@@ -29,7 +30,7 @@ modules/NN-slug/
 
 No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The validator rejects them.
 
-`module.json` fields: `slug`, `title`, `order` (int = folder prefix), `level` (basico | intermedio | avanzado), `status` (ready | pending), `summary`, `tags`, `prereqs` (module slugs), `versions` ({package: version} for the main libraries), optional `planned_chapters` (only for pending).
+`module.json` fields: `slug`, `title`, `order` (int = folder prefix), `level` (basico | intermedio | avanzado), `summary`, `tags`, `prereqs` (slugs of existing modules), `versions` ({package: version} for the main libraries).
 
 ## Chapter rules
 
@@ -48,10 +49,10 @@ No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The 
 
    - Use these exact labels so the reader's choice carries across pages: `Anthropic`, `OpenAI`, `OpenRouter`, `LangGraph`, `LangChain`, `CrewAI`, `MS Agent Framework`, `Hugging Face`, `pgvector`, `Chroma`, `Pinecone`, `Weaviate`, `FAISS`, `Milvus`, `Elasticsearch`, `LangSmith`, `DeepEval`, `Langfuse`, `OpenTelemetry`, `HubSpot`, `Salesforce`, `Odoo`, `Ollama`, `vLLM`, `FastAPI`. New label only for a technology not in this list.
    - Same example in every tab, so the reader compares the shape, not the problem.
-   - First tab = the one job descriptions ask for most.
+   - First tab = the most widely used one.
    - At least two tabs per block, no nested tabs.
 4. Code lives only in fenced snippets inside the chapter. Do not reference script files, do not say "run this", "corré", "con tu API key", and do not include setup steps (venvs, `pip install`, `.env`, `docker run`). Mention setup facts only when they are knowledge worth having (e.g. "pgvector is a Postgres extension"), not as instructions.
-5. Close with `## Errores comunes` and `## En una entrevista` (questions they ask and short answers).
+5. Close with `## Errores comunes` and `## Preguntas de repaso` (key questions about the topic with short answers).
 6. Callouts: `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!IMPORTANT]`.
 7. Tables over long lists when comparing technologies.
 8. **Diagrams as inline SVG, never ASCII art.** Use one whenever a structure, flow, sequence, hierarchy or architecture is easier to see than to read. Write it as raw HTML in the Markdown, with no blank lines inside:
@@ -81,7 +82,7 @@ See `template/chapter.md` and the existing modules `00-fundamentos-llm`, `01-too
 ## Steps
 
 1. Read `README.md`, `manifest.json` and one existing ready module to match tone and depth.
-2. Research: which libraries job descriptions ask for, their official docs and current PyPI versions. Drop libraries without a release in ~6 months. If a library was superseded (AutoGen and Semantic Kernel became Microsoft Agent Framework), teach the current one and explain the conceptual mapping.
+2. Research: which libraries are most used for the topic, their official docs and current PyPI versions. Drop libraries without a release in ~6 months. If a library was superseded (AutoGen and Semantic Kernel became Microsoft Agent Framework), teach the current one and explain the conceptual mapping.
 3. Write `module.json` and the chapters.
 4. Check every snippet against the installed library (signatures, parameter names, return shapes) in a scratch venv outside the repo. Never call paid APIs or use the reader's keys.
 5. `python3 .claude/skills/add-module/scripts/validate.py` until it prints `OK`. It rewrites `manifest.json`.

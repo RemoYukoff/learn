@@ -167,7 +167,7 @@ El mismo `Agent` funciona con `OpenAIChatClient`, Azure, Bedrock u Ollama cambia
 - Lanzar excepciones desde una tool cuando el problema es de datos. Devolvé un texto de error que el modelo pueda usar ("customer not found, known ids: ..."); `crm.py` lo hace así.
 - Tools con efectos (cambiar estado de un ticket) sin aprobación humana. Lo resolvemos en el capítulo de human-in-the-loop.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué hace `ToolNode`?** Ejecuta en paralelo todas las tool calls del último `AIMessage` y devuelve un `ToolMessage` por cada una. Con `handle_tool_errors` los errores de las tools vuelven al modelo como mensaje en vez de cortar el grafo.
 - **¿Qué diferencia hay entre `create_agent` y armar el grafo?** `create_agent` es ese mismo grafo prearmado con puntos de extensión (middleware). Armo el grafo cuando necesito nodos o routing propios.

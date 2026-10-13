@@ -94,7 +94,7 @@ for chunk in stream:
 - Concatenar deltas de tool input y parsear antes de que termine el bloque.
 - No cerrar el stream (usá `with`), dejando conexiones abiertas.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cuándo usás streaming?** Siempre que haya un humano esperando o salidas largas; para batch offline no hace falta.
 - **¿Cómo exponés streaming de un LLM a un frontend?** Server-Sent Events desde el backend, reenviando deltas y un evento final con metadata.

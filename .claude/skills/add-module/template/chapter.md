@@ -9,7 +9,7 @@ type: concepto
 ## Idea
 
 Explicación agnóstica de la tecnología concreta: qué problema resuelve, cómo funciona por dentro,
-qué vocabulario usan las entrevistas. Diagramas en texto o tablas si ayudan.
+el vocabulario del tema. Diagramas SVG o tablas si ayudan.
 
 ## Cómo se implementa
 
@@ -37,6 +37,6 @@ Texto corto + código.
 - Error típico y cómo se nota.
 - Otro error típico.
 
-## En una entrevista
+## Preguntas de repaso
 
-- Pregunta que suelen hacer y la respuesta corta.
+- Pregunta clave sobre el tema y la respuesta corta.

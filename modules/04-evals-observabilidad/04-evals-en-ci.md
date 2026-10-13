@@ -138,7 +138,7 @@ def test_support_bot(golden: Golden):
 - Resultados que solo quedan en el log del CI y no se pueden comparar con la versión anterior.
 - Cambiar dataset y prompt en el mismo PR: no sabés qué movió los números.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo integrás evals en CI/CD?** Dataset versionado, target que ejecuta el sistema, evaluadores deterministas y LLM, umbrales por métrica y por casos críticos; subset en PR y suite completa nightly; resultados guardados como experimentos para comparar.
 - **¿LangSmith o DeepEval?** LangSmith si querés una plataforma con datasets, experimentos comparables y tracing juntos; DeepEval si el equipo vive en pytest y querés métricas listas para usar.

@@ -23,7 +23,7 @@ Un framework de orquestación es, en esencia, **un runtime que ejecuta pasos sob
 
 ## Workflow vs agente
 
-La distinción más útil para diseñar (y la que más se pregunta en entrevistas):
+La distinción más útil para diseñar:
 
 - **Workflow:** el código decide el camino. El LLM ejecuta pasos concretos (clasificar, extraer, redactar) dentro de un flujo que vos definiste. Predecible, barato, fácil de testear.
 - **Agente:** el modelo decide el camino. Elige qué tool usar y cuándo terminar. Flexible, más caro, menos predecible.
@@ -31,7 +31,7 @@ La distinción más útil para diseñar (y la que más se pregunta en entrevista
 En producción casi todo es una mezcla: un workflow con algunos nodos donde un agente tiene autonomía acotada. Los frameworks modernos modelan las dos cosas con la misma primitiva (un grafo o un flujo de pasos), y un agente es simplemente un ciclo `modelo -> tools -> modelo` dentro de ese grafo.
 
 > [!TIP]
-> Empezá siempre por la opción más simple que funcione: una llamada, después un workflow, y solo después un agente. Es la recomendación de Anthropic en "Building effective agents" y la que esperan escuchar en una entrevista.
+> Empezá siempre por la opción más simple que funcione: una llamada, después un workflow, y solo después un agente. Es la recomendación de Anthropic en "Building effective agents".
 
 ## Las piezas
 
@@ -68,7 +68,7 @@ Señales de que sí conviene: pausas humanas, tareas largas que tienen que sobre
 - Olvidar que reanudar un nodo lo ejecuta de nuevo desde el principio. Los efectos externos dentro de un nodo tienen que ser idempotentes o ir después de la pausa.
 - Mezclar memoria de conversación con memoria de usuario en el mismo lugar.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Diferencia entre workflow y agente?** En el workflow el código define el camino; en el agente el modelo elige las acciones y cuándo terminar. Uso workflows por defecto y agentes donde la variabilidad lo justifica.
 - **¿Para qué sirve un checkpointer?** Persistir el estado tras cada paso: retomar después de fallas, pausar para aprobación humana y reproducir o bifurcar ejecuciones.

@@ -203,7 +203,7 @@ es.search(index=INDEX, size=3, retriever={"rrf": {
 - Agregar un reranker sin medir latencia: en CPU puede multiplicar el tiempo por consulta.
 - Full-text en el idioma equivocado (stemming en inglés sobre texto en español).
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Qué es búsqueda híbrida y por qué usarla?** Combinar búsqueda semántica y léxica. Los embeddings fallan con términos exactos y BM25 con paráfrasis; juntos suben el recall.
 - **¿Qué es RRF?** Reciprocal Rank Fusion: suma `1/(k + rank)` de cada ranking. Fusiona sin normalizar scores.

@@ -98,7 +98,7 @@ Verificá en la página del modelo en OpenRouter que soporte `structured_outputs
 - Esquemas con 40 campos opcionales: el modelo deja vacíos los que no entiende.
 - Confiar en la semántica porque el esquema validó.
 
-## En una entrevista
+## Preguntas de repaso
 
 - **¿Cómo garantizás que el LLM devuelva JSON válido?** Structured outputs con JSON Schema (constrained decoding), validado con Pydantic. Pedirlo en el prompt no alcanza.
 - **¿Diferencia entre JSON mode y structured outputs?** JSON mode garantiza sintaxis JSON; structured outputs garantiza el esquema.

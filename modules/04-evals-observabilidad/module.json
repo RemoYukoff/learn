@@ -3,7 +3,6 @@
   "title": "Evals y observabilidad",
   "order": 4,
   "level": "intermedio",
-  "status": "ready",
   "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
   "tags": [
     "evals",
