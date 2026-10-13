@@ -3,25 +3,30 @@
   "title": "Evals y observabilidad",
   "order": 4,
   "level": "intermedio",
-  "status": "pending",
-  "summary": "Medir la calidad de un sistema LLM: datasets, evals offline y online, LLM-as-judge, tracing y monitoreo en producción.",
+  "status": "ready",
+  "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de trayectorias, tracing con OpenTelemetry y monitoreo en producción.",
   "tags": [
     "evals",
+    "llm-as-judge",
     "langsmith",
-    "ragas",
+    "deepeval",
     "promptfoo",
+    "ragas",
+    "langfuse",
     "opentelemetry"
   ],
   "prereqs": [
     "01-tool-use"
   ],
-  "versions": {},
-  "planned_chapters": [
-    "Por qué evaluar LLMs es distinto a testear",
-    "Datasets y métricas",
-    "LLM-as-judge",
-    "Evals en CI (tabs: LangSmith / ragas / promptfoo)",
-    "Tracing y observabilidad (tabs: LangSmith / OpenTelemetry)",
-    "Monitoreo en producción: latencia, costo, tasa de éxito de tool calls"
-  ]
+  "versions": {
+    "langsmith": "0.14.8",
+    "deepeval": "4.2.8",
+    "promptfoo": "0.124.1",
+    "ragas": "0.4.3",
+    "openevals": "0.2.0",
+    "langfuse": "4.17.0",
+    "opentelemetry-sdk": "1.45.1",
+    "opentelemetry-instrumentation-anthropic": "0.62.4",
+    "anthropic": "1.13.0"
+  }
 }

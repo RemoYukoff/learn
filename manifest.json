@@ -285,27 +285,75 @@
       "title": "Evals y observabilidad",
       "order": 4,
       "level": "intermedio",
-      "status": "pending",
-      "summary": "Medir la calidad de un sistema LLM: datasets, evals offline y online, LLM-as-judge, tracing y monitoreo en producción.",
+      "status": "ready",
+      "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de trayectorias, tracing con OpenTelemetry y monitoreo en producción.",
       "tags": [
         "evals",
+        "llm-as-judge",
         "langsmith",
-        "ragas",
+        "deepeval",
         "promptfoo",
+        "ragas",
+        "langfuse",
         "opentelemetry"
       ],
       "prereqs": [
         "01-tool-use"
       ],
-      "versions": {},
-      "chapters": [],
-      "planned_chapters": [
-        "Por qué evaluar LLMs es distinto a testear",
-        "Datasets y métricas",
-        "LLM-as-judge",
-        "Evals en CI (tabs: LangSmith / ragas / promptfoo)",
-        "Tracing y observabilidad (tabs: LangSmith / OpenTelemetry)",
-        "Monitoreo en producción: latencia, costo, tasa de éxito de tool calls"
+      "versions": {
+        "langsmith": "0.14.8",
+        "deepeval": "4.2.8",
+        "promptfoo": "0.124.1",
+        "ragas": "0.4.3",
+        "openevals": "0.2.0",
+        "langfuse": "4.17.0",
+        "opentelemetry-sdk": "1.45.1",
+        "opentelemetry-instrumentation-anthropic": "0.62.4",
+        "anthropic": "1.13.0"
+      },
+      "chapters": [
+        {
+          "file": "01-por-que-evaluar-llms.md",
+          "title": "Por qué evaluar LLMs es distinto a testear",
+          "order": 1,
+          "type": "concepto"
+        },
+        {
+          "file": "02-datasets-y-metricas.md",
+          "title": "Datasets y métricas",
+          "order": 2,
+          "type": "concepto"
+        },
+        {
+          "file": "03-llm-as-judge.md",
+          "title": "LLM-as-judge",
+          "order": 3,
+          "type": "implementacion"
+        },
+        {
+          "file": "04-evals-en-ci.md",
+          "title": "Evals en CI",
+          "order": 4,
+          "type": "implementacion"
+        },
+        {
+          "file": "05-evaluar-agentes.md",
+          "title": "Evaluar agentes",
+          "order": 5,
+          "type": "implementacion"
+        },
+        {
+          "file": "06-tracing-y-observabilidad.md",
+          "title": "Tracing y observabilidad",
+          "order": 6,
+          "type": "implementacion"
+        },
+        {
+          "file": "07-monitoreo-en-produccion.md",
+          "title": "Monitoreo en producción",
+          "order": 7,
+          "type": "concepto"
+        }
       ]
     },
     {
