@@ -1,0 +1,24 @@
+# LLM SDKs
+anthropic==1.13.0
+openai==3.29.0
+python-dotenv==1.2.4
+pydantic==2.14.1
+# Embeddings, BM25 and reranking (local, CPU)
+numpy==2.5.4
+fastembed==0.9.0
+bm25s==0.3.13
+langchain-text-splitters==1.1.3
+# Vector stores (only install the ones you want to try)
+chromadb==1.5.9
+faiss-cpu==1.15.1
+pgvector==0.5.1
+psycopg[binary]==3.3.6
+pinecone==10.0.0
+weaviate-client==4.23.1
+pymilvus==3.0.2
+milvus-lite==3.2.2
+elasticsearch==9.5.1
+# Agentic RAG (chapter 8)
+langgraph==1.2.15
+langchain==1.4.5
+langchain-anthropic==1.7.6

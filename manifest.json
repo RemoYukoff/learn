@@ -197,31 +197,87 @@
       "title": "RAG",
       "order": 3,
       "level": "intermedio",
-      "status": "pending",
+      "status": "ready",
       "summary": "Retrieval-Augmented Generation de punta a punta: chunking, embeddings, bases vectoriales, búsqueda híbrida, reranking y evaluación del retrieval.",
       "tags": [
         "rag",
         "embeddings",
         "vector-db",
-        "pgvector",
-        "chroma",
+        "hybrid-search",
+        "reranking",
         "pinecone",
+        "chroma",
+        "weaviate",
+        "pgvector",
+        "faiss",
+        "milvus",
         "elasticsearch"
       ],
       "prereqs": [
         "00-fundamentos-llm",
         "02-orquestacion-agentes"
       ],
-      "versions": {},
-      "chapters": [],
-      "planned_chapters": [
-        "Qué es RAG y cuándo conviene",
-        "Chunking",
-        "Embeddings",
-        "Bases vectoriales (tabs: pgvector / Chroma / Pinecone / Weaviate / FAISS / Milvus / Elasticsearch)",
-        "Búsqueda híbrida y reranking",
-        "Evaluar el retrieval",
-        "RAG dentro de un grafo de agente"
+      "versions": {
+        "fastembed": "0.9.0",
+        "bm25s": "0.3.13",
+        "chromadb": "1.5.9",
+        "pinecone": "10.0.0",
+        "weaviate-client": "4.23.1",
+        "pgvector": "0.5.1",
+        "faiss-cpu": "1.15.1",
+        "pymilvus": "3.0.2",
+        "elasticsearch": "9.5.1",
+        "langgraph": "1.2.15"
+      },
+      "chapters": [
+        {
+          "file": "01-que-es-rag.md",
+          "title": "Qué es RAG y cuándo conviene",
+          "order": 1,
+          "type": "concepto"
+        },
+        {
+          "file": "02-chunking.md",
+          "title": "Chunking",
+          "order": 2,
+          "type": "concepto"
+        },
+        {
+          "file": "03-embeddings.md",
+          "title": "Embeddings",
+          "order": 3,
+          "type": "implementacion"
+        },
+        {
+          "file": "04-bases-vectoriales.md",
+          "title": "Bases vectoriales",
+          "order": 4,
+          "type": "implementacion"
+        },
+        {
+          "file": "05-busqueda-hibrida-y-reranking.md",
+          "title": "Búsqueda híbrida y reranking",
+          "order": 5,
+          "type": "implementacion"
+        },
+        {
+          "file": "06-evaluar-el-retrieval.md",
+          "title": "Evaluar un RAG",
+          "order": 6,
+          "type": "concepto"
+        },
+        {
+          "file": "07-generacion-con-citas.md",
+          "title": "Generación con citas",
+          "order": 7,
+          "type": "implementacion"
+        },
+        {
+          "file": "08-rag-agentico.md",
+          "title": "RAG agéntico",
+          "order": 8,
+          "type": "implementacion"
+        }
       ]
     },
     {
