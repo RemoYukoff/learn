@@ -1,0 +1,3 @@
+# CrewAI examples (*_crewai.py). Separate venv: crewai pins pydantic<2.13.
+crewai[anthropic]==1.15.27
+python-dotenv==1.2.4

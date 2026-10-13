@@ -3,7 +3,7 @@
   "title": "Orquestación de agentes",
   "order": 2,
   "level": "intermedio",
-  "status": "pending",
+  "status": "ready",
   "summary": "Estado, grafos, memoria, human-in-the-loop y patrones multi-agente, con LangGraph a fondo y LangChain, CrewAI y Microsoft Agent Framework (ex AutoGen + Semantic Kernel) en tabs.",
   "tags": [
     "langgraph",
@@ -21,15 +21,5 @@
     "langchain": "1.4.5",
     "crewai": "1.15.27",
     "agent-framework": "1.21.0"
-  },
-  "planned_chapters": [
-    "Por qué un framework de orquestación",
-    "Panorama de frameworks",
-    "LangGraph: grafos y estado",
-    "Agente con tools (tabs)",
-    "Memoria y persistencia (tabs)",
-    "Human-in-the-loop (tabs)",
-    "Patrones multi-agente (tabs)",
-    "LangGraph: streaming y subgrafos"
-  ]
+  }
 }

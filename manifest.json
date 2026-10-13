@@ -122,7 +122,7 @@
       "title": "Orquestación de agentes",
       "order": 2,
       "level": "intermedio",
-      "status": "pending",
+      "status": "ready",
       "summary": "Estado, grafos, memoria, human-in-the-loop y patrones multi-agente, con LangGraph a fondo y LangChain, CrewAI y Microsoft Agent Framework (ex AutoGen + Semantic Kernel) en tabs.",
       "tags": [
         "langgraph",
@@ -141,16 +141,55 @@
         "crewai": "1.15.27",
         "agent-framework": "1.21.0"
       },
-      "chapters": [],
-      "planned_chapters": [
-        "Por qué un framework de orquestación",
-        "Panorama de frameworks",
-        "LangGraph: grafos y estado",
-        "Agente con tools (tabs)",
-        "Memoria y persistencia (tabs)",
-        "Human-in-the-loop (tabs)",
-        "Patrones multi-agente (tabs)",
-        "LangGraph: streaming y subgrafos"
+      "chapters": [
+        {
+          "file": "01-por-que-orquestar.md",
+          "title": "Por qué orquestar",
+          "order": 1,
+          "type": "concepto"
+        },
+        {
+          "file": "02-panorama-de-frameworks.md",
+          "title": "Panorama de frameworks",
+          "order": 2,
+          "type": "concepto"
+        },
+        {
+          "file": "03-langgraph-grafos-y-estado.md",
+          "title": "LangGraph: grafos y estado",
+          "order": 3,
+          "type": "implementacion"
+        },
+        {
+          "file": "04-agente-con-tools.md",
+          "title": "Agente con tools",
+          "order": 4,
+          "type": "implementacion"
+        },
+        {
+          "file": "05-memoria-y-persistencia.md",
+          "title": "Memoria y persistencia",
+          "order": 5,
+          "type": "implementacion"
+        },
+        {
+          "file": "06-human-in-the-loop.md",
+          "title": "Human-in-the-loop",
+          "order": 6,
+          "type": "implementacion"
+        },
+        {
+          "file": "07-patrones-multi-agente.md",
+          "title": "Patrones multi-agente",
+          "order": 7,
+          "type": "implementacion"
+        },
+        {
+          "file": "08-langgraph-streaming-y-subgrafos.md",
+          "title": "LangGraph: streaming, subgrafos y time travel",
+          "order": 8,
+          "type": "implementacion"
+        }
       ]
     },
     {
