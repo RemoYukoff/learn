@@ -12,6 +12,9 @@
  * Markdown extensions:
  *   :::tabs / == Label / :::            technology switcher, preference shared across pages
  *   > [!NOTE] | [!TIP] | [!WARNING]     callouts
+ *
+ * Editing: selecting text in a chapter shows "Pedir cambio"; the request goes
+ * to POST /api/edit (server.py), which has an agent rewrite the chapter .md.
  */
 (() => {
   "use strict";
@@ -402,6 +405,153 @@
   $("#search").addEventListener("input", renderSidebar);
   $("#menu-toggle").addEventListener("click", () => document.body.classList.toggle("nav-open"));
 
+  // ---------- edit requests ----------
+  let currentChapter = null; // {slug, file} while a chapter is shown
+  let pending = null; // {selection, context, tab} captured when the button is clicked
+
+  const askBtn = document.createElement("button");
+  askBtn.type = "button";
+  askBtn.className = "ask-btn";
+  askBtn.textContent = "Pedir cambio";
+  askBtn.hidden = true;
+  document.body.appendChild(askBtn);
+
+  const pop = document.createElement("div");
+  pop.className = "ask-pop";
+  pop.hidden = true;
+  pop.innerHTML = `<div class="ask-head"><span>Pedir cambio</span>
+      <button type="button" class="ask-close" aria-label="Cerrar">×</button></div>
+    <blockquote class="ask-quote"></blockquote>
+    <div class="ask-log"></div>
+    <form class="ask-form">
+      <textarea rows="3" placeholder="Ej: explicá un poco más cómo diseñar esto" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>`;
+  document.body.appendChild(pop);
+  const popQuote = $(".ask-quote", pop);
+  const popLog = $(".ask-log", pop);
+  const popForm = $(".ask-form", pop);
+  const popInput = $("textarea", pop);
+  const popSend = $('button[type="submit"]', pop);
+
+  function selectionInChapter() {
+    const sel = window.getSelection();
+    if (!currentChapter || !sel || sel.isCollapsed || !sel.rangeCount) return null;
+    const text = sel.toString().trim();
+    if (text.length < 2) return null;
+    const range = sel.getRangeAt(0);
+    const node = range.commonAncestorContainer;
+    const el = node.nodeType === 1 ? node : node.parentElement;
+    if (!el.closest("article.prose") || el.closest(".chapter-foot, .crumbs, .copy-btn")) return null;
+    const block = el.closest("p, li, pre, td, th, blockquote, h2, h3, h4, figure") || el;
+    return {
+      range,
+      selection: text,
+      context: block.textContent.trim(),
+      tab: el.closest(".tab-panel")?.dataset.label || "",
+    };
+  }
+
+  function placeAt(box, rect) {
+    const top = rect.bottom + window.scrollY + 8;
+    const maxLeft = window.scrollX + document.documentElement.clientWidth - box.offsetWidth - 12;
+    box.style.top = `${top}px`;
+    box.style.left = `${Math.max(12, Math.min(rect.left + window.scrollX, maxLeft))}px`;
+  }
+
+  function updateAskBtn() {
+    const found = selectionInChapter();
+    askBtn.hidden = !found || !pop.hidden;
+    if (found && !askBtn.hidden) placeAt(askBtn, found.range.getBoundingClientRect());
+  }
+
+  document.addEventListener("mouseup", (e) => {
+    if (e.target === askBtn || pop.contains(e.target)) return;
+    setTimeout(updateAskBtn, 0);
+  });
+  document.addEventListener("keyup", (e) => {
+    if (e.shiftKey || e.key.startsWith("Arrow")) updateAskBtn();
+  });
+
+  // mousedown would otherwise clear the selection before the click lands
+  askBtn.addEventListener("mousedown", (e) => e.preventDefault());
+  askBtn.addEventListener("click", () => {
+    const found = selectionInChapter();
+    if (!found) return;
+    const { range, ...rest } = found;
+    pending = { ...rest, ...currentChapter };
+    popQuote.textContent = found.selection.length > 280 ? `${found.selection.slice(0, 280)}…` : found.selection;
+    popLog.innerHTML = "";
+    askBtn.hidden = true;
+    pop.hidden = false;
+    placeAt(pop, range.getBoundingClientRect());
+    popInput.focus();
+  });
+
+  function closePop() {
+    pop.hidden = true;
+    pending = null;
+  }
+  $(".ask-close", pop).addEventListener("click", closePop);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !pop.hidden && !popSend.disabled) closePop();
+  });
+  window.addEventListener("hashchange", () => {
+    askBtn.hidden = true;
+    if (!popSend.disabled) closePop();
+  });
+
+  function logLine(text, kind) {
+    const div = document.createElement("div");
+    div.className = `ask-msg ask-${kind}`;
+    div.textContent = text;
+    popLog.appendChild(div);
+    return div;
+  }
+
+  popInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      popForm.requestSubmit();
+    }
+  });
+
+  popForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const instruction = popInput.value.trim();
+    if (!instruction || !pending) return;
+    const req = { ...pending, instruction };
+    logLine(instruction, "user");
+    const status = logLine("Editando el capítulo… puede tardar un minuto.", "status");
+    popInput.value = "";
+    popInput.disabled = popSend.disabled = true;
+    try {
+      const res = await fetch("api/edit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req),
+      });
+      const data = await res.json().catch(() => {
+        throw new Error("El servidor no acepta ediciones. Levantá el sitio con ./serve.sh.");
+      });
+      if (!data.ok) throw new Error(data.error || "No se pudo editar.");
+      status.remove();
+      logLine(data.summary || "Listo.", "agent");
+      const route = parseRoute();
+      if (route.slug === req.slug && route.file === req.file) {
+        const y = window.scrollY;
+        await render();
+        window.scrollTo(0, y);
+      }
+    } catch (err) {
+      status.remove();
+      logLine(err.message, "error");
+    } finally {
+      popInput.disabled = popSend.disabled = false;
+      popInput.focus();
+    }
+  });
+
   // ---------- views ----------
   function parseRoute() {
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
@@ -458,6 +608,7 @@
     const idx = mod.chapters.findIndex((c) => c.file === file);
     if (idx === -1) return renderNotFound();
     const chapter = mod.chapters[idx];
+    currentChapter = { slug: mod.slug, file };
     document.title = `${chapter.title} · ${mod.title}`;
     content.innerHTML = `<p class="loading">Cargando…</p>`;
     const raw = await fetchText(`modules/${mod.slug}/${file}`);
@@ -501,6 +652,7 @@
 
   async function render() {
     document.body.classList.remove("nav-open");
+    currentChapter = null;
     renderSidebar();
     const { slug, file } = parseRoute();
     try {

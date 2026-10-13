@@ -278,3 +278,41 @@ a:hover { text-decoration: underline; }
 .prose figure.diagram.mermaid { display: flex; justify-content: center; }
 .diagram-error { color: var(--warn); white-space: pre-wrap; }
 .recommended { font-size: 14px; color: var(--fg-muted); margin: -4px 0 0; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--bg-sunk); border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* ---------- edit requests (selection → agent) ---------- */
+.ask-btn {
+  position: absolute; z-index: 40;
+  padding: 5px 10px; border: 1px solid var(--accent); border-radius: 6px;
+  background: var(--accent); color: var(--bg); font: 600 13px var(--font); cursor: pointer;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+}
+.ask-pop {
+  position: absolute; z-index: 40; width: min(420px, calc(100vw - 24px));
+  padding: 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-elev); color: var(--fg); font-size: 14px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+}
+.ask-head { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+.ask-close { border: 0; background: none; color: var(--fg-muted); font-size: 20px; line-height: 1; cursor: pointer; }
+.ask-quote {
+  margin: 8px 0; padding: 6px 10px; max-height: 96px; overflow: auto;
+  border-left: 3px solid var(--accent); background: var(--bg-sunk); color: var(--fg-muted);
+  font-size: 13px; white-space: pre-wrap;
+}
+.ask-log { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow: auto; }
+.ask-log:not(:empty) { margin-bottom: 8px; }
+.ask-msg { padding: 6px 10px; border-radius: 6px; white-space: pre-wrap; }
+.ask-user { align-self: flex-end; background: var(--accent-soft); }
+.ask-agent { background: var(--bg-sunk); }
+.ask-status { color: var(--fg-muted); font-style: italic; }
+.ask-error { color: var(--warn); background: var(--bg-sunk); }
+.ask-form { display: flex; gap: 8px; align-items: flex-end; }
+.ask-form textarea {
+  flex: 1; resize: vertical; padding: 8px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg); color: var(--fg); font: inherit;
+}
+.ask-form button {
+  padding: 8px 12px; border: 0; border-radius: 6px; background: var(--accent); color: var(--bg);
+  font: 600 14px var(--font); cursor: pointer;
+}
+.ask-form :disabled { opacity: 0.6; cursor: progress; }
