@@ -32,7 +32,7 @@ El ejemplo de los tabs: "cerrá todos los tickets abiertos de C-001", con `updat
 
 :::tabs
 == LangGraph
-`interrupt(valor)` detiene el grafo dentro de un nodo (o dentro de una tool que corre en `ToolNode`), guarda el estado en el checkpointer y devuelve el control con el valor bajo la clave `__interrupt__`. Para seguir, invocás el mismo thread con `Command(resume=decisión)`: el nodo **se ejecuta de nuevo desde el principio** y esta vez `interrupt()` devuelve la decisión.
+`interrupt(valor)` detiene el grafo dentro de un nodo (o dentro de una tool que ejecuta `ToolNode`), guarda el estado en el checkpointer y devuelve el control con el valor bajo la clave `__interrupt__`. Para seguir, invocás el mismo thread con `Command(resume=decisión)`: el nodo **se ejecuta de nuevo desde el principio** y esta vez `interrupt()` devuelve la decisión.
 
 ```python
 from langgraph.types import Command, interrupt
@@ -45,7 +45,7 @@ def update_ticket_status(ticket_id: str, status: str) -> str:
         return f"A human rejected changing {ticket_id} to {status}. Do not retry."
     return crm.update_ticket_status(ticket_id, status)
 
-graph = builder.compile(checkpointer=InMemorySaver())     # obligatorio para interrumpir
+graph = builder.compile(checkpointer=InMemorySaver())     # required to interrupt
 config = {"configurable": {"thread_id": "hitl-demo"}}
 
 result = graph.invoke({"messages": [("user", "Close every open ticket of C-001.")]}, config)
@@ -58,8 +58,6 @@ while result.get("__interrupt__"):
 - Entre la pausa y la reanudación pueden pasar días y cambiar de proceso: el estado vive en el checkpointer.
 - Como el nodo se re-ejecuta, todo lo que esté **antes** de `interrupt()` tiene que ser idempotente.
 - También podés pausar sin tocar los nodos con `compile(interrupt_before=["tools"])`, y editar el estado con `graph.update_state(...)` antes de seguir.
-
-Ejemplo: `code/06_hitl_langgraph.py`
 == LangChain
 `HumanInTheLoopMiddleware` implementa la política sobre `create_agent`: para cada tool decís si interrumpe y qué decisiones se permiten. Cuando el modelo pide una tool protegida, el agente se detiene con un `HITLRequest` y se reanuda con una lista de decisiones (una por acción, en el mismo orden).
 
@@ -84,13 +82,11 @@ request = result["__interrupt__"][0].value          # {"action_requests": [...],
 decisions = [{"type": "approve"}]
 # {"type": "edit", "edited_action": {"name": "update_ticket_status", "args": {...}}}
 # {"type": "reject", "message": "Waiting for the customer."}
-# {"type": "respond", "message": "..."}   # solo si está en allowed_decisions
+# {"type": "respond", "message": "..."}   # only if listed in allowed_decisions
 result = agent.invoke(Command(resume={"decisions": decisions}), config)
 ```
 
 Es el mismo mecanismo de `interrupt` de LangGraph, empaquetado con un formato estándar que las UIs de LangChain (Agent Chat UI, LangSmith Studio) saben mostrar.
-
-Ejemplo: `code/06_hitl_langchain.py`
 == CrewAI
 En CrewAI la aprobación vive en los **Flows**. `@human_feedback` en un paso muestra su resultado a una persona, toma su respuesta en texto libre y, si declarás `emit`, usa un LLM para reducirla a uno de esos resultados. Cada resultado es un evento que escuchás con `@listen`.
 
@@ -124,9 +120,7 @@ CloseTicketFlow().kickoff()
 - Dentro de una Crew existe `Task(human_input=True)`: al terminar la tarea el agente le muestra el resultado a una persona por consola y lo corrige con su feedback. Sirve para revisar resultados, no para aprobar una tool antes de ejecutarla.
 
 > [!NOTE]
-> Para clasificar la respuesta CrewAI intenta primero salida estructurada forzando `tool_choice`. `claude-opus-5-5` lo rechaza y CrewAI cae solo a un prompt simple: vas a ver un warning, pero funciona.
-
-Ejemplo: `code/06_hitl_crewai.py`
+> Para clasificar la respuesta CrewAI intenta primero salida estructurada forzando `tool_choice`. `claude-opus-5-5` lo rechaza y CrewAI cae solo a un prompt simple: emite un warning, pero el flujo sigue.
 == MS Agent Framework
 La política va en la tool: `@tool(approval_mode="always_require")`. Cuando el modelo la pide, el agente **no la ejecuta** y devuelve en `response.user_input_requests` un pedido de aprobación con la llamada propuesta. Respondés con un mensaje de usuario que contiene las respuestas de aprobación, en la misma sesión.
 
@@ -152,8 +146,6 @@ while response.user_input_requests:
 
 - Si el modelo pide varias tools en la misma respuesta y alguna requiere aprobación, se pide aprobación para todas.
 - En Workflows el mecanismo general es `ctx.request_info(...)`: el workflow emite un evento `request_info`, se puede checkpointear, y se reanuda con `workflow.run(responses={request_id: respuesta})`. Los builders de orquestación lo exponen con `.with_request_info()`.
-
-Ejemplo: `code/06_hitl_msaf.py`
 :::
 
 ## Errores comunes

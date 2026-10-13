@@ -24,10 +24,10 @@ Cualquier framework necesita resolver lo mismo:
 3. **Ejecutar** las tool calls de la respuesta (en paralelo si son varias) y devolver resultados, incluidos errores.
 4. **Repetir** hasta que el modelo responda sin tools o se llegue a un límite.
 
-Lo que cambia es cuánto de eso queda a la vista. El ejemplo de todos los tabs es el mismo: un asistente de soporte que responde "¿qué tickets abiertos tiene el cliente C-001 y en qué plan está?" usando dos tools de `code/crm.py`.
+Lo que cambia es cuánto de eso queda a la vista. El ejemplo de todos los tabs es el mismo: un asistente de soporte que responde "¿qué tickets abiertos tiene el cliente C-001 y en qué plan está?" usando dos tools del CRM falso del módulo (`get_customer` y `list_open_tickets`, funciones Python que devuelven JSON; ver el capítulo 2).
 
 > [!IMPORTANT]
-> `claude-opus-5-5` rechaza `temperature`, `top_p` y `tool_choice` forzado (`any` o una tool concreta). Ningún ejemplo los manda. Si un framework fuerza `tool_choice` por su cuenta, vas a ver un error 400; el tab de CrewAI explica el caso.
+> `claude-opus-5-5` rechaza `temperature`, `top_p` y `tool_choice` forzado (`any` o una tool concreta). Ningún snippet los manda. Si un framework fuerza `tool_choice` por su cuenta, la API responde 400; el tab de CrewAI explica el caso.
 
 ## Implementación
 
@@ -65,8 +65,6 @@ for update in graph.stream({"messages": [("user", question)]}, stream_mode="upda
 ```
 
 Cuándo conviene: cuando querés meter nodos propios en el medio (validar, resumir, pedir aprobación, cortar por presupuesto). El grafo es tuyo.
-
-Ejemplo: `code/04_tools_langgraph.py`
 == LangChain
 `create_agent` devuelve el mismo grafo ya armado. Recibe el modelo, las tools y un system prompt, y se extiende con middleware.
 
@@ -84,8 +82,6 @@ print(result["messages"][-1].text)
 ```
 
 `model` también acepta un string como `"anthropic:claude-opus-5-5"` (usa `init_chat_model`). Otros parámetros útiles: `response_format` para salida estructurada, `checkpointer` y `store` para memoria, `middleware` para HITL, resúmenes de historial o límites de llamadas.
-
-Ejemplo: `code/04_tools_langchain.py`
 == CrewAI
 CrewAI describe al agente por rol, objetivo e historia, y el trabajo como una `Task` con resultado esperado. La `Crew` ejecuta las tareas y el agente hace el loop de tools internamente.
 
@@ -117,8 +113,6 @@ print(result.raw)
 
 > [!WARNING]
 > Si un agente de CrewAI tiene **exactamente una tool**, CrewAI fuerza `tool_choice` a esa tool, y lo mismo hace con `output_pydantic`/`response_model`. `claude-opus-5-5` responde 400 a eso. Dale al menos dos tools o ninguna, y pedí JSON en el prompt en vez de forzar el esquema.
-
-Ejemplo: `code/04_tools_crewai.py`
 == MS Agent Framework
 Un `Agent` combina un chat client, instrucciones y tools. Las funciones con `@tool` (o funciones planas) se convierten en tools a partir de sus tipos, y `Annotated` agrega la descripción de cada argumento. Todo es `async`.
 
@@ -133,18 +127,16 @@ def get_customer(customer_id: Annotated[str, "Customer id, e.g. C-001"]) -> str:
     return crm.get_customer(customer_id)
 
 agent = Agent(
-    client=AnthropicClient(model="claude-opus-5-5"),      # lee ANTHROPIC_API_KEY
+    client=AnthropicClient(model="claude-opus-5-5"),
     instructions="You are a support assistant. Use the CRM tools; never invent data.",
     tools=[get_customer, list_open_tickets],
-    default_options={"max_tokens": 4096},                 # el default del cliente es 1024
+    default_options={"max_tokens": 4096},                 # AnthropicClient defaults to 1024
 )
 response = await agent.run(question)
 print(response.text)
 ```
 
 El mismo `Agent` funciona con `OpenAIChatClient`, Azure, Bedrock u Ollama cambiando solo el cliente. Con `agent.as_tool()` un agente se vuelve tool de otro.
-
-Ejemplo: `code/04_tools_msaf.py`
 :::
 
 ## Comparación rápida

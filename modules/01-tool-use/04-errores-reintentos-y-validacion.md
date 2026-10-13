@@ -48,7 +48,7 @@ Por cada tool call registrá: tool, input, resultado o error, latencia, y el id 
 
 ## Cómo se ve en código
 
-`code/04_errors.py` le pide al agente un reembolso de 900 USD cuando la regla de negocio permite hasta 500. La validación con Pydantic rechaza la llamada, el modelo recibe el error y reacciona. También limita a 3 llamadas por tool.
+Un pedido de reembolso de 900 USD cuando la regla de negocio permite hasta 500: la validación con Pydantic rechaza la llamada antes de ejecutarla, el modelo recibe el error como `tool_result` y reacciona (explica el límite o propone otra acción). El ejecutor además corta después de 3 llamadas a la misma tool.
 
 ```python
 class RefundInput(BaseModel):

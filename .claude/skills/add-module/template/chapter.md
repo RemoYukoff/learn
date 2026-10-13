@@ -31,7 +31,6 @@ Texto corto + código.
 ```
 :::
 
-Ejemplo completo y ejecutable: `code/01_nombre.py`
 
 ## Errores comunes
 

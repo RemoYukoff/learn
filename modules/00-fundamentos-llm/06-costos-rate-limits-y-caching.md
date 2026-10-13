@@ -48,7 +48,7 @@ Lo que se espera ver en producción: presupuesto por cliente o feature, alertas 
 
 ## Cómo se ve en código
 
-`code/06_costs_and_caching.py` cuenta tokens de un prefijo largo, hace dos llamadas con el mismo prefijo marcado con `cache_control` y muestra que la segunda lee del cache. Después compara el costo de la misma pregunta con effort `low` y `high`.
+Un prefijo largo y estable (políticas, documentación, ejemplos) marcado con `cache_control`. La primera llamada escribe el cache (`cache_creation_input_tokens`); las siguientes con el mismo prefijo lo leen (`cache_read_input_tokens`) a ~10% del precio.
 
 ```python
 system = [{"type": "text", "text": POLICY, "cache_control": {"type": "ephemeral"}}]

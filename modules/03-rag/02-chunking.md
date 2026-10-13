@@ -45,14 +45,14 @@ Antes de partir hay que **extraer bien el texto**. Tablas de PDF convertidas en 
 
 ## Cómo se ve en código
 
-`code/02_chunking.py` parte el mismo corpus con tres estrategias de LangChain text splitters y mide cuántas preguntas encuentran el chunk que contiene la evidencia:
+Los text splitters de LangChain (`langchain-text-splitters`) implementan las estrategias recursiva y por estructura:
 
 ```python
 recursive = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=50)
 by_heading = MarkdownHeaderTextSplitter(headers_to_split_on=[("#", "title"), ("##", "section")])
 ```
 
-Resultado medido sobre las 22 preguntas:
+Comparación medida sobre el corpus de prueba del módulo (10 documentos cortos de un handbook ficticio y 22 preguntas etiquetadas). hit@k = la pregunta encuentra, entre los k primeros chunks, el que contiene la evidencia:
 
 | Estrategia | Chunks | hit@1 | hit@3 |
 |---|---|---|---|

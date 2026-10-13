@@ -8,7 +8,7 @@ type: implementacion
 
 ## Streaming
 
-Un agente tarda: varias llamadas al modelo y a tools. Para una UI hace falta mostrar qué está pasando. `graph.stream(...)` emite eventos mientras el grafo corre, y `stream_mode` elige qué tipo:
+Un agente tarda: varias llamadas al modelo y a tools. Para una UI hace falta mostrar qué está pasando. `graph.stream(...)` emite eventos mientras el grafo se ejecuta, y `stream_mode` elige qué tipo:
 
 | `stream_mode` | Qué emite | Uso típico |
 |---|---|---|
@@ -30,7 +30,7 @@ def summarize(state):
 for mode, data in graph.stream(inputs, config, stream_mode=["updates", "custom"]):
     print(mode, data)
 
-# Tokens del modelo, con el nodo que los generó
+# Model tokens, with the node that produced them
 for chunk, meta in agent.stream(inputs, stream_mode="messages"):
     if meta["langgraph_node"] == "model":
         print(chunk.text, end="", flush=True)
@@ -89,23 +89,23 @@ Se pasa por ejecución: `graph.invoke(inputs, config, durability="sync")`.
 Cada checkpoint de un thread queda guardado. Eso permite:
 
 ```python
-history = list(graph.get_state_history(config))   # más nuevo primero
+history = list(graph.get_state_history(config))   # newest first
 for snap in history:
-    print(snap.next, snap.values)                   # qué venía después y el estado en ese punto
+    print(snap.next, snap.values)                   # what came next and the state at that point
 
-# Re-ejecutar desde un punto anterior, tal cual (replay):
+# Re-run from an earlier point, unchanged (replay):
 graph.invoke(None, history[2].config)
 
-# O bifurcar: editar el estado en ese punto y seguir desde ahí (fork)
+# Or branch: edit the state at that point and continue from there (fork)
 forked_config = graph.update_state(history[2].config, {"ticket_ids": ["T-100"]})
 graph.invoke(None, forked_config)
 ```
 
 `update_state` crea un checkpoint **nuevo** como si el nodo de ese punto hubiera devuelto esos valores; los checkpoints anteriores no se tocan. Es la herramienta para reproducir el bug de un agente en producción: cargás el thread, volvés al paso previo al error, corregís el estado o el prompt y re-ejecutás.
 
-## El ejemplo completo
+## Todo junto
 
-`code/08_streaming_subgraphs.py` corre sin API key: carga los tickets de un cliente, lanza un subgrafo por ticket con `Send`, escribe progreso con `get_stream_writer`, y después recorre el historial y bifurca desde un checkpoint con un ticket menos.
+Un grafo que combina las piezas de este capítulo: carga los tickets de un cliente, lanza un subgrafo por ticket con `Send`, cada subgrafo escribe progreso con `get_stream_writer`, y al final se recorre el historial y se bifurca desde un checkpoint con un ticket menos. Así se ven los eventos y el historial (abreviado):
 
 ```text
 === stream_mode=["custom", "updates"] + subgraphs=True: namespaced events

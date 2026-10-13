@@ -45,11 +45,22 @@ Los frameworks del módulo 02 le dan nombre a esto: *checkpointer* (corto plazo,
 
 ## Cómo se ve en código
 
-`code/06_context.py` corre la misma tarea de cuatro consultas tres veces e imprime los tokens de entrada por vuelta:
+Recorte en el cliente: antes de cada llamada, los `tool_result` viejos se reemplazan por un placeholder y solo el último queda completo.
 
-- `none`: historial completo, crece con cada resultado.
-- `trim`: reemplaza resultados viejos en el cliente.
-- `server`: usa context editing de Anthropic (beta), que borra resultados viejos según un disparador.
+```python
+def trim_old_tool_results(messages: list[dict], keep_last: int = 1) -> None:
+    seen = 0
+    for msg in reversed(messages):
+        if msg["role"] != "user" or not isinstance(msg["content"], list):
+            continue
+        for part in msg["content"]:
+            if part.get("type") == "tool_result":
+                seen += 1
+                if seen > keep_last:
+                    part["content"] = "[old tool result removed to save context]"
+```
+
+Lo mismo del lado del servidor con context editing de Anthropic (beta): un disparador decide cuándo borrar y cuántos resultados conservar.
 
 ```python
 CONTEXT_EDITS = {"edits": [{

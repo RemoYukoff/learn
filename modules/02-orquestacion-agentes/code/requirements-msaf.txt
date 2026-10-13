@@ -1,3 +1,0 @@
-# Microsoft Agent Framework examples (*_msaf.py). Separate venv.
-agent-framework==1.21.0
-python-dotenv==1.2.4

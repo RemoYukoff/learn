@@ -11,7 +11,7 @@ type: implementacion
 LangGraph ejecuta el grafo en **super-steps** (modelo Pregel):
 
 1. Arranca en `START` con el input como estado inicial.
-2. En cada paso corre todos los nodos activos (en paralelo si hay varios).
+2. En cada paso ejecuta todos los nodos activos (en paralelo si hay varios).
 3. Cada nodo recibe el estado completo y **devuelve solo las claves que cambia**.
 4. Las actualizaciones se combinan en el estado con los **reducers**.
 5. Las aristas deciden qué nodos se activan en el siguiente paso.
@@ -42,7 +42,7 @@ from langgraph.graph import MessagesState          # {"messages": Annotated[list
 from langgraph.graph.message import add_messages
 
 class AgentState(MessagesState):
-    customer_id: str                               # agregás tus claves
+    customer_id: str                               # your own fields
 ```
 
 `add_messages` agrega mensajes nuevos, **reemplaza** los que vienen con un `id` ya existente (para editar) y acepta tuplas como `("user", "hola")` o dicts, que convierte a objetos de mensaje.
@@ -57,7 +57,7 @@ def classify(state: TriageState) -> dict:
     return {"category": category, "log": [f"classify -> {category}"]}
 
 def route_by_category(state: TriageState) -> str:
-    return state["category"]            # nombre del próximo nodo
+    return state["category"]            # name of the next node
 
 builder = StateGraph(TriageState)
 builder.add_node("classify", classify)
@@ -99,25 +99,59 @@ Es el estilo habitual en sistemas multi-agente, donde un agente "le pasa la post
 
 `add_node` acepta `retry_policy=RetryPolicy(max_attempts=3)` para reintentar ante excepciones (llamadas a APIs inestables), `timeout` y `cache_policy`. Preferí estas opciones a envolver cada nodo con `try/except` a mano.
 
-## El ejemplo completo
+## Un ejemplo completo
 
-`code/03_graph_basics.py` arma un triage de tickets sin LLM: un clasificador por palabras clave, dos ramas y un loop de revisión que obliga a reintentar una vez. Imprime el grafo en Mermaid y el log que acumula el reducer:
+Un triage de tickets sin LLM: un clasificador por palabras clave, dos ramas y un loop de revisión que obliga a reintentar una vez. El campo `log` usa el reducer `operator.add`; `draft` y `attempts` se reemplazan.
 
-```sh
-.venv/bin/python 03_graph_basics.py
+```python
+import operator
+from typing import Annotated, Literal, TypedDict
+from langgraph.graph import END, START, StateGraph
+
+class Triage(TypedDict):
+    ticket: str
+    category: str
+    draft: str
+    attempts: int
+    log: Annotated[list[str], operator.add]
+
+def classify(state: Triage) -> dict:
+    category = "technical" if "login" in state["ticket"].lower() else "billing"
+    return {"category": category, "log": [f"classify -> {category}"]}
+
+def technical(state: Triage) -> dict:
+    n = state["attempts"] + 1
+    draft = "Looking into it" if n == 1 else "Tech team: we reset your SSO metadata, please retry login."
+    return {"draft": draft, "attempts": n, "log": [f"technical attempt {n}"]}
+
+def billing(state: Triage) -> dict:
+    return {"draft": "Billing will fix the invoice today.", "log": ["billing"]}
+
+def review(state: Triage) -> Literal["retry", "done"]:
+    return "retry" if len(state["draft"]) < 20 else "done"
+
+builder = StateGraph(Triage)
+builder.add_node("classify", classify)
+builder.add_node("technical", technical)
+builder.add_node("billing", billing)
+builder.add_edge(START, "classify")
+builder.add_conditional_edges("classify", lambda s: s["category"])        # returns the node name
+builder.add_conditional_edges("technical", review, {"retry": "technical", "done": END})
+builder.add_edge("billing", END)
+graph = builder.compile()
+
+result = graph.invoke({"ticket": "SSO login fails for new users", "attempts": 0, "log": []})
 ```
+
+Para el ticket de SSO, `result["log"]` queda así:
 
 ```text
-=== Ticket: 'SSO login fails for new users'
-   classify -> technical
-   technical attempt 1
-   review draft (10 chars)
-   technical attempt 2
-   review draft (58 chars)
-   final draft: Tech team: we reset your SSO metadata, please retry login.
+classify -> technical
+technical attempt 1
+technical attempt 2
 ```
 
-Mirá el orden del log: el reducer `operator.add` conserva el historial de pasos a través del ciclo, mientras que `draft` y `attempts` se reemplazan.
+El reducer conserva el historial de pasos a través del ciclo, mientras que `draft` y `attempts` muestran solo el último valor. `graph.get_graph().draw_mermaid()` devuelve el diagrama del grafo en Mermaid, útil para documentarlo.
 
 ## Errores comunes
 

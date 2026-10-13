@@ -33,7 +33,7 @@ Otras técnicas que aparecen en este contexto:
 > [!WARNING]
 > Cada decisión del LLM agrega latencia, costo y un punto de falla. Agregalas cuando las evals muestren que el pipeline fijo no alcanza, no por defecto.
 
-Los dos ejemplos usan `HybridRetriever` de `code/rag_utils.py`: híbrida + rerank del capítulo 5 encapsulada.
+En los dos tabs, `retriever.search(query, top=3)` es la búsqueda híbrida + rerank del capítulo 5 envuelta en un método que devuelve los mejores chunks (cada uno con `id` y `text`).
 
 ## Cómo se implementa
 
@@ -69,7 +69,6 @@ builder.add_edge("generate", END)
 > [!IMPORTANT]
 > `with_structured_output` de `langchain-anthropic` usa por defecto **tool calling forzado**, que `claude-opus-5-5` rechaza. Pasá `method="json_schema"` para usar structured outputs nativos.
 
-Ejemplo: `code/08_agentic_rag_langgraph.py`
 == LangChain
 Retrieval como tool de un agente con `create_agent`. La descripción de la tool le dice al modelo qué cubre la base y que busque una vez por sub-pregunta.
 
@@ -89,9 +88,8 @@ agent = create_agent(
 result = agent.invoke({"messages": [{"role": "user", "content": question}]})
 ```
 
-El script imprime cada búsqueda que hace el agente. Con la pregunta de ejemplo, de dos partes, lo esperable es una búsqueda por cada parte (SLA y aprobación de reembolsos); si hace una sola, mejorá la descripción de la tool.
+Los `tool_calls` de los mensajes del resultado muestran qué buscó el agente. Con una pregunta de dos partes (por ejemplo, créditos de SLA y aprobación de un reembolso), lo esperable es una búsqueda por cada parte. Si hace una sola, el problema suele estar en la descripción de la tool.
 
-Ejemplo: `code/08_agentic_rag_langchain.py`
 :::
 
 ## Errores comunes

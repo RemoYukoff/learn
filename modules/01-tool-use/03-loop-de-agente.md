@@ -91,7 +91,6 @@ for message in runner:          # one iteration per model response
     ...
 ```
 
-Ejemplos: `code/03_agent_loop.py` y `code/03_tool_runner.py`
 == OpenAI
 Mismo loop. Cambia que los resultados van como **un mensaje `role: "tool"` por llamada** y que el mensaje del assistant se guarda con sus `tool_calls`.
 
@@ -115,11 +114,10 @@ def agent(task: str) -> str:
     return "[gave up]"
 ```
 
-Ejemplo: `code/03_agent_loop_openrouter.py`
 :::
 
 > [!TIP]
-> Corré `code/03_agent_loop.py` y mirá el orden de las llamadas impresas: busca el cliente, lista tickets, cierra el de CSV y vuelve a listar. Nadie le programó ese plan: lo deduce de las descripciones de las tools.
+> Con la tarea "Acme dice que el export a CSV ya funciona: cerrá ese ticket y decime qué les queda abierto", la secuencia típica es buscar el cliente, listar tickets, cerrar el de CSV y volver a listar. Nadie programa ese plan: el modelo lo deduce de las descripciones de las tools.
 
 ## Errores comunes
 

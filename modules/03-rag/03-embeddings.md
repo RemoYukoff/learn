@@ -30,7 +30,7 @@ Le cuesta:
 - **Números y negaciones** ("más de 200" vs "menos de 200" quedan casi iguales).
 - **Palabras compartidas con distinto sentido**: una frase con las mismas palabras pero otro tema puede quedar casi tan cerca como una paráfrasis real.
 
-Lo medido en `code/03_embeddings.py` con `bge-small-en-v1.5`:
+Medido con el modelo local `bge-small-en-v1.5`:
 
 | Frase comparada con "Refunds above 2,000 USD need approval from the finance director" | Coseno |
 |---|---|
@@ -59,7 +59,7 @@ Anthropic no tiene modelo de embeddings propio y recomienda **Voyage AI**. OpenR
 
 :::tabs
 == FastEmbed
-Modelos ONNX que corren en CPU, sin API key. Bueno para desarrollo, datos sensibles y volumen alto.
+Librería que ejecuta modelos de embeddings en formato ONNX sobre CPU, sin servicio externo. Buena opción para datos sensibles y volumen alto.
 
 ```python
 from fastembed import TextEmbedding
@@ -69,14 +69,14 @@ passages = list(model.passage_embed(["Refunds above 2,000 USD need..."]))
 query = next(iter(model.query_embed("who approves large refunds?")))  # adds the query instruction
 ```
 
-`passage_embed` y `query_embed` existen porque los modelos BGE esperan un prefijo distinto para preguntas. Los ejemplos lo encapsulan en `rag_utils.Embedder`.
+`passage_embed` y `query_embed` existen porque los modelos BGE esperan un prefijo distinto para preguntas.
 == OpenRouter
-La API de embeddings compatible con OpenAI, con modelos de Voyage, Google, NVIDIA y otros. Necesita `OPENROUTER_API_KEY`.
+La API de embeddings compatible con OpenAI, con modelos de Voyage, Google, NVIDIA y otros detrás de un mismo endpoint.
 
 ```python
 from openai import OpenAI
 
-client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])
+client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=...)
 response = client.embeddings.create(model="voyageai/voyage-4-lite", input=sentences)
 vectors = [d.embedding for d in response.data]
 print(len(vectors[0]), response.usage.prompt_tokens)
@@ -84,8 +84,6 @@ print(len(vectors[0]), response.usage.prompt_tokens)
 
 Se cobra por token de entrada, como un LLM pero mucho más barato. Embebé en lotes (decenas o cientos de textos por request).
 :::
-
-Ejemplo con ambos: `code/03_embeddings.py`
 
 ## Errores comunes
 

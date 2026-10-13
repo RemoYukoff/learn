@@ -41,7 +41,7 @@ Cada acción sensible deja registro: qué pidió el agente, quién aprobó, cuá
 
 ## Cómo se ve en código
 
-`code/05_human_in_the_loop.py` pide reembolsar 49 USD a Acme y cerrar el ticket. Antes de `issue_refund` y `update_ticket_status` te pregunta por consola. Probá aprobar uno y rechazar el otro con una nota.
+Un agente al que se le pide reembolsar 49 USD y cerrar el ticket. Antes de ejecutar `issue_refund` y `update_ticket_status`, el ejecutor pide aprobación (por consola en una CLI, con un botón en Slack en producción). Si el operador rechaza con una nota, el modelo la recibe y responde en consecuencia.
 
 ```python
 NEEDS_APPROVAL = {"issue_refund", "update_ticket_status"}

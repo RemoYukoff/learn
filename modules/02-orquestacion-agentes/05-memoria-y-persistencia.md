@@ -41,7 +41,7 @@ with SqliteSaver.from_conn_string("memory.sqlite") as checkpointer:
     graph.invoke({"messages": [("user", "My customer id is C-001.")]}, config)
     graph.invoke({"messages": [("user", "What is my id?")]}, config)   # recuerda
 
-    snapshot = graph.get_state(config)      # estado actual del thread
+    snapshot = graph.get_state(config)      # current state of the thread
     snapshot.values["messages"]             # historial completo
 ```
 
@@ -73,7 +73,7 @@ graph.invoke(inputs, config, context=Context(user_id="alice"))
 
 **Contexto que crece:** con `create_agent` de LangChain agregás `SummarizationMiddleware(model, trigger=("tokens", 100_000), keep=("messages", 20))`, que resume el historial viejo. `create_agent` acepta los mismos `checkpointer` y `store`.
 
-Ejemplo: `code/05_memory_langgraph.py` (corré el script dos veces: la segunda vez el thread sigue desde `memory.sqlite`).
+Con un checkpointer persistente como `SqliteSaver`, el thread sobrevive al reinicio del proceso: una nueva invocación con el mismo `thread_id` sigue desde el último checkpoint guardado.
 == CrewAI
 CrewAI tiene una **memoria unificada**: un objeto `Memory` que guarda recuerdos en una base vectorial local (LanceDB), usa un LLM para decidir qué guardar y cómo categorizarlo, y los recupera combinando similitud, recencia e importancia. Con `Crew(memory=True)` se crea una con defaults; para controlar modelos y storage pasás una instancia.
 
@@ -84,7 +84,7 @@ from crewai.memory.unified_memory import Memory
 llm = LLM(model="anthropic/claude-opus-5-5", max_tokens=4096)
 
 memory = Memory(
-    llm=llm,                                   # analiza qué guardar (default: un modelo de OpenAI)
+    llm=llm,                                   # decides what to store (default: an OpenAI model)
     storage="./crew_memory.db",                # carpeta de LanceDB
     embedder={                                 # default: OpenAI embeddings
         "provider": "openrouter",
@@ -96,8 +96,8 @@ memory = Memory(
 crew = Crew(agents=[support], tasks=[task], memory=memory)
 crew.kickoff()
 
-memory.remember("User prefers Spanish", scope="/users/alice")   # escritura explícita
-memory.recall("preferred language", limit=3)                    # búsqueda explícita
+memory.remember("User prefers Spanish", scope="/users/alice")   # explicit write
+memory.recall("preferred language", limit=3)                    # explicit search
 ```
 
 - Las crews guardan automáticamente lo que producen y recuperan recuerdos relevantes antes de cada tarea.
@@ -105,9 +105,7 @@ memory.recall("preferred language", limit=3)                    # búsqueda expl
 - Corto plazo: dentro de un `kickoff` las tareas comparten contexto por `context=[...]`; entre ejecuciones, la memoria es la que conecta.
 
 > [!NOTE]
-> Anthropic no ofrece embeddings. Para no depender de una key de OpenAI, el ejemplo usa embeddings a través de OpenRouter. También hay proveedores locales (`ollama`, `sentence_transformer`).
-
-Ejemplo: `code/05_memory_crewai.py`
+> Anthropic no ofrece embeddings. Para no depender de OpenAI, el snippet configura embeddings a través de OpenRouter. También hay proveedores locales (`ollama`, `sentence_transformer`).
 == MS Agent Framework
 **Corto plazo = `AgentSession`.** Una sesión agrupa los mensajes de una conversación. El proveedor de historial por defecto (`InMemoryHistoryProvider`) guarda los mensajes dentro de `session.state`, así que persisten mientras conserves la sesión, y se serializan con `to_dict()` / `from_dict()`.
 
@@ -127,8 +125,6 @@ restored = AgentSession.from_dict(saved)
 Para guardar el historial del lado del servidor hay proveedores para Redis (`agent-framework-redis`) y Cosmos DB, o el historial del propio servicio cuando el cliente lo soporta (Responses API, Foundry).
 
 **Largo plazo = context providers.** Un `ContextProvider` se ejecuta antes y después de cada `run`: antes inyecta contexto (instrucciones, mensajes, tools) y después puede extraer y guardar información. Hay proveedores listos: `MemoryContextProvider` y `FileMemoryProvider`, Mem0 (`agent-framework-mem0`), Redis, y búsqueda vectorial (`VectorCollectionContextProvider`). Para compactar el historial, `Agent(compaction_strategy=...)` acepta estrategias como `SlidingWindowStrategy` o `SummarizationStrategy`.
-
-Ejemplo: `code/05_memory_msaf.py`
 :::
 
 ## Errores comunes

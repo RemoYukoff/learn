@@ -47,7 +47,7 @@ Multi-tenancy (un índice para muchos clientes) es un filtro más, o namespaces 
 
 ## Cómo se implementa
 
-Todos los scripts hacen lo mismo: crear la colección para 384 dimensiones con coseno, cargar los 37 chunks con metadata (`doc`, `section`), buscar "Who approves a 3,500 USD refund?" y repetir otra búsqueda filtrando `doc == "pricing.md"`. Los seis que corren localmente (todos menos Pinecone, que necesita cuenta) devuelven el mismo top 3, con `refunds.md#1` (Approval rules) primero.
+Cada tab muestra el mismo flujo: crear la colección para vectores de 384 dimensiones con coseno, cargar los chunks con su metadata (`doc`, `section`), buscar los más cercanos a una pregunta y repetir la búsqueda filtrando por `doc == "pricing.md"`. `chunks` es la lista de fragmentos (cada uno con `id`, `doc`, `section`, `text`), `vectors` sus embeddings como array de numpy y `query_vector` el embedding de la pregunta. Con los mismos embeddings, todas devuelven el mismo top 3: el índice cambia la velocidad y las features, no qué es "cercano".
 
 :::tabs
 == Pinecone
@@ -56,7 +56,7 @@ Pinecone SDK 10 usa **document indexes**: declarás un schema de campos y cada r
 ```python
 from pinecone import DenseVectorQuery, Pinecone
 
-pc = Pinecone()   # PINECONE_API_KEY
+pc = Pinecone(api_key=...)
 pc.indexes.create(
     name="handbook",
     schema={"fields": {"embedding": {"type": "dense_vector", "dimension": 384, "metric": "cosine"}}},
@@ -78,7 +78,6 @@ for doc in res.matches:
 
 Los upserts son asincrónicos: un documento puede tardar unos segundos en aparecer. Los **namespaces** separan tenants o versiones dentro de un índice.
 
-Ejemplo: `code/04_vector_pinecone.py` (necesita cuenta; hay free tier)
 == Chroma
 Embebida en tu proceso y persistida en una carpeta. Cero infraestructura.
 
@@ -99,7 +98,6 @@ print(res["ids"][0], res["distances"][0])
 
 Chroma también puede embeber por vos si le pasás `documents` sin `embeddings` (usa un modelo por defecto). Es cómodo, pero fijá el modelo explícitamente en producción.
 
-Ejemplo: `code/04_vector_chroma.py`
 == Weaviate
 Schema con propiedades tipadas. Podés traer tus vectores (`self_provided`) o configurar un vectorizador para que Weaviate embeba solo.
 
@@ -122,13 +120,6 @@ with weaviate.connect_to_local() as client:
                                 filters=Filter.by_property("doc").equal("pricing.md"))
 ```
 
-```sh
-docker run -d --rm --name learn-weaviate -p 8080:8080 -p 50051:50051 \
-  -e DEFAULT_VECTORIZER_MODULE=none -e AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true \
-  cr.weaviate.io/semitechnologies/weaviate:1.40.1
-```
-
-Ejemplo: `code/04_vector_weaviate.py`
 == pgvector
 Un tipo de columna `vector(n)` en Postgres. La búsqueda es SQL con el operador `<=>` (distancia coseno), y los filtros son `WHERE` comunes.
 
@@ -158,11 +149,6 @@ with psycopg.connect(DSN, autocommit=True) as conn:
 
 Operadores: `<->` L2, `<#>` producto interno negativo, `<=>` coseno. El índice tiene que usar el mismo (`vector_cosine_ops` para `<=>`). Ventaja enorme: joins con tus tablas, transacciones y permisos en el mismo lugar.
 
-```sh
-docker run -d --rm --name learn-pgvector -e POSTGRES_PASSWORD=postgres -p 5433:5432 pgvector/pgvector:0.8.7-pg18-trixie
-```
-
-Ejemplo: `code/04_vector_pgvector.py`
 == FAISS
 Una librería de índices (Meta), no una base: guarda vectores y devuelve **posiciones**. Ids, texto, metadata y persistencia son tuyos.
 
@@ -183,9 +169,8 @@ scores, positions = index.search(q, 3, params=params)
 faiss.write_index(index, "handbook.faiss")
 ```
 
-Ejemplo: `code/04_vector_faiss.py`
 == Milvus
-Base distribuida para escala muy grande. **Milvus Lite** corre embebido desde un archivo con el mismo cliente: cambiás la URI y pasás a un cluster o a Zilliz Cloud.
+Base distribuida para escala muy grande. **Milvus Lite** funciona embebido desde un archivo con el mismo cliente: cambiás la URI y pasás a un cluster o a Zilliz Cloud.
 
 ```python
 from pymilvus import MilvusClient
@@ -201,7 +186,6 @@ for hit in res[0]:
     print(hit["entity"]["chunk_id"], hit["distance"])
 ```
 
-Ejemplo: `code/04_vector_milvus.py`
 == Elasticsearch
 Un motor de búsqueda full-text con campos `dense_vector` y búsqueda kNN. Si la empresa ya lo usa, suele ser la opción natural.
 
@@ -224,13 +208,6 @@ res = es.search(index="handbook", knn={
 
 `num_candidates` es cuántos vecinos explora el HNSW por shard: más = mejor recall, más lento.
 
-```sh
-docker run -d --rm --name learn-es -p 9200:9200 -e discovery.type=single-node \
-  -e xpack.security.enabled=false -e ES_JAVA_OPTS="-Xms512m -Xmx512m" \
-  docker.elastic.co/elasticsearch/elasticsearch:9.5.5
-```
-
-Ejemplo: `code/04_vector_elasticsearch.py`
 :::
 
 ## Errores comunes

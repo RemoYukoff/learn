@@ -1,7 +1,0 @@
-# LangGraph + LangChain examples (03_*, 04_tools_langgraph/langchain, 05_memory_langgraph, 06_hitl_langgraph/langchain, 07_multiagent_langgraph, 08_*)
-langgraph==1.2.15
-langchain==1.4.5
-langchain-anthropic==1.7.6
-langgraph-checkpoint-sqlite==3.1.2
-anthropic==1.13.0
-python-dotenv==1.2.4

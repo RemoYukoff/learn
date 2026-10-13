@@ -28,7 +28,7 @@ Una tool tiene tres partes. Las tres son prompt:
 
 Con `strict: true` el proveedor garantiza que el `input` valida contra tu esquema (mismo mecanismo que salida estructurada). Requiere `additionalProperties: false` y todos los campos en `required`. Soporta un subconjunto de JSON Schema: si usás restricciones raras (`exclusiveMinimum`, `pattern` complejos) validalas en tu código.
 
-Todos los ejemplos del módulo usan el mismo CRM falso en memoria: `code/crm.py`. Cambiar el cuerpo de las funciones por llamadas HTTP reales no cambia nada del agente.
+Los fragmentos del módulo usan un CRM ficticio con cuatro tools: `find_customer(name)`, `list_tickets(customer_id, status)`, `update_ticket_status(ticket_id, status)` e `issue_refund(customer_id, amount_usd, reason)`. Detrás de cada una puede haber una lista en memoria o una llamada HTTP a HubSpot: para el agente es lo mismo.
 
 ## Cómo se implementa
 
@@ -62,7 +62,6 @@ for block in response.content:
         print(block.id, block.name, block.input)   # input is a dict
 ```
 
-Ejemplo: `code/02_define_tools_anthropic.py`
 == OpenAI
 Cada tool va envuelta en `{"type": "function", "function": {...}}` y el esquema se llama `parameters`. Las llamadas vienen en `message.tool_calls` y los **argumentos son un string JSON** que tenés que parsear.
 
@@ -89,7 +88,14 @@ for call in message.tool_calls or []:
     print(call.id, call.function.name, args)
 ```
 
-`code/crm.py` tiene `to_openai()` que convierte las definiciones de un formato al otro. Ejemplo: `code/02_define_tools_openrouter.py`
+Convertir del formato de Anthropic al de OpenAI es mecánico:
+
+```python
+def to_openai(tools: list[dict]) -> list[dict]:
+    return [{"type": "function",
+             "function": {"name": t["name"], "description": t["description"], "parameters": t["input_schema"]}}
+            for t in tools]
+```
 :::
 
 | | Anthropic | OpenAI / OpenRouter |

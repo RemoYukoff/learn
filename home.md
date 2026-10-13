@@ -6,7 +6,7 @@ title: Inicio
 
 Lo que piden las búsquedas de **AI Engineer**, módulo por módulo. Cada módulo es una tecnología o un concepto. Cuando varias tecnologías resuelven lo mismo, primero se explica la idea sin atarla a ninguna y después aparecen **tabs** para ver cómo se implementa en cada una. La tab que elijas queda recordada en todo el sitio.
 
-Marcá cada capítulo como leído con el checkbox del índice o el botón al final. El progreso queda en este navegador.
+Es material de lectura: el código aparece como fragmentos dentro de cada capítulo para ilustrar la idea, no para ejecutar. Marcá cada capítulo como leído con el checkbox del índice o el botón al final. El progreso queda en este navegador.
 
 ## Qué piden las búsquedas
 
@@ -31,15 +31,3 @@ Relevado en octubre de 2026 sobre cuatro búsquedas: [AYI Group](https://jobs.ay
 
 > [!NOTE]
 > Los módulos marcados como **pendiente** ya tienen el plan de capítulos. Para generarlos, abrí Claude Code en este repo y corré `/add-module <tema>`.
-
-## Cómo correr los ejemplos
-
-Cada módulo trae `code/` con scripts numerados igual que los capítulos y su `requirements.txt` con versiones fijas.
-
-```sh
-cd modules/01-tool-use/code
-uv venv -p 3.12 && source .venv/bin/activate.fish   # o activate en bash/zsh
-uv pip install -r requirements.txt
-cp .env.example .env                                 # completá ANTHROPIC_API_KEY / OPENROUTER_API_KEY
-python 03_agent_loop.py
-```

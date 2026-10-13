@@ -63,14 +63,12 @@ supervisor = create_agent(model, tools=[ask_accounts, ask_tickets],
 
 **Handoff con `Command`.** Cada agente es un nodo; para transferir el control devuelve `Command(goto="otro_agente", update={...})`. Si el agente es un subgrafo y quiere saltar a un nodo del grafo padre, usa `Command(goto=..., graph=Command.PARENT)`.
 
-**Paralelo con `Send`.** Una arista condicional que devuelve `[Send("worker", {...}), ...]` lanza una ejecución del nodo por cada elemento, en paralelo, y un reducer junta los resultados. Lo ves funcionando en el capítulo siguiente.
+**Paralelo con `Send`.** Una arista condicional que devuelve `[Send("worker", {...}), ...]` lanza una ejecución del nodo por cada elemento, en paralelo, y un reducer junta los resultados. El capítulo siguiente lo muestra en detalle.
 
 **Pipeline y jerárquico.** Un pipeline son aristas fijas entre nodos-agente. Un jerárquico son subgrafos: un supervisor compilado se agrega como nodo de otro grafo.
 
 > [!NOTE]
 > Existen `langgraph-supervisor` y `langgraph-swarm` como paquetes prearmados. La documentación actual de LangChain recomienda el enfoque de agentes como tools para el supervisor, que da más control sobre qué contexto recibe cada especialista.
-
-Ejemplo: `code/07_multiagent_langgraph.py`
 == CrewAI
 El multi-agente es el modelo nativo de CrewAI: varios `Agent`, varias `Task` y un `Process`.
 
@@ -82,10 +80,10 @@ collect = Task(description="Collect plan, country and open tickets for customer 
 brief = Task(description="Write a 3-line briefing for customer {customer_id}.",
              expected_output="Three lines.", agent=writer, context=[collect])
 
-# Pipeline: las tareas corren en orden; context=[collect] pasa el resultado explícitamente.
+# Pipeline: tasks run in order; context=[collect] passes the result explicitly.
 crew = Crew(agents=[analyst, writer], tasks=[collect, brief], process=Process.sequential)
 
-# Jerárquico: un manager planifica, delega cada tarea al agente que elija y valida el resultado.
+# Hierarchical: a manager plans, delegates each task to the agent it picks, and validates.
 crew = Crew(agents=[analyst, writer], tasks=[collect, brief],
             process=Process.hierarchical, manager_llm=llm)
 
@@ -93,10 +91,8 @@ crew.kickoff(inputs={"customer_id": "C-001"})
 ```
 
 - `allow_delegation=True` en un agente le da tools para delegar trabajo o hacer preguntas a sus compañeros (supervisor informal).
-- `async_execution=True` en una `Task` la corre en paralelo con las siguientes; una tarea posterior con `context=[...]` espera a que terminen (fan-out / fan-in).
+- `async_execution=True` en una `Task` la ejecuta en paralelo con las siguientes; una tarea posterior con `context=[...]` espera a que terminen (fan-out / fan-in).
 - Para lógica condicional o handoffs usás un **Flow**: `@router` elige el próximo paso según el estado y cada paso puede lanzar una Crew distinta.
-
-Ejemplo: `code/07_multiagent_crewai.py` (con `--hierarchical` para el modo jerárquico)
 == MS Agent Framework
 Los patrones vienen como builders en `agent_framework.orchestrations`. Cada uno arma un `Workflow` que se ejecuta con `await workflow.run(tarea)`.
 
@@ -105,23 +101,23 @@ from agent_framework.orchestrations import (
     ConcurrentBuilder, GroupChatBuilder, HandoffBuilder, MagenticBuilder, SequentialBuilder,
 )
 
-# Pipeline: cada agente ve la conversación hasta ahí y agrega su turno.
+# Pipeline: each agent sees the conversation so far and adds its turn.
 workflow = SequentialBuilder(participants=[triager, responder]).build()
 
-# Paralelo: misma entrada a todos, resultados agregados (.with_aggregator() para combinar a medida).
+# Concurrent: same input to every agent, results aggregated (.with_aggregator() for custom merging).
 workflow = ConcurrentBuilder(participants=[security, support]).build()
 
-# Handoff: el agente activo puede transferir la conversación a los que declares.
+# Handoff: the active agent can transfer the conversation to the agents you declare.
 workflow = (HandoffBuilder(participants=[triage, billing, tech])
             .with_start_agent(triage)
             .add_handoff(triage, [billing, tech])
             .build())
 
-# Group chat: un orquestador (agente o función) elige quién habla en cada ronda.
+# Group chat: an orchestrator (agent or function) picks who speaks each round.
 workflow = GroupChatBuilder(participants=[writer, reviewer], orchestrator_agent=moderator,
                             max_rounds=6).build()
 
-# Magentic: manager con plan, ledger de progreso y re-planificación (Magentic-One de AutoGen).
+# Magentic: manager with a plan, progress ledger and re-planning (AutoGen's Magentic-One).
 workflow = MagenticBuilder(participants=[researcher, coder], manager_agent=manager).build()
 
 result = await workflow.run("Customer C-001 reports that SSO login fails for new users.")
@@ -131,8 +127,6 @@ for output in result.get_outputs():
 
 - Para un supervisor simple: `especialista.as_tool()` convierte un agente en tool de otro, igual que en LangGraph.
 - Para grafos a medida, `WorkflowBuilder` con executors y aristas (`add_edge`, `add_fan_out_edges`, `add_fan_in_edges`, `add_switch_case_edge_group`).
-
-Ejemplo: `code/07_multiagent_msaf.py` (sequential y concurrent)
 :::
 
 ## Cómo elegir el patrón

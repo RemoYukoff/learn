@@ -58,7 +58,6 @@ ticket: Ticket = response.parsed_output
 
 Sin Pydantic, pasás el JSON Schema crudo en `messages.create(output_config={"format": {"type": "json_schema", "schema": {...}}})` y hacés `json.loads` del bloque de texto. El esquema necesita `additionalProperties: false` y `required`.
 
-Ejemplo completo: `code/03_structured_anthropic.py`
 == OpenAI
 En el SDK de OpenAI, `chat.completions.parse()` recibe el modelo Pydantic en `response_format`. Funciona igual contra OpenAI o contra cualquier API compatible.
 
@@ -92,7 +91,6 @@ completion = client.chat.completions.parse(
 
 Verificá en la página del modelo en OpenRouter que soporte `structured_outputs`. Si no, cae a JSON mode o falla.
 
-Ejemplo completo: `code/03_structured_openrouter.py`
 :::
 
 ## Errores comunes

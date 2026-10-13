@@ -63,7 +63,6 @@ for chunk in stream:
 ```
 :::
 
-Ejemplo con ambos: `code/05_streaming.py`
 
 > [!TIP]
 > Para exponer streaming a un frontend, tu backend (FastAPI, Express) reenvía los eventos como SSE. Es lo que hace el Vercel AI SDK por debajo.

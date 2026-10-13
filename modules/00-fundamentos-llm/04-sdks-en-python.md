@@ -80,7 +80,6 @@ except anthropic.APIConnectionError:
     ...
 ```
 
-Ejemplo completo: `code/04_sdk_anthropic.py`
 == OpenAI
 Chat Completions: el system prompt es un mensaje más y la respuesta está en `choices`.
 
@@ -125,7 +124,6 @@ for model in ["anthropic/claude-opus-5.5", "google/gemini-3.8-flash"]:
 
 Extras de OpenRouter que aparecen en producción: `extra_body={"models": [...]}` para fallback entre modelos, `provider` para preferir proveedores por precio o latencia, y límites de gasto por API key.
 
-Ejemplo completo: `code/04_sdk_openrouter.py`
 :::
 
 ## Errores comunes

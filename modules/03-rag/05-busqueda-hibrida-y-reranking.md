@@ -17,7 +17,7 @@ type: implementacion
 
 **BM25** es el algoritmo clásico de buscadores: puntúa un documento por cuántas veces aparecen los términos de la consulta, pesando más los términos raros en el corpus y normalizando por largo. No necesita modelo ni GPU.
 
-En el corpus de ejemplo, cada una falla en preguntas distintas (rank de la evidencia, `-` = no está en el top 10):
+En el corpus de prueba del módulo, cada una falla en preguntas distintas (rank de la evidencia, `-` = no está en el top 10):
 
 | Pregunta | Densa | BM25 |
 |---|---|---|
@@ -45,7 +45,7 @@ Opciones: cross-encoders abiertos (ms-marco MiniLM, bge-reranker), APIs (Cohere 
 
 ### Qué aporta cada paso (medido)
 
-`code/05_hybrid_rerank.py` arma todo a mano (BM25 con `bm25s`, densa con FastEmbed, RRF, reranker MiniLM) y `code/06_eval_retrieval.py` mide las 22 preguntas:
+Medido sobre el corpus de prueba del módulo (10 documentos cortos de un handbook ficticio y 22 preguntas etiquetadas), con BM25 de `bm25s`, embeddings densos de FastEmbed, RRF con k=60 y el cross-encoder `ms-marco-MiniLM-L-6-v2` sobre los 10 primeros candidatos:
 
 | Estrategia | hit@1 | hit@3 | hit@10 | MRR |
 |---|---|---|---|---|
@@ -58,7 +58,7 @@ Lectura honesta: la híbrida **sube el recall** (nada queda afuera del top 10) p
 
 ## Cómo se implementa
 
-Varias bases hacen la híbrida de forma nativa. Mismo ejemplo en todas: "What second factor is required to reach production?", que la búsqueda densa sola deja en el puesto 9. Con híbrida, `security.md#0` sale primero en todas.
+Varias bases hacen la híbrida de forma nativa. Mismo ejemplo en todas: "What second factor is required to reach production?", que la búsqueda densa sola deja en el puesto 9. Con híbrida, el chunk de la política de seguridad que tiene la respuesta sale primero en Weaviate, pgvector y Elasticsearch (las tres medidas). `question` es el texto de la pregunta y `qvec` su embedding.
 
 :::tabs
 == Pinecone
@@ -80,9 +80,8 @@ for result in (keyword, semantic):
         scores[doc.id] = scores.get(doc.id, 0) + 1 / (60 + rank)
 ```
 
-Ejemplo: `code/05_hybrid_pinecone.py`
 == Weaviate
-`query.hybrid` corre BM25 y vector y los fusiona. `alpha` va de 0 (solo BM25) a 1 (solo vector).
+`query.hybrid` ejecuta BM25 y vector y los fusiona. `alpha` va de 0 (solo BM25) a 1 (solo vector).
 
 ```python
 res = col.query.hybrid(
@@ -94,9 +93,8 @@ res = col.query.hybrid(
 )
 ```
 
-Medido: `alpha=0` y `alpha=0.5` ponen `security.md#0` primero; `alpha=1` (solo vector) no lo trae en el top 3.
+Medido: `alpha=0` y `alpha=0.5` ponen el chunk correcto primero; `alpha=1` (solo vector) no lo trae en el top 3.
 
-Ejemplo: `code/05_hybrid_weaviate.py`
 == pgvector
 Full-text de Postgres (`tsvector` + índice GIN) y pgvector en la misma tabla, fusionados con RRF en una query.
 
@@ -122,7 +120,6 @@ ORDER BY rrf DESC LIMIT 3;
 > [!WARNING]
 > `plainto_tsquery` y `websearch_to_tsquery` exigen **todos** los términos (AND). Una pregunta en lenguaje natural casi nunca matchea completa y el lado léxico devuelve vacío. El `replace(… ' & ', ' | ')` la convierte en OR, como BM25.
 
-Ejemplo: `code/05_hybrid_pgvector.py`
 == Elasticsearch
 Dos opciones en una sola request:
 
@@ -144,9 +141,8 @@ es.search(index=INDEX, size=3, retriever={"rrf": {
 ```
 
 > [!NOTE]
-> El retriever `rrf` devuelve 403 `license is non-compliant` con la licencia básica. Para probarlo localmente agregá `-e xpack.license.self_generated.type=trial` al `docker run` (30 días).
+> El retriever `rrf` es una feature paga: con la licencia básica (la gratuita) devuelve 403 `license is non-compliant`. Necesita licencia Enterprise o una trial de 30 días. La combinación `query` + `knn` sí es gratuita.
 
-Ejemplo: `code/05_hybrid_elasticsearch.py`
 :::
 
 ## Errores comunes

@@ -70,7 +70,7 @@ La respuesta no es un string: es una **lista de bloques** (`text`, `thinking`, `
 
 ## Cómo se ve en código
 
-`code/01_tokens_and_context.py` cuenta tokens antes de enviar, hace una llamada, imprime `usage` y `stop_reason`, y repite con `max_tokens=20` para que veas una respuesta truncada.
+Contar tokens antes de enviar, llamar, y leer `usage` y `stop_reason` de la respuesta. Con `max_tokens=20` la misma pregunta vuelve cortada y con `stop_reason == "max_tokens"`.
 
 ```python
 count = client.messages.count_tokens(model=MODEL, messages=messages)

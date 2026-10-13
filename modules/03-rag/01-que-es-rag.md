@@ -57,20 +57,32 @@ Casi todos los problemas son de **retrieval**, no del modelo:
 
 Por eso el módulo pone tanto peso en medir el retrieval (capítulo 6) antes de tocar el prompt.
 
-### El corpus de los ejemplos
+### El corpus de prueba de este módulo
 
-Todos los scripts usan el handbook ficticio de "Northwind Cloud" en `code/data/`: diez documentos cortos (reembolsos, SLA, on-call, precios, seguridad...) y 22 preguntas etiquetadas con la frase que contiene la respuesta. Hay preguntas fáciles, preguntas con códigos exactos (`X-Northwind-Signature`) y preguntas parafraseadas ("me despertaron tres noches") para que las diferencias entre técnicas se vean de verdad.
+Las mediciones que aparecen en los capítulos se hicieron sobre un corpus de prueba: un handbook ficticio de una empresa SaaS ("Northwind Cloud") con 10 documentos cortos (reembolsos, SLA, on-call, precios, seguridad...) partidos en 37 chunks, y 22 preguntas etiquetadas con la frase que contiene la respuesta. Hay preguntas fáciles, preguntas con códigos exactos (`X-Northwind-Signature`) y preguntas parafraseadas ("me despertaron tres noches"), para que las diferencias entre técnicas se vean en números.
 
 ## Cómo se ve en código
 
-`code/01_minimal_rag.py` es un RAG completo en 40 líneas: chunking por secciones, embeddings locales con FastEmbed, similitud coseno con numpy, y respuesta con Claude. La parte de retrieval corre sin API key.
+Un RAG mínimo entra en una pantalla: partir por secciones, embeber con un modelo local (FastEmbed), buscar por similitud coseno con numpy y responder con Claude.
 
 ```python
-chunks = all_chunks()                                    # 1. chunking
-matrix = embedder.passages([c.text for c in chunks])    # 2. embeddings (indexado)
-hits = cosine_top_k(embedder.query(QUESTION), matrix, k=3)   # 3. retrieval
-context = "\n\n".join(f'<source id="{chunks[i].id}">\n{chunks[i].text}\n</source>' for i, _ in hits)
-response = client.messages.create(model="claude-opus-5-5", ..., messages=[{"role": "user", "content": f"{context}\n\nQuestion: {QUESTION}"}])
+import numpy as np
+from fastembed import TextEmbedding
+
+model = TextEmbedding("BAAI/bge-small-en-v1.5")
+chunks = [...]                                                     # 1. chunking: list of section texts
+matrix = np.array(list(model.passage_embed(chunks)))               # 2. embeddings (indexing, offline)
+
+q = np.array(next(iter(model.query_embed(question))))              # 3. retrieval, per question
+scores = (matrix / np.linalg.norm(matrix, axis=1, keepdims=True)) @ (q / np.linalg.norm(q))
+top = np.argsort(-scores)[:3]
+
+context = "\n\n".join(f'<source id="{i}">\n{chunks[i]}\n</source>' for i in top)   # 4. generation
+response = client.messages.create(
+    model="claude-opus-5-5", max_tokens=1024,
+    system="Answer using only the sources. If they do not contain the answer, say you don't know.",
+    messages=[{"role": "user", "content": f"{context}\n\nQuestion: {question}"}],
+)
 ```
 
 > [!NOTE]

@@ -25,7 +25,13 @@ Un set de preguntas con la respuesta esperada y **qué fragmento** la contiene. 
 - **Cobertura**: preguntas fáciles, con términos exactos, parafraseadas, que requieren dos documentos, y que **no tienen respuesta** en el corpus (el sistema tiene que decir "no sé").
 - **Tamaño**: 30–100 preguntas bien elegidas dan señal. Mejor pocas y buenas que mil sintéticas.
 
-En `code/data/questions.json` cada pregunta tiene `evidence`: una frase que solo está en el chunk correcto. Así se etiqueta relevancia a nivel chunk sin depender de los ids (que cambian si cambia el chunking).
+Un truco útil para etiquetar: guardar con cada pregunta una frase de **evidencia** que solo está en el fragmento correcto. Un chunk es relevante si contiene esa frase. Así la etiqueta no depende de los ids de chunk, que cambian cada vez que cambia el chunking.
+
+```json
+{"question": "Our CFO wants money back for a 3,500 USD charge. Who signs off?",
+ "evidence": "finance director",
+ "answer": "The finance director, with a ticket reference."}
+```
 
 ### Métricas de retrieval
 
@@ -53,7 +59,21 @@ Frameworks que empaquetan esto: **ragas**, **DeepEval**, **TruLens**, **promptfo
 
 ## Cómo se ve en código
 
-`code/06_eval_retrieval.py` corre las cuatro estrategias del capítulo 5 sobre las 22 preguntas y reporta métricas y latencia. Sin API key llega hasta acá:
+Las métricas de retrieval son pocas líneas: para cada pregunta, la posición del primer chunk que contiene la evidencia.
+
+```python
+def metrics(ranking: list[str], evidence: str) -> dict[str, float]:
+    rel = [evidence in text for text in ranking]          # ranking = retrieved chunk texts, best first
+    first = next((n for n, r in enumerate(rel, 1) if r), None)
+    return {
+        "hit@1": float(first == 1),
+        "hit@3": float(first is not None and first <= 3),
+        "mrr": 1 / first if first else 0.0,
+        "ndcg@10": sum(1 / math.log2(n + 1) for n, r in enumerate(rel, 1) if r),  # one relevant chunk: ideal DCG = 1
+    }
+```
+
+Las cuatro estrategias del capítulo 5 medidas sobre el corpus de prueba del módulo (10 documentos cortos de un handbook ficticio y 22 preguntas etiquetadas), con latencia promedio por consulta en CPU:
 
 ```text
 strategy        hit@1  hit@3  hit@10    MRR  nDCG@10  ms/query
@@ -63,7 +83,7 @@ hybrid           0.73   0.91    1.00   0.83     0.87       4.0
 hybrid+rerank    0.77   0.95    1.00   0.86     0.90      67.3
 ```
 
-Con `ANTHROPIC_API_KEY`, además genera respuestas con el top 3 de híbrida + rerank y las califica con un juez que devuelve salida estructurada:
+Para la generación, un juez LLM recibe pregunta, referencia, contexto y respuesta, y devuelve un veredicto con salida estructurada:
 
 ```python
 class Grade(BaseModel):
@@ -76,10 +96,10 @@ grade = client.messages.parse(model="claude-opus-5-5", ..., output_format=Grade)
 
 ### Cómo se usa en la práctica
 
-1. Armá el dataset y una línea base.
-2. Cambiá **una** cosa (chunking, modelo de embeddings, k, híbrida, reranker, prompt).
-3. Corré las evals, compará contra la línea base, quedate con el cambio solo si mejora sin romper otras preguntas.
-4. Corré las evals en CI cuando cambie cualquier pieza del pipeline.
+1. Armar el dataset y medir una línea base.
+2. Cambiar **una** cosa (chunking, modelo de embeddings, k, híbrida, reranker, prompt).
+3. Ejecutar las evals y comparar contra la línea base. El cambio se queda solo si mejora sin romper otras preguntas.
+4. Ejecutar las evals en CI cada vez que cambie cualquier pieza del pipeline.
 
 ## Errores comunes
 

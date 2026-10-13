@@ -45,7 +45,7 @@ Si el texto que procesás viene de un usuario o de internet, puede contener inst
 
 ## Cómo se ve en código
 
-`code/02_prompting.py` clasifica tickets de soporte dos veces: con un prompt vago y con uno estructurado (system prompt con categorías definidas, few-shot y tags XML). Compará la consistencia de la salida.
+Clasificación de tickets de soporte con un prompt estructurado: system prompt con categorías definidas, few-shot y tags XML para separar los datos. Frente a un prompt vago ("¿qué tipo de ticket es este?"), la salida pasa de frases libres a una categoría consistente.
 
 ```python
 SYSTEM = """You triage support tickets for a B2B SaaS.

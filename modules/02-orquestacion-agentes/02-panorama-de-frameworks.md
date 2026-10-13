@@ -82,28 +82,20 @@ Cómo traducir lo que pide una búsqueda que dice AutoGen o Semantic Kernel:
 4. ¿El equipo piensa en roles y querés un prototipo rápido de varios agentes? CrewAI; pasá a Flows para producción.
 5. ¿Stack Microsoft (.NET, Azure AI Foundry) o una base de código AutoGen/SK? Microsoft Agent Framework.
 
-## Cómo correr los ejemplos de este módulo
+## El ejemplo común del módulo
 
-Los frameworks fijan versiones incompatibles entre sí (CrewAI exige `pydantic<2.13`, por ejemplo), así que hay tres entornos:
+Todos los capítulos usan el mismo CRM falso para que el problema sea idéntico en cada tab y solo cambie el framework. Son tres funciones Python comunes; cada framework las envuelve con su propio decorador de tool:
 
-```sh
-cd modules/02-orquestacion-agentes/code
-cp .env.example .env    # ANTHROPIC_API_KEY (y OPENROUTER_API_KEY para la memoria de CrewAI)
+```python
+CUSTOMERS = {"C-001": {"id": "C-001", "name": "Acme SA", "plan": "enterprise", "country": "AR"}, ...}
+TICKETS = {"T-100": {"id": "T-100", "customer_id": "C-001", "subject": "Invoice shows wrong VAT", "status": "open"}, ...}
 
-# LangGraph + LangChain: 03_*, 04_tools_langgraph/langchain, 05/06/07 *_langgraph|langchain, 08_*
-uv venv -p 3.12 .venv && uv pip install -p .venv -r requirements.txt
-
-# CrewAI: *_crewai.py
-uv venv -p 3.12 .venv-crewai && uv pip install -p .venv-crewai -r requirements-crewai.txt
-
-# Microsoft Agent Framework: *_msaf.py
-uv venv -p 3.12 .venv-msaf && uv pip install -p .venv-msaf -r requirements-msaf.txt
-
-.venv/bin/python 03_graph_basics.py
-.venv-crewai/bin/python 04_tools_crewai.py
+def get_customer(customer_id: str) -> str: ...           # customer record as JSON, or an error message
+def list_open_tickets(customer_id: str) -> str: ...      # open tickets of a customer as JSON
+def update_ticket_status(ticket_id: str, status: str) -> str: ...   # the sensitive action in the HITL chapter
 ```
 
-Todos los ejemplos usan el mismo CRM falso de `code/crm.py`, así el problema es idéntico en cada tab y solo cambia el framework.
+Los frameworks fijan versiones incompatibles entre sí (CrewAI exige `pydantic<2.13`, por ejemplo), así que en un proyecto real no suelen convivir en el mismo entorno.
 
 ## Errores comunes
 
@@ -113,6 +105,6 @@ Todos los ejemplos usan el mismo CRM falso de `code/crm.py`, así el problema es
 
 ## En una entrevista
 
-- **¿LangChain o LangGraph?** LangGraph es el runtime de grafos con estado y persistencia; `create_agent` de LangChain es un agente prearmado que corre sobre LangGraph. Empiezo con `create_agent` y bajo a un grafo propio cuando necesito controlar el flujo.
+- **¿LangChain o LangGraph?** LangGraph es el runtime de grafos con estado y persistencia; `create_agent` de LangChain es un agente prearmado construido sobre LangGraph. Empiezo con `create_agent` y bajo a un grafo propio cuando necesito controlar el flujo.
 - **¿Qué ventaja tiene CrewAI?** Modelar rápido un equipo de agentes por rol y tarea. Para producción uso Flows por el control del orden y del estado.
 - **¿Qué pasó con AutoGen?** Microsoft lo unificó con Semantic Kernel en Microsoft Agent Framework; los group chats, handoffs y Magentic-One existen ahí como orquestaciones.

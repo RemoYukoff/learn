@@ -90,18 +90,10 @@ def check_tabs(text: str, where: str, report: Report) -> None:
         report.error(where, "unclosed code fence")
 
 
-def check_requirements(code_dir: Path, where: str, report: Report) -> None:
-    reqs = sorted(code_dir.glob("requirements*.txt"))
-    if not reqs:
-        report.error(where, "code/ needs at least one requirements*.txt")
-        return
-    for req in reqs:
-        for n, line in enumerate(req.read_text().splitlines(), 1):
-            line = line.split("#", 1)[0].strip()
-            if not line or line.startswith("-"):
-                continue
-            if "==" not in line:
-                report.error(f"{where}/{req.name}", f"line {n}: '{line}' is not pinned with ==")
+RUN_PHRASES = re.compile(
+    r"`code/|\bcorré\b|\bcorrelo\b|ejecut[áa]lo|python \d\d_|pip install|uv pip|\.env\.example|tu API key|tus claves",
+    re.I,
+)
 
 
 def validate_module(path: Path, report: Report) -> dict | None:
@@ -162,9 +154,9 @@ def validate_module(path: Path, report: Report) -> dict | None:
         if order != int(md.name[:2]):
             report.error(cwhere, f"order {order} does not match file prefix {md.name[:2]}")
         check_tabs(text, cwhere, report)
-        for ref in re.findall(r"`code/([\w./-]+)`", text):
-            if not (path / "code" / ref).exists():
-                report.error(cwhere, f"references code/{ref} which does not exist")
+        for n, line in enumerate(text.splitlines(), 1):
+            if m := RUN_PHRASES.search(line):
+                report.error(cwhere, f"line {n}: '{m.group(0)}' - chapters are read-only, no runnable files or setup steps")
         chapters.append({"file": md.name, "title": fm.get("title", md.stem), "order": order, "type": fm.get("type", "concepto")})
 
     chapters.sort(key=lambda c: c["order"])
@@ -172,16 +164,13 @@ def validate_module(path: Path, report: Report) -> dict | None:
     if len(set(orders)) != len(orders):
         report.error(where, f"duplicate chapter orders {orders}")
 
+    extra = sorted(p.name for p in path.iterdir() if p.name != "module.json" and p.suffix != ".md")
+    if extra:
+        report.error(where, f"only module.json and chapter .md files are allowed, found {extra}")
+
     if meta["status"] == "ready":
         if not chapters:
             report.error(where, "status is ready but there are no chapters")
-        code_dir = path / "code"
-        if not code_dir.is_dir():
-            report.error(where, "status is ready but code/ is missing")
-        else:
-            check_requirements(code_dir, f"{where}/code", report)
-            if not (code_dir / ".env.example").exists():
-                report.warn(f"{where}/code", "no .env.example")
     else:
         if chapters:
             report.warn(where, "status is pending but chapters exist; set status to ready when done")
