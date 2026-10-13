@@ -1,7 +1,6 @@
 ---
 title: Título del capítulo
 order: 1
-type: concepto
 ---
 
 **Objetivo:** una línea con lo que vas a poder hacer o explicar al terminar.

@@ -1,7 +1,6 @@
 ---
 title: Streaming
 order: 5
-type: implementacion
 ---
 
 **Objetivo:** mostrar la respuesta mientras se genera y saber cuándo el streaming es obligatorio y no solo cosmético.

@@ -1,7 +1,6 @@
 ---
 title: Monitoreo en producción
 order: 7
-type: concepto
 ---
 
 **Objetivo:** saber qué medir de un sistema LLM en producción, cómo detectar que se degradó, y cómo cerrar el ciclo con las evals.

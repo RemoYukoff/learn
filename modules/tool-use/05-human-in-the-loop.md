@@ -1,7 +1,6 @@
 ---
 title: Human-in-the-loop
 order: 5
-type: concepto
 ---
 
 **Objetivo:** poner una aprobación humana delante de las acciones sensibles sin romper el flujo del agente.

@@ -1,7 +1,6 @@
 ---
 title: Por qué evaluar LLMs es distinto a testear
 order: 1
-type: concepto
 ---
 
 **Objetivo:** entender qué cambia cuando el sistema bajo prueba es no determinista y su salida es lenguaje, y qué se mantiene igual de lo que ya sabés de QA.

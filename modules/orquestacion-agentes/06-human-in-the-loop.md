@@ -1,7 +1,6 @@
 ---
 title: Human-in-the-loop
 order: 6
-type: implementacion
 ---
 
 **Objetivo:** pausar un agente antes de una acción sensible, pedir una decisión humana y retomar la ejecución, en los cuatro frameworks.

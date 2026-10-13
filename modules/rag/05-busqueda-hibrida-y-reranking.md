@@ -1,7 +1,6 @@
 ---
 title: Búsqueda híbrida y reranking
 order: 5
-type: implementacion
 ---
 
 **Objetivo:** combinar búsqueda semántica y por palabras, y reordenar los candidatos con un reranker, sabiendo cuánto aporta cada paso.

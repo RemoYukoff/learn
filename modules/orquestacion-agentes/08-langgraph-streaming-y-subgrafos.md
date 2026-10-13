@@ -1,7 +1,6 @@
 ---
 title: "LangGraph: streaming, subgrafos y time travel"
 order: 8
-type: implementacion
 ---
 
 **Objetivo:** mostrar progreso en tiempo real, componer grafos, paralelizar con `Send` y volver a un checkpoint anterior.

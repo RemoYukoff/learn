@@ -1,7 +1,6 @@
 ---
 title: Prompt engineering
 order: 2
-type: concepto
 ---
 
 **Objetivo:** escribir prompts que den resultados consistentes y que se puedan mantener, versionar y evaluar como cualquier otro código.

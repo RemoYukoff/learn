@@ -1,7 +1,6 @@
 ---
 title: Tracing y observabilidad
 order: 6
-type: implementacion
 ---
 
 **Objetivo:** registrar qué hizo un sistema LLM en cada request (cada llamada al modelo, cada tool, cada retrieval) para depurar, medir y alimentar las evals.

@@ -1,7 +1,6 @@
 ---
 title: Loop de agente desde cero
 order: 3
-type: implementacion
 ---
 
 **Objetivo:** escribir el loop de agente a mano, entender cada línea, y saber qué te ahorra un tool runner o un framework.

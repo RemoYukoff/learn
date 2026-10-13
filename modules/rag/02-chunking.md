@@ -1,7 +1,6 @@
 ---
 title: Chunking
 order: 2
-type: concepto
 ---
 
 **Objetivo:** partir documentos en fragmentos que se recuperen bien y que, solos, tengan sentido.

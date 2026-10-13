@@ -1,7 +1,6 @@
 ---
 title: Embeddings
 order: 3
-type: implementacion
 ---
 
 **Objetivo:** saber qué captura un embedding, qué no, y cómo elegir y usar un modelo de embeddings.

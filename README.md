@@ -32,7 +32,6 @@ Every chapter starts with frontmatter:
 ---
 title: Loop de agente desde cero
 order: 3
-type: concepto        # concepto | implementacion
 ---
 ```
 

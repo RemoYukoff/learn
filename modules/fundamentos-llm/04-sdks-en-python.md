@@ -1,7 +1,6 @@
 ---
 title: SDKs en Python y multi-proveedor
 order: 4
-type: implementacion
 ---
 
 **Objetivo:** manejar con soltura los SDKs oficiales: cliente, mensajes, conversación de varios turnos, errores, reintentos y cómo cambiar de proveedor.

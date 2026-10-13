@@ -24,7 +24,7 @@ Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). Cr
 ```
 modules/<slug>/
   module.json          # copy template/module.json
-  01-chapter.md        # chapters, NN-kebab-case.md, frontmatter title/order/type
+  01-chapter.md        # chapters, NN-kebab-case.md, frontmatter title/order
   02-chapter.md
 ```
 
@@ -34,7 +34,7 @@ No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The 
 
 ## Chapter rules
 
-1. Start with frontmatter (`title`, `order`, `type: concepto | implementacion`) then `**Objetivo:**` in one line. Do not repeat the title as `#` heading: the viewer renders it.
+1. Start with frontmatter (`title`, `order`; nothing else) then `**Objetivo:**` in one line. Do not repeat the title as `#` heading: the viewer renders it.
 2. **Concept first, agnostic.** Explain what the thing does and how it works without tying it to a library: vocabulary, moving parts, trade-offs, failure modes.
 3. **Then the implementations in a tab block** when more than one technology does the same job:
 

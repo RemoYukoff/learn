@@ -1,7 +1,6 @@
 ---
 title: Definir tools
 order: 2
-type: implementacion
 ---
 
 **Objetivo:** escribir definiciones de tools que el modelo use bien, y leer lo que el modelo devuelve en cada proveedor.

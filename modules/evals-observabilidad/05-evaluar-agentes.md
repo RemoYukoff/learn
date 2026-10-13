@@ -1,7 +1,6 @@
 ---
 title: Evaluar agentes
 order: 5
-type: implementacion
 ---
 
 **Objetivo:** evaluar un agente por partes (cada decisión, el camino y el resultado) para poder diagnosticar qué falla.

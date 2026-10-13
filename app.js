@@ -441,8 +441,7 @@
       .map(
         (c) => `<li><a href="#/${mod.slug}/${c.file}">
           <span class="check">${isDone(mod.slug, c.file) ? "✓" : ""}</span>
-          <span>${escapeHtml(c.title)}</span>
-          <span class="type type-${escapeHtml(c.type)}">${escapeHtml(c.type)}</span></a></li>`
+          <span>${escapeHtml(c.title)}</span></a></li>`
       )
       .join("");
     const body = `<ol class="toc">${items}</ol>`;

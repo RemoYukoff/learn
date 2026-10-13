@@ -1,7 +1,6 @@
 ---
 title: RAG agéntico
 order: 8
-type: implementacion
 ---
 
 **Objetivo:** pasar de "buscar una vez y responder" a sistemas donde el modelo decide qué buscar, evalúa lo que encontró y vuelve a buscar si hace falta.

@@ -1,7 +1,6 @@
 ---
 title: Qué es RAG y cuándo conviene
 order: 1
-type: concepto
 ---
 
 **Objetivo:** entender las piezas de un sistema RAG, por qué existe y cuándo conviene otra cosa.

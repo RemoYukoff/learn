@@ -1,7 +1,6 @@
 ---
 title: Memoria y persistencia
 order: 5
-type: implementacion
 ---
 
 **Objetivo:** distinguir memoria de corto y de largo plazo, y saber dónde vive cada una en LangGraph, CrewAI y Microsoft Agent Framework.

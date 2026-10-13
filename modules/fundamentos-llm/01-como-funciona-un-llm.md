@@ -1,7 +1,6 @@
 ---
 title: Cómo funciona un LLM (desde el lado de quien lo integra)
 order: 1
-type: concepto
 ---
 
 **Objetivo:** entender tokens, ventana de contexto, sampling, razonamiento y stop reasons lo suficiente como para diagnosticar por qué una integración se comporta como se comporta.

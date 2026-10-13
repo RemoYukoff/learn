@@ -1,7 +1,6 @@
 ---
 title: Por qué orquestar
 order: 1
-type: concepto
 ---
 
 **Objetivo:** saber qué problemas resuelve un framework de orquestación, qué vocabulario usa y cuándo no hace falta ninguno.

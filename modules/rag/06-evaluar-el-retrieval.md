@@ -1,7 +1,6 @@
 ---
 title: Evaluar un RAG
 order: 6
-type: concepto
 ---
 
 **Objetivo:** medir por separado si el sistema encuentra lo correcto y si responde bien con lo que encontró, para saber qué arreglar.

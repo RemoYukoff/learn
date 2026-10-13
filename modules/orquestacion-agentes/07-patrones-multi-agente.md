@@ -1,7 +1,6 @@
 ---
 title: Patrones multi-agente
 order: 7
-type: implementacion
 ---
 
 **Objetivo:** reconocer los patrones multi-agente, saber cuándo valen la pena y cómo se expresa cada uno en LangGraph, CrewAI y Microsoft Agent Framework.

@@ -1,7 +1,6 @@
 ---
 title: Salida estructurada
 order: 3
-type: implementacion
 ---
 
 **Objetivo:** obtener del modelo objetos tipados y válidos (no "texto que parece JSON") para que el resto del sistema pueda confiar en ellos.

@@ -1,7 +1,6 @@
 ---
 title: Costos, rate limits y caching
 order: 6
-type: concepto
 ---
 
 **Objetivo:** estimar y bajar el costo de una integración sin perder calidad, y no caerse por rate limits.

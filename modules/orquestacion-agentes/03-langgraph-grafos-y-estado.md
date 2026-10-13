@@ -1,7 +1,6 @@
 ---
 title: "LangGraph: grafos y estado"
 order: 3
-type: implementacion
 ---
 
 **Objetivo:** escribir un grafo de LangGraph desde cero y entender exactamente qué hace con el estado en cada paso.

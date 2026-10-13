@@ -1,7 +1,6 @@
 ---
 title: Evals en CI
 order: 4
-type: implementacion
 ---
 
 **Objetivo:** convertir las evals en un gate automático que corre en cada cambio de prompt, modelo o código, y conocer cómo lo resuelve cada herramienta.

@@ -1,7 +1,6 @@
 ---
 title: Contexto y memoria del agente
 order: 6
-type: concepto
 ---
 
 **Objetivo:** controlar cuánto contexto consume un agente a medida que trabaja y distinguir los tipos de memoria de un agente.

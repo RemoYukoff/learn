@@ -1,7 +1,6 @@
 ---
 title: Qué es function calling
 order: 1
-type: concepto
 ---
 
 **Objetivo:** entender el protocolo que convierte un modelo de texto en algo que consulta y modifica sistemas reales, y quién hace qué en cada paso.

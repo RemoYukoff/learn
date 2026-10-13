@@ -1,7 +1,6 @@
 ---
 title: Datasets y métricas
 order: 2
-type: concepto
 ---
 
 **Objetivo:** armar un dataset de evaluación útil, elegir métricas por tipo de tarea, y leer los resultados con criterio estadístico.

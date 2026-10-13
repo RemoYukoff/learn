@@ -1,7 +1,6 @@
 ---
 title: Agente con tools
 order: 4
-type: implementacion
 ---
 
 **Objetivo:** construir el mismo agente con tools en los cuatro frameworks y reconocer qué parte del loop resuelve cada uno.

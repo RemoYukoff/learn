@@ -1,7 +1,6 @@
 ---
 title: Panorama de frameworks
 order: 2
-type: concepto
 ---
 
 **Objetivo:** ubicar los frameworks de orquestación más usados, saber qué modelo mental usa cada uno y entender AutoGen y Semantic Kernel aunque hoy se usen con otro nombre.

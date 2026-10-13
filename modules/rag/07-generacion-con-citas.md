@@ -1,7 +1,6 @@
 ---
 title: Generación con citas
 order: 7
-type: implementacion
 ---
 
 **Objetivo:** que el modelo responda solo con lo recuperado, diga cuando no alcanza, y muestre de qué fragmento sale cada afirmación.

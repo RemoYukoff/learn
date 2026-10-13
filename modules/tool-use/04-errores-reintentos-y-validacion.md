@@ -1,7 +1,6 @@
 ---
 title: Errores, reintentos y validación
 order: 4
-type: concepto
 ---
 
 **Objetivo:** hacer que un agente sea confiable en producción: que se recupere de errores, que no ejecute entradas inválidas y que no se quede en loop.

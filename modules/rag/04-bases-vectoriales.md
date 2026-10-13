@@ -1,7 +1,6 @@
 ---
 title: Bases vectoriales
 order: 4
-type: implementacion
 ---
 
 **Objetivo:** entender qué hace una base vectorial por dentro, cómo elegir una, y usar las siete más usadas con el mismo ejemplo.

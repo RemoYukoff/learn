@@ -24,7 +24,6 @@ MANIFEST = ROOT / "manifest.json"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CHAPTER_RE = re.compile(r"^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 FRONTMATTER_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n", re.S)
-CHAPTER_TYPES = {"concepto", "implementacion"}
 REQUIRED_MODULE_KEYS = {"title", "summary", "tags", "versions"}
 
 
@@ -133,13 +132,11 @@ def validate_module(path: Path, report: Report) -> dict | None:
         text = md.read_text()
         fm = parse_frontmatter(text)
         if fm is None:
-            report.error(cwhere, "missing frontmatter block (--- title/order/type ---)")
+            report.error(cwhere, "missing frontmatter block (--- title/order ---)")
             continue
-        for key in ("title", "order", "type"):
+        for key in ("title", "order"):
             if not fm.get(key):
                 report.error(cwhere, f"frontmatter missing '{key}'")
-        if fm.get("type") and fm["type"] not in CHAPTER_TYPES:
-            report.error(cwhere, f"type must be one of {sorted(CHAPTER_TYPES)}")
         try:
             order = int(fm.get("order", ""))
         except ValueError:
@@ -151,7 +148,7 @@ def validate_module(path: Path, report: Report) -> dict | None:
         for n, line in enumerate(text.splitlines(), 1):
             if m := RUN_PHRASES.search(line):
                 report.error(cwhere, f"line {n}: '{m.group(0)}' - chapters are read-only, no runnable files or setup steps")
-        chapters.append({"file": md.name, "title": fm.get("title", md.stem), "order": order, "type": fm.get("type", "concepto")})
+        chapters.append({"file": md.name, "title": fm.get("title", md.stem), "order": order})
 
     chapters.sort(key=lambda c: c["order"])
     orders = [c["order"] for c in chapters]

@@ -1,7 +1,6 @@
 ---
 title: LLM-as-judge
 order: 3
-type: implementacion
 ---
 
 **Objetivo:** usar un modelo para calificar salidas de otro de forma confiable, y saber cuándo no confiar en él.
