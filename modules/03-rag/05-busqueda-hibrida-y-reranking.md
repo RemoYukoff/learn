@@ -41,11 +41,11 @@ Los embeddings comparan vectores calculados **por separado** (bi-encoder). Un **
 retrieval barato (híbrida, top 20–100)  ──▶  reranker caro (cross-encoder)  ──▶  top 3–5 al LLM
 ```
 
-Opciones: cross-encoders abiertos (ms-marco MiniLM, bge-reranker), APIs (Cohere Rerank, Voyage Rerank), o un LLM que ordena (caro, útil con pocos candidatos).
+Opciones: cross-encoders abiertos de Hugging Face, APIs de reranking, o un LLM que ordena (caro, útil con pocos candidatos).
 
 ### Qué aporta cada paso (medido)
 
-Medido sobre el corpus de prueba del módulo (10 documentos cortos de un handbook ficticio y 22 preguntas etiquetadas), con BM25 de `bm25s`, embeddings densos de FastEmbed, RRF con k=60 y el cross-encoder `ms-marco-MiniLM-L-6-v2` sobre los 10 primeros candidatos:
+Medido sobre el corpus de prueba del módulo (10 documentos cortos de un handbook ficticio y 22 preguntas etiquetadas), con BM25, embeddings densos de un modelo abierto chico (bge-small-en-v1.5), RRF con k=60 y un cross-encoder chico (ms-marco-MiniLM-L-6-v2) sobre los 10 primeros candidatos:
 
 | Estrategia | hit@1 | hit@3 | hit@10 | MRR |
 |---|---|---|---|---|
@@ -54,7 +54,33 @@ Medido sobre el corpus de prueba del módulo (10 documentos cortos de un handboo
 | Híbrida (RRF) | 0.73 | 0.91 | **1.00** | 0.83 |
 | Híbrida + rerank | 0.77 | **0.95** | **1.00** | **0.86** |
 
-Lectura honesta: la híbrida **sube el recall** (nada queda afuera del top 10) pero puede bajar la evidencia del primer puesto; el reranker recupera precisión arriba. El reranker cuesta ~18 veces más latencia por consulta en CPU. Con un reranker más grande o una API, la mejora en hit@1 suele ser mayor.
+Lectura honesta: la híbrida **sube el recall** (nada queda afuera del top 10) pero puede bajar la evidencia del primer puesto; el reranker recupera precisión arriba, a cambio de bastante más latencia por consulta.
+
+### RRF y reranking en código
+
+RRF no necesita ninguna librería: solo las posiciones de cada ranking.
+
+```python
+def rrf(*rankings: list[str], k: int = 60) -> list[str]:
+    scores: dict[str, float] = {}
+    for ranking in rankings:
+        for rank, doc_id in enumerate(ranking, 1):
+            scores[doc_id] = scores.get(doc_id, 0.0) + 1 / (k + rank)
+    return sorted(scores, key=scores.get, reverse=True)
+
+candidates = rrf(dense_ids, keyword_ids)[:20]
+```
+
+El reranker es un cross-encoder de Hugging Face que puntúa cada par pregunta–chunk:
+
+```python
+from sentence_transformers import CrossEncoder
+
+reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+texts = [chunk_text[i] for i in candidates]
+ranked = reranker.rank(question, texts, top_k=3)        # [{"corpus_id": 4, "score": 8.1}, ...]
+best = [candidates[r["corpus_id"]] for r in ranked]
+```
 
 ## Cómo se implementa
 
@@ -117,20 +143,19 @@ FROM semantic s FULL OUTER JOIN keyword k USING (id)
 ORDER BY rrf DESC LIMIT 3;
 ```
 
-> [!WARNING]
-> `plainto_tsquery` y `websearch_to_tsquery` exigen **todos** los términos (AND). Una pregunta en lenguaje natural casi nunca matchea completa y el lado léxico devuelve vacío. El `replace(… ' & ', ' | ')` la convierte en OR, como BM25.
+El lado léxico busca con OR entre términos (como BM25), por eso el `replace(' & ', ' | ')` sobre la consulta de texto.
 
 == Elasticsearch
 Dos opciones en una sola request:
 
 ```python
-# 1) query + knn: scores summed with boosts (basic license, free)
+# 1) query + knn: weighted sum of both scores
 es.search(index=INDEX,
           query={"match": {"content": {"query": question, "boost": 0.3}}},
           knn={"field": "embedding", "query_vector": qvec, "k": 10, "num_candidates": 50, "boost": 0.7},
           size=3)
 
-# 2) rrf retriever: rank fusion (Enterprise license or trial)
+# 2) rrf retriever: rank fusion
 es.search(index=INDEX, size=3, retriever={"rrf": {
     "retrievers": [
         {"standard": {"query": {"match": {"content": question}}}},
@@ -140,8 +165,6 @@ es.search(index=INDEX, size=3, retriever={"rrf": {
 }})
 ```
 
-> [!NOTE]
-> El retriever `rrf` es una feature paga: con la licencia básica (la gratuita) devuelve 403 `license is non-compliant`. Necesita licencia Enterprise o una trial de 30 días. La combinación `query` + `knn` sí es gratuita.
 
 :::
 

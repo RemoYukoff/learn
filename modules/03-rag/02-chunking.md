@@ -41,7 +41,7 @@ El trade-off central:
 
 ### Parsing: el paso que nadie mira
 
-Antes de partir hay que **extraer bien el texto**. Tablas de PDF convertidas en sopa de números, headers y footers repetidos en cada página, columnas mezcladas: ningún chunking arregla un parsing malo. Para PDFs complejos se usan parsers específicos (Docling, Unstructured, LlamaParse) o directamente un modelo con visión.
+Antes de partir hay que **extraer bien el texto**. Tablas de PDF convertidas en sopa de números, headers y footers repetidos en cada página, columnas mezcladas: ningún chunking arregla un parsing malo. Para PDFs complejos se usan parsers de documentos especializados o directamente un modelo con visión.
 
 ## Cómo se ve en código
 

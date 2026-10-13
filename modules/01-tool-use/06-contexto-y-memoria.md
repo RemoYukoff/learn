@@ -60,7 +60,7 @@ def trim_old_tool_results(messages: list[dict], keep_last: int = 1) -> None:
                     part["content"] = "[old tool result removed to save context]"
 ```
 
-Lo mismo del lado del servidor con context editing de Anthropic (beta): un disparador decide cuándo borrar y cuántos resultados conservar.
+Lo mismo del lado del servidor con context editing de Anthropic: un disparador decide cuándo borrar y cuántos resultados conservar.
 
 ```python
 CONTEXT_EDITS = {"edits": [{

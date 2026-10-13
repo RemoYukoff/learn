@@ -13,7 +13,7 @@ Sin streaming, el cliente espera a que el modelo termine para recibir todo junto
 Por qué importa:
 
 - **Latencia percibida**: el usuario ve texto en 1 segundo en vez de esperar 30.
-- **Timeouts**: respuestas largas (decenas de miles de tokens) superan los timeouts HTTP sin streaming. Con `max_tokens` alto, el SDK de Anthropic te exige streaming.
+- **Timeouts**: respuestas largas (decenas de miles de tokens) superan los timeouts HTTP sin streaming.
 - **Agentes**: mostrar progreso y tool calls mientras ocurren.
 
 El flujo de eventos tiene la misma forma en todos los proveedores:

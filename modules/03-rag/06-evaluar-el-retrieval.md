@@ -52,7 +52,7 @@ Se miden con **LLM-as-judge**: otro llamado al modelo con la pregunta, la respue
 - **Faithfulness / groundedness**: ¿cada afirmación está respaldada por el contexto? Detecta alucinaciones aunque la respuesta "suene" bien.
 - **Answer relevance**: ¿responde lo que se preguntó?
 
-Frameworks que empaquetan esto: **ragas**, **DeepEval**, **TruLens**, **promptfoo**, y las evals de **LangSmith**. Se ven en el módulo 04. El patrón de fondo es el de este capítulo.
+Herramientas que empaquetan esto: **LangSmith** y **DeepEval**, en el módulo 04. El patrón de fondo es el de este capítulo.
 
 > [!IMPORTANT]
 > Un juez LLM también se equivoca. Revisá a mano una muestra de sus veredictos al principio y cada vez que cambies el prompt del juez. Es tu experiencia de QA aplicada: el juez es un test que también hay que testear.

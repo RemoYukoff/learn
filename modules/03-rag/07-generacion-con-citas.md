@@ -59,7 +59,7 @@ for block in response.content:
             print(cit.source, cit.cited_text)
 ```
 
-Cuando el retrieval es una tool de un agente, la tool devuelve los `search_result` dentro del `tool_result` y las citas funcionan igual. Las citas no se pueden combinar con salida estructurada (`output_config.format`).
+Cuando el retrieval es una tool de un agente, la tool devuelve los `search_result` dentro del `tool_result` y las citas funcionan igual.
 
 == OpenRouter
 Sin citas nativas: fuentes numeradas en el prompt y salida estructurada con los ids por afirmación. Funciona con cualquier modelo.

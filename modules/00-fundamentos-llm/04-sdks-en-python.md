@@ -33,18 +33,18 @@ Patrón común en producción: SDK nativo para el camino principal, gateway para
 
 ### Errores y reintentos
 
-Ambos SDKs reintentan solos (por defecto 2 veces, con backoff) los errores transitorios: conexión, 408, 409, 429 y 5xx. Vos manejás lo que queda, con excepciones tipadas de más específica a más general.
+Los errores se dividen en dos grupos: los transitorios, que se reintentan con backoff (los SDKs ya lo hacen solos), y los del request, que no se arreglan reintentando.
 
-| HTTP | Anthropic | OpenAI | Reintentar |
-|---|---|---|---|
-| 400 | `BadRequestError` | `BadRequestError` | No: el request está mal |
-| 401 / 403 | `AuthenticationError` / `PermissionDeniedError` | igual | No |
-| 404 | `NotFoundError` | igual | No: modelo o recurso inexistente |
-| 429 | `RateLimitError` | `RateLimitError` | Sí, respetando `retry-after` |
-| 5xx / 529 | `InternalServerError` / `APIStatusError` | igual | Sí |
-| red | `APIConnectionError` | igual | Sí |
+| Error | Significa | Reintentar |
+|---|---|---|
+| 400 | El request está mal armado | No |
+| 401 / 403 | Credenciales o permisos | No |
+| 404 | Modelo o recurso inexistente | No |
+| 429 | Rate limit | Sí, esperando lo que indica `retry-after` |
+| 5xx | Falla del proveedor | Sí |
+| Red / timeout | Conexión | Sí |
 
-Logueá siempre el request id (`response._request_id` en ambos SDKs): es lo que te pide soporte.
+Registrá el id de cada request para poder rastrear una falla con el proveedor.
 
 ## Cómo se implementa
 
@@ -53,7 +53,7 @@ Logueá siempre el request id (`response._request_id` en ambos SDKs): es lo que 
 ```python
 import anthropic
 
-client = anthropic.Anthropic(max_retries=3, timeout=60.0)   # reads ANTHROPIC_API_KEY
+client = anthropic.Anthropic(max_retries=3, timeout=60.0)
 history = []
 
 def send(text: str) -> str:
@@ -64,7 +64,7 @@ def send(text: str) -> str:
         system="You are a concise assistant.",
         messages=history,
     )
-    # keep the full content: thinking blocks must be sent back unchanged
+    # keep the full content blocks, not only the text
     history.append({"role": "assistant", "content": response.content})
     return next(b.text for b in response.content if b.type == "text")
 ```
@@ -86,7 +86,7 @@ Chat Completions: el system prompt es un mensaje más y la respuesta está en `c
 ```python
 from openai import OpenAI
 
-client = OpenAI(max_retries=3)           # reads OPENAI_API_KEY
+client = OpenAI(max_retries=3)
 messages = [
     {"role": "system", "content": "You are a concise assistant."},
     {"role": "user", "content": "What is a token?"},
@@ -122,15 +122,13 @@ for model in ["anthropic/claude-opus-5.5", "google/gemini-3.8-flash"]:
     print(model, completion.usage.prompt_tokens, completion.choices[0].message.content)
 ```
 
-Extras de OpenRouter que aparecen en producción: `extra_body={"models": [...]}` para fallback entre modelos, `provider` para preferir proveedores por precio o latencia, y límites de gasto por API key.
-
 :::
 
 ## Errores comunes
 
 - Guardar en el historial solo el texto del assistant cuando hubo thinking o tools: los bloques se tienen que devolver tal cual.
 - Capturar `Exception` y reintentar todo, incluidos los 400.
-- Hardcodear la API key. Usá variables de entorno (`.env` + `python-dotenv` en local, secret manager en producción).
+- Hardcodear la API key en el código.
 - Mezclar formatos: mandar `role: "system"` en `messages` de Anthropic esperando que sea el system prompt principal.
 
 ## En una entrevista

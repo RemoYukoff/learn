@@ -14,6 +14,8 @@ Argument: a technology or concept (`rag`, `mcp`, `langsmith`, `pgvector`...). If
 - The reader is a senior QA / test-automation engineer with production Python, TypeScript, REST, SQL, Docker, CI/CD and one shipped tool-calling agent (Vercel AI SDK). Do not teach Python, HTTP, Docker or testing basics.
 - Goal: learn skills and technologies that AI Engineer job descriptions require. **No projects, no "build X at the end", no exercises.** The site is flat study material: read-only chapters. Code appears only as snippets inside the chapter to illustrate the idea. Nothing in the repo is meant to be run, and nothing requires the reader's API keys, accounts, subscriptions or Docker. If the reader wants to try something, they write and set it up in their own project.
 - Cover everything important about the technology, without padding. No time estimates.
+- **Theory, then code.** Each chapter explains what the thing does and how it works, then shows in code how it is implemented. Nothing else. No implementation gotchas: no notes about which model accepts which parameter, library bugs, version quirks, deprecated aliases, default values, env var names, licenses or install problems. If a library needs a workaround, just write the working code without commenting on it.
+- **Only what jobs ask for.** Cover the technologies most AI Engineer job descriptions name, and only maintained ones (a release in the last ~6 months). No name-dropping of niche or alternative libraries.
 - Prose in Spanish (rioplatense neutral, "vos" is fine). Code, identifiers and comments in code in English.
 
 ## Module structure
@@ -44,7 +46,7 @@ No `code/` folder, no `requirements.txt`, no `.env.example`, no data files. The 
    :::
    ```
 
-   - Use these exact labels so the reader's choice carries across pages: `Anthropic`, `OpenAI`, `OpenRouter`, `LangGraph`, `LangChain`, `CrewAI`, `MS Agent Framework`, `FastEmbed`, `pgvector`, `Chroma`, `Pinecone`, `Weaviate`, `FAISS`, `Milvus`, `Elasticsearch`, `LangSmith`, `DeepEval`, `ragas`, `promptfoo`, `Langfuse`, `OpenTelemetry`, `HubSpot`, `Salesforce`, `Odoo`, `Ollama`, `vLLM`, `FastAPI`. New label only for a technology not in this list.
+   - Use these exact labels so the reader's choice carries across pages: `Anthropic`, `OpenAI`, `OpenRouter`, `LangGraph`, `LangChain`, `CrewAI`, `MS Agent Framework`, `Hugging Face`, `pgvector`, `Chroma`, `Pinecone`, `Weaviate`, `FAISS`, `Milvus`, `Elasticsearch`, `LangSmith`, `DeepEval`, `Langfuse`, `OpenTelemetry`, `HubSpot`, `Salesforce`, `Odoo`, `Ollama`, `vLLM`, `FastAPI`. New label only for a technology not in this list.
    - Same example in every tab, so the reader compares the shape, not the problem.
    - First tab = the one job descriptions ask for most.
    - At least two tabs per block, no nested tabs.
@@ -66,10 +68,10 @@ See `template/chapter.md` and the existing modules `00-fundamentos-llm`, `01-too
 ## Steps
 
 1. Read `README.md`, `manifest.json` and one existing ready module to match tone and depth.
-2. Research: official docs and current PyPI versions of every library the module covers. Check that libraries are still maintained (example: AutoGen and Semantic Kernel were merged into Microsoft Agent Framework; teach the current one and explain the mapping).
+2. Research: which libraries job descriptions ask for, their official docs and current PyPI versions. Drop libraries without a release in ~6 months. If a library was superseded (AutoGen and Semantic Kernel became Microsoft Agent Framework), teach the current one and explain the conceptual mapping.
 3. Write `module.json` and the chapters.
 4. Check every snippet against the installed library (signatures, parameter names, return shapes) in a scratch venv outside the repo. Never call paid APIs or use the reader's keys.
 5. `python3 .claude/skills/add-module/scripts/validate.py` until it prints `OK`. It rewrites `manifest.json`.
 6. `uv run --with playwright==1.63.0 python .claude/skills/add-module/scripts/check_render.py --module <slug>` until 0 problems.
 7. Commit on `main` and push: `git add modules/<slug> manifest.json && git commit -m "feat(module): <slug>" && git push`. One commit per finished module. End the commit message with the attribution line the session requires.
-8. Report to the user: what the module covers and which APIs changed versus common knowledge.
+8. Report to the user in plain words: what the module covers. No library trivia in the report either.

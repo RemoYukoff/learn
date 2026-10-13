@@ -77,7 +77,7 @@ final = graph.invoke({"ticket": "SSO login fails", "attempts": 0, "log": []})
 
 - **`add_edge(a, b)`**: siempre después de `a` va `b`. Si un nodo tiene varias aristas salientes, los destinos corren en paralelo en el mismo super-step.
 - **`add_conditional_edges(a, fn, path_map=None)`**: `fn(state)` devuelve el nombre del nodo siguiente (o una lista, o `END`). Tipar el retorno con `Literal[...]` o pasar `path_map` le permite a LangGraph dibujar el grafo.
-- **Ciclos**: una arista condicional puede volver a un nodo anterior. Así se arma un loop de reintento o el loop de agente. Para que no sea infinito, guardá un contador en el estado; además LangGraph corta con `GraphRecursionError` al pasar `recursion_limit`. En LangGraph 1.2 el default es 10007 pasos (las versiones 0.x usaban 25), así que para un agente conviene fijarlo vos: `graph.invoke(inputs, {"recursion_limit": 30})`.
+- **Ciclos**: una arista condicional puede volver a un nodo anterior. Así se arma un loop de reintento o el loop de agente. Para que no sea infinito, guardá un contador en el estado; además `recursion_limit` corta la ejecución después de N pasos: `graph.invoke(inputs, {"recursion_limit": 30})`.
 - **`compile()`** valida el grafo (que haya entrada desde `START`, que no haya nodos inalcanzables) y devuelve un `CompiledStateGraph` con `invoke`, `stream`, `get_state` y compañía. Acá también se pasa el `checkpointer` y el `store`.
 
 ### Routing desde el nodo con `Command`
@@ -158,7 +158,7 @@ El reducer conserva el historial de pasos a través del ciclo, mientras que `dra
 - Devolver el estado entero desde un nodo. Funciona con claves de reemplazo, pero con reducers duplica datos (por ejemplo, la lista de mensajes entera vuelve a agregarse). Devolvé solo lo que cambia.
 - Mutar el `state` recibido (`state["log"].append(...)`). El cambio no pasa por el reducer ni queda en el checkpoint de forma confiable.
 - Dos nodos paralelos escribiendo una clave sin reducer: `InvalidUpdateError`.
-- Ciclos sin condición de salida en el estado, confiando solo en `recursion_limit`. Con el default actual un agente trabado puede hacer miles de llamadas al modelo antes de cortar.
+- Ciclos sin condición de salida en el estado: un agente trabado sigue llamando al modelo hasta que algo lo corta.
 - Olvidar `add_edge(START, ...)`: `compile()` falla con "Graph must have an entrypoint".
 
 ## En una entrevista

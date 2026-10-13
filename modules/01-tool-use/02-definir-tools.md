@@ -26,7 +26,7 @@ Una tool tiene tres partes. Las tres son prompt:
 
 ### Strict mode
 
-Con `strict: true` el proveedor garantiza que el `input` valida contra tu esquema (mismo mecanismo que salida estructurada). Requiere `additionalProperties: false` y todos los campos en `required`. Soporta un subconjunto de JSON Schema: si usás restricciones raras (`exclusiveMinimum`, `pattern` complejos) validalas en tu código.
+Con `strict: true` el proveedor garantiza que el `input` valida contra tu esquema (mismo mecanismo que salida estructurada). Las reglas de negocio (montos máximos, formatos) se siguen validando en tu código.
 
 Los fragmentos del módulo usan un CRM ficticio con cuatro tools: `find_customer(name)`, `list_tickets(customer_id, status)`, `update_ticket_status(ticket_id, status)` e `issue_refund(customer_id, amount_usd, reason)`. Detrás de cada una puede haber una lista en memoria o una llamada HTTP a HubSpot: para el agente es lo mismo.
 

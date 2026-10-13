@@ -26,8 +26,6 @@ Cualquier framework necesita resolver lo mismo:
 
 Lo que cambia es cuánto de eso queda a la vista. El ejemplo de todos los tabs es el mismo: un asistente de soporte que responde "¿qué tickets abiertos tiene el cliente C-001 y en qué plan está?" usando dos tools del CRM falso del módulo (`get_customer` y `list_open_tickets`, funciones Python que devuelven JSON; ver el capítulo 2).
 
-> [!IMPORTANT]
-> `claude-opus-5-5` rechaza `temperature`, `top_p` y `tool_choice` forzado (`any` o una tool concreta). Ningún snippet los manda. Si un framework fuerza `tool_choice` por su cuenta, la API responde 400; el tab de CrewAI explica el caso.
 
 ## Implementación
 
@@ -111,8 +109,6 @@ print(result.raw)
 - `anthropic/...` usa el proveedor nativo de Anthropic, que viene con el extra `crewai[anthropic]`. Sin ese extra CrewAI necesita LiteLLM.
 - Los `{placeholders}` de `description` se completan con `kickoff(inputs=...)`.
 
-> [!WARNING]
-> Si un agente de CrewAI tiene **exactamente una tool**, CrewAI fuerza `tool_choice` a esa tool, y lo mismo hace con `output_pydantic`/`response_model`. `claude-opus-5-5` responde 400 a eso. Dale al menos dos tools o ninguna, y pedí JSON en el prompt en vez de forzar el esquema.
 == MS Agent Framework
 Un `Agent` combina un chat client, instrucciones y tools. Las funciones con `@tool` (o funciones planas) se convierten en tools a partir de sus tipos, y `Annotated` agrega la descripción de cada argumento. Todo es `async`.
 
@@ -130,7 +126,6 @@ agent = Agent(
     client=AnthropicClient(model="claude-opus-5-5"),
     instructions="You are a support assistant. Use the CRM tools; never invent data.",
     tools=[get_customer, list_open_tickets],
-    default_options={"max_tokens": 4096},                 # AnthropicClient defaults to 1024
 )
 response = await agent.run(question)
 print(response.text)
@@ -152,11 +147,10 @@ El mismo `Agent` funciona con `OpenAIChatClient`, Azure, Bedrock u Ollama cambia
 
 - Docstrings vagos. La descripción de la tool es parte del prompt: "Get a customer record by id, e.g. C-001" funciona mejor que "customer tool".
 - Lanzar excepciones desde una tool cuando el problema es de datos. Devolvé un texto de error que el modelo pueda usar ("customer not found, known ids: ..."); `crm.py` lo hace así.
-- `max_tokens` bajo con modelos que piensan: el razonamiento consume tokens del mismo presupuesto y la respuesta sale cortada.
 - Tools con efectos (cambiar estado de un ticket) sin aprobación humana. Lo resolvemos en el capítulo de human-in-the-loop.
 
 ## En una entrevista
 
-- **¿Qué hace `ToolNode`?** Ejecuta en paralelo todas las tool calls del último `AIMessage` y devuelve un `ToolMessage` por cada una. Por defecto convierte en mensaje solo los errores de argumentos inválidos y relanza las demás excepciones; con `handle_tool_errors=True` (o un string o una función) también devuelve esos errores al modelo.
+- **¿Qué hace `ToolNode`?** Ejecuta en paralelo todas las tool calls del último `AIMessage` y devuelve un `ToolMessage` por cada una. Con `handle_tool_errors` los errores de las tools vuelven al modelo como mensaje en vez de cortar el grafo.
 - **¿Qué diferencia hay entre `create_agent` y armar el grafo?** `create_agent` es ese mismo grafo prearmado con puntos de extensión (middleware). Armo el grafo cuando necesito nodos o routing propios.
 - **¿Cómo describe CrewAI un agente?** Con `role`, `goal` y `backstory`, que forman su system prompt, y tareas con `description` y `expected_output`.

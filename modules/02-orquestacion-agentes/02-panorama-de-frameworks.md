@@ -35,7 +35,7 @@ Runtime de bajo nivel de LangChain Inc. Un `StateGraph` con nodos (funciones) y 
 
 ### LangChain
 
-Desde la versión 1.0 LangChain se reorganizó alrededor de `create_agent`: una función que devuelve **un grafo de LangGraph ya compilado** con el loop modelo-tools. Se personaliza con **middleware** (aprobación humana, resumen de historial, reintentos, límites de llamadas) en vez de cadenas. Sigue aportando la capa de integraciones: modelos (`ChatAnthropic`, `init_chat_model`), tools, loaders, vector stores. Si en una entrevista te preguntan por "chains" o LCEL, es la API vieja: hoy se usa para pipelines simples y el código nuevo de agentes va por `create_agent` o LangGraph.
+LangChain se organiza alrededor de `create_agent`: una función que devuelve **un grafo de LangGraph ya compilado** con el loop modelo-tools. Se personaliza con **middleware** (aprobación humana, resumen de historial, reintentos, límites de llamadas) en vez de cadenas. Sigue aportando la capa de integraciones: modelos (`ChatAnthropic`, `init_chat_model`), tools, loaders, vector stores.
 
 ### CrewAI
 
@@ -46,7 +46,7 @@ Framework independiente de LangChain, orientado a roles. Dos piezas:
 
 ### Microsoft Agent Framework (ex AutoGen + Semantic Kernel)
 
-Microsoft unificó sus dos frameworks en uno: **Microsoft Agent Framework** (paquete `agent-framework`). AutoGen quedó en mantenimiento (la última versión de `autogen-agentchat` es la 0.7.5, de septiembre de 2025) y Semantic Kernel recibe soporte pero el desarrollo nuevo de agentes va al framework unificado. Tiene dos capas:
+Microsoft unificó sus dos frameworks en uno: **Microsoft Agent Framework** (paquete `agent-framework`). El desarrollo nuevo de agentes de Microsoft va a este framework; AutoGen y Semantic Kernel quedaron como antecesores. Tiene dos capas:
 
 - **Agent:** un cliente de chat (Anthropic, OpenAI, Azure, Bedrock, Ollama...), instrucciones, tools y middleware. Hace el loop de tools solo.
 - **Workflows:** grafo tipado de executors con aristas, fan-out/fan-in, checkpoints y pedidos de input humano, más orquestaciones prearmadas (`SequentialBuilder`, `ConcurrentBuilder`, `HandoffBuilder`, `GroupChatBuilder`, `MagenticBuilder`).
@@ -65,8 +65,6 @@ Cómo traducir lo que pide una búsqueda que dice AutoGen o Semantic Kernel:
 | SK planners | Function calling nativo del modelo (los planners se deprecaron) |
 | SK Process Framework | Workflows |
 
-> [!NOTE]
-> Si en la entrevista preguntan por AutoGen, explicá el modelo conversacional (agentes que se mandan mensajes en un equipo con condición de terminación) y aclará que hoy lo escribirías con Microsoft Agent Framework. Muestra que seguís el ecosistema.
 
 ### Otros que conviene reconocer
 
@@ -95,13 +93,11 @@ def list_open_tickets(customer_id: str) -> str: ...      # open tickets of a cus
 def update_ticket_status(ticket_id: str, status: str) -> str: ...   # the sensitive action in the HITL chapter
 ```
 
-Los frameworks fijan versiones incompatibles entre sí (CrewAI exige `pydantic<2.13`, por ejemplo), así que en un proyecto real no suelen convivir en el mismo entorno.
 
 ## Errores comunes
 
 - Elegir framework por popularidad en vez de por el tipo de control que necesitás.
 - Mezclar dos frameworks de orquestación en el mismo servicio. Elegí uno; integraciones sueltas (un vector store de LangChain dentro de un Flow de CrewAI) sí están bien.
-- Aprender tutoriales viejos: `AgentExecutor`, `initialize_agent`, `ConversationBufferMemory` y los planners de Semantic Kernel son APIs reemplazadas.
 
 ## En una entrevista
 

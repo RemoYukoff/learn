@@ -119,8 +119,6 @@ CloseTicketFlow().kickoff()
 - Por defecto pregunta por consola. Para producción pasás un `provider` (`HumanFeedbackProvider`) que manda el pedido a Slack o a una UI y lanza `HumanFeedbackPending`: `kickoff()` devuelve ese objeto en vez de bloquear, el estado se guarda si el Flow tiene persistencia configurada (`@persist`) y se reanuda cuando llega la respuesta.
 - Dentro de una Crew existe `Task(human_input=True)`: al terminar la tarea el agente le muestra el resultado a una persona por consola y lo corrige con su feedback. Sirve para revisar resultados, no para aprobar una tool antes de ejecutarla.
 
-> [!NOTE]
-> Para clasificar la respuesta CrewAI intenta primero salida estructurada forzando `tool_choice`. `claude-opus-5-5` lo rechaza y CrewAI cae solo a un prompt simple: emite un warning, pero el flujo sigue.
 == MS Agent Framework
 La política va en la tool: `@tool(approval_mode="always_require")`. Cuando el modelo la pide, el agente **no la ejecuta** y devuelve en `response.user_input_requests` un pedido de aprobación con la llamada propuesta. Respondés con un mensaje de usuario que contiene las respuestas de aprobación, en la misma sesión.
 

@@ -51,7 +51,7 @@ Cada tab muestra el mismo flujo: crear la colección para vectores de 384 dimens
 
 :::tabs
 == Pinecone
-Pinecone SDK 10 usa **document indexes**: declarás un schema de campos y cada registro es un documento JSON. Los campos no declarados quedan como metadata filtrable. (El estilo anterior `dimension=` + `index.upsert`/`index.query` sigue funcionando pero está deprecado.)
+Base vectorial administrada: declarás un schema de campos y cada registro es un documento JSON. Los campos no declarados quedan como metadata filtrable.
 
 ```python
 from pinecone import DenseVectorQuery, Pinecone
@@ -76,7 +76,7 @@ for doc in res.matches:
     print(doc.id, doc.score, doc.get("section"))
 ```
 
-Los upserts son asincrónicos: un documento puede tardar unos segundos en aparecer. Los **namespaces** separan tenants o versiones dentro de un índice.
+Los **namespaces** separan tenants o versiones dentro de un índice.
 
 == Chroma
 Embebida en tu proceso y persistida en una carpeta. Cero infraestructura.
@@ -96,7 +96,6 @@ res = col.query(query_embeddings=[query_vector], n_results=3, where={"doc": "pri
 print(res["ids"][0], res["distances"][0])
 ```
 
-Chroma también puede embeber por vos si le pasás `documents` sin `embeddings` (usa un modelo por defecto). Es cómodo, pero fijá el modelo explícitamente en producción.
 
 == Weaviate
 Schema con propiedades tipadas. Podés traer tus vectores (`self_provided`) o configurar un vectorizador para que Weaviate embeba solo.

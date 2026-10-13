@@ -75,22 +75,15 @@ graph.invoke(inputs, config, context=Context(user_id="alice"))
 
 Con un checkpointer persistente como `SqliteSaver`, el thread sobrevive al reinicio del proceso: una nueva invocación con el mismo `thread_id` sigue desde el último checkpoint guardado.
 == CrewAI
-CrewAI tiene una **memoria unificada**: un objeto `Memory` que guarda recuerdos en una base vectorial local (LanceDB), usa un LLM para decidir qué guardar y cómo categorizarlo, y los recupera combinando similitud, recencia e importancia. Con `Crew(memory=True)` se crea una con defaults; para controlar modelos y storage pasás una instancia.
+CrewAI tiene una **memoria unificada**: un objeto `Memory` que guarda recuerdos en una base vectorial local, usa un LLM para decidir qué guardar y cómo categorizarlo, y los recupera combinando similitud, recencia e importancia. Con `Crew(memory=True)` se activa con la configuración por defecto, o pasás una instancia propia.
 
 ```python
 from crewai import LLM, Crew
 from crewai.memory.unified_memory import Memory
 
-llm = LLM(model="anthropic/claude-opus-5-5", max_tokens=4096)
-
 memory = Memory(
-    llm=llm,                                   # decides what to store (default: an OpenAI model)
-    storage="./crew_memory.db",                # carpeta de LanceDB
-    embedder={                                 # default: OpenAI embeddings
-        "provider": "openrouter",
-        "config": {"api_key": os.environ["OPENROUTER_API_KEY"],
-                   "model_name": "openai/text-embedding-3-small"},
-    },
+    llm=LLM(model="anthropic/claude-opus-5-5"),   # decides what to store and how to categorize it
+    storage="./crew_memory.db",                   # local vector store folder
 )
 
 crew = Crew(agents=[support], tasks=[task], memory=memory)
@@ -104,10 +97,8 @@ memory.recall("preferred language", limit=3)                    # explicit searc
 - `scope` organiza los recuerdos como rutas (`/users/alice`), y `memory.scope("/users/alice")` devuelve una vista limitada a esa rama: así separás usuarios.
 - Corto plazo: dentro de un `kickoff` las tareas comparten contexto por `context=[...]`; entre ejecuciones, la memoria es la que conecta.
 
-> [!NOTE]
-> Anthropic no ofrece embeddings. Para no depender de OpenAI, el snippet configura embeddings a través de OpenRouter. También hay proveedores locales (`ollama`, `sentence_transformer`).
 == MS Agent Framework
-**Corto plazo = `AgentSession`.** Una sesión agrupa los mensajes de una conversación. El proveedor de historial por defecto (`InMemoryHistoryProvider`) guarda los mensajes dentro de `session.state`, así que persisten mientras conserves la sesión, y se serializan con `to_dict()` / `from_dict()`.
+**Corto plazo = `AgentSession`.** Una sesión agrupa los mensajes de una conversación. Un history provider guarda los mensajes de la sesión; la sesión se serializa con `to_dict()` / `from_dict()` para guardarla y retomarla.
 
 ```python
 from agent_framework import Agent, AgentSession, InMemoryHistoryProvider
@@ -122,9 +113,9 @@ saved = session.to_dict()                                  # guardalo en tu DB
 restored = AgentSession.from_dict(saved)
 ```
 
-Para guardar el historial del lado del servidor hay proveedores para Redis (`agent-framework-redis`) y Cosmos DB, o el historial del propio servicio cuando el cliente lo soporta (Responses API, Foundry).
+Para persistir el historial fuera del proceso se usa un history provider respaldado por una base de datos.
 
-**Largo plazo = context providers.** Un `ContextProvider` se ejecuta antes y después de cada `run`: antes inyecta contexto (instrucciones, mensajes, tools) y después puede extraer y guardar información. Hay proveedores listos: `MemoryContextProvider` y `FileMemoryProvider`, Mem0 (`agent-framework-mem0`), Redis, y búsqueda vectorial (`VectorCollectionContextProvider`). Para compactar el historial, `Agent(compaction_strategy=...)` acepta estrategias como `SlidingWindowStrategy` o `SummarizationStrategy`.
+**Largo plazo = context providers.** Un `ContextProvider` se ejecuta antes y después de cada `run`: antes inyecta contexto (instrucciones, mensajes, tools) y después puede extraer y guardar información. Hay proveedores listos para memoria y para búsqueda vectorial. Para compactar el historial, `Agent(compaction_strategy=...)` acepta estrategias como `SlidingWindowStrategy` o `SummarizationStrategy`.
 :::
 
 ## Errores comunes

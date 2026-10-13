@@ -50,7 +50,7 @@ La paráfrasis gana, pero por poco. Por eso se combina con búsqueda por palabra
 | Local vs API | Local: sin costo por token, sin enviar datos afuera, necesitás CPU/GPU. API: mejor calidad, latencia de red |
 | Query vs documento | Muchos modelos embeben distinto la pregunta y el pasaje (prefijos o `input_type`). Usarlo mal baja el recall |
 
-Anthropic no tiene modelo de embeddings propio y recomienda **Voyage AI**. OpenRouter expone Voyage y otros modelos con la API de embeddings compatible con OpenAI.
+Las dos familias que aparecen en la práctica: modelos por API (OpenAI es el más usado) y modelos abiertos de Hugging Face que corren en tu infraestructura.
 
 > [!IMPORTANT]
 > El modelo de embeddings es parte del índice. Si lo cambiás, tenés que reembeber **todo** el corpus: vectores de modelos distintos no son comparables. Guardá el nombre y versión del modelo junto al índice.
@@ -58,31 +58,37 @@ Anthropic no tiene modelo de embeddings propio y recomienda **Voyage AI**. OpenR
 ## Cómo se implementa
 
 :::tabs
-== FastEmbed
-Librería que ejecuta modelos de embeddings en formato ONNX sobre CPU, sin servicio externo. Buena opción para datos sensibles y volumen alto.
-
-```python
-from fastembed import TextEmbedding
-
-model = TextEmbedding("BAAI/bge-small-en-v1.5")          # 384 dims, ~70 MB
-passages = list(model.passage_embed(["Refunds above 2,000 USD need..."]))
-query = next(iter(model.query_embed("who approves large refunds?")))  # adds the query instruction
-```
-
-`passage_embed` y `query_embed` existen porque los modelos BGE esperan un prefijo distinto para preguntas.
-== OpenRouter
-La API de embeddings compatible con OpenAI, con modelos de Voyage, Google, NVIDIA y otros detrás de un mismo endpoint.
+== OpenAI
+Modelos por API: mandás textos y recibís vectores. `text-embedding-3-small` (1536 dimensiones) es el default razonable; `text-embedding-3-large` (3072) da algo más de calidad a más costo. Ambos permiten pedir menos dimensiones con `dimensions`.
 
 ```python
 from openai import OpenAI
 
-client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=...)
-response = client.embeddings.create(model="voyageai/voyage-4-lite", input=sentences)
-vectors = [d.embedding for d in response.data]
+client = OpenAI()
+response = client.embeddings.create(
+    model="text-embedding-3-small",
+    input=["Refunds above 2,000 USD need approval from the finance director.",
+           "Big reimbursements must be signed off by the head of finance."],
+)
+vectors = [d.embedding for d in response.data]       # one list[float] per input, same order
 print(len(vectors[0]), response.usage.prompt_tokens)
 ```
 
-Se cobra por token de entrada, como un LLM pero mucho más barato. Embebé en lotes (decenas o cientos de textos por request).
+Se cobra por token de entrada y se embebe en lotes (decenas o cientos de textos por request).
+== Hugging Face
+Modelos abiertos con la librería `sentence-transformers`: corren en tu máquina o tu servidor, sin enviar datos afuera. `encode_query` y `encode_document` aplican el formato que cada modelo espera para preguntas y pasajes.
+
+```python
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("BAAI/bge-small-en-v1.5")      # 384 dimensions
+docs = model.encode_document([
+    "Refunds above 2,000 USD need approval from the finance director.",
+    "The finance director approves the annual budget in December.",
+])
+query = model.encode_query(["who approves large refunds?"])
+print(model.similarity(query, docs))                        # cosine similarity matrix, shape (1, 2)
+```
 :::
 
 ## Errores comunes

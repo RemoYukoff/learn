@@ -73,8 +73,6 @@ ticket = message.parsed           # None if the model refused
 if message.refusal:
     ...
 ```
-
-La Responses API (la más nueva de OpenAI) usa `client.responses.parse(..., text_format=Ticket)` y devuelve `response.output_parsed`.
 == OpenRouter
 OpenRouter es compatible con la API de OpenAI: mismo SDK, otro `base_url`. El mismo código sirve para Claude, GPT o Gemini cambiando el string del modelo.
 

@@ -39,7 +39,7 @@ El modelo ve las tools como parte del prompt. Elige según:
 - **El nombre y los parámetros**: nombres claros (`issue_refund`, no `op3`), descripciones en cada parámetro, enums cuando hay valores fijos.
 - **El contexto de la conversación**.
 
-`tool_choice` controla si puede elegir (`auto`, el default), si no puede usar tools (`none`), o si está obligado a usar alguna. Ojo: en Claude Opus 5.5 y Sonnet 5.5 forzar una tool (`any` / `tool`) ya no se acepta; se guía con el prompt y `strict`.
+`tool_choice` controla si puede elegir (`auto`, el default), si no puede usar tools (`none`), o si está obligado a usar alguna.
 
 ### Llamadas en paralelo
 

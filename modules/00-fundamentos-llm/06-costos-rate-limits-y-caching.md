@@ -10,21 +10,13 @@ type: concepto
 
 ### Cómo se cobra
 
-Se paga por millón de tokens, con precios distintos para entrada y salida. La salida cuesta ~5 veces más que la entrada. Los tokens de razonamiento cuentan como salida.
-
-| Modelo (Anthropic, oct 2026) | Entrada $/M | Salida $/M |
-|---|---|---|
-| Claude Opus 5.5 | 4.00 | 20.00 |
-| Claude Sonnet 5.5 | 2.00 | 10.00 |
-| Claude Haiku 5.5 | 0.10 | 0.50 |
-
-Los precios cambian seguido: tomalos de la página oficial, no del código.
+Se paga por millón de tokens, con precios distintos para entrada y salida. La salida suele costar varias veces más que la entrada, y los tokens de razonamiento cuentan como salida. Los modelos grandes cuestan bastante más por token que los chicos de la misma familia.
 
 Costo de un agente = suma de **todas** las llamadas del loop, y cada llamada reenvía el historial completo. Un agente de 10 pasos con 20k tokens de contexto paga esos 20k diez veces (salvo caching).
 
 ### Palancas, de gratis a costosas
 
-1. **Prompt caching** (gratis en calidad). El proveedor guarda el procesamiento de un prefijo idéntico. Lecturas de cache cuestan ~10% del precio de entrada; escribir el cache cuesta ~25% más la primera vez. TTL de 5 minutos por defecto (1 hora opcional).
+1. **Prompt caching** (gratis en calidad). El proveedor guarda el procesamiento de un prefijo idéntico. Leer del cache cuesta una fracción del precio normal de entrada; escribirlo la primera vez cuesta un poco más. El cache vive unos minutos y se renueva con cada uso.
    - Es **match de prefijo**: cualquier byte distinto invalida todo lo que viene después.
    - Orden: tools → system → mensajes. Lo estable primero, lo variable al final.
    - Asesinos silenciosos del cache: timestamps en el system prompt, JSON sin ordenar, lista de tools que cambia de orden.
@@ -56,8 +48,6 @@ r = client.messages.create(model=MODEL, max_tokens=512, system=system, messages=
 print(r.usage.cache_creation_input_tokens, r.usage.cache_read_input_tokens)
 ```
 
-> [!NOTE]
-> El prefijo mínimo cacheable depende del modelo (entre 512 y 4096 tokens). Prefijos más cortos simplemente no se cachean, sin error.
 
 ## Errores comunes
 

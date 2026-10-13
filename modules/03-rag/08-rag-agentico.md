@@ -66,8 +66,6 @@ builder.add_edge("rewrite", "retrieve")
 builder.add_edge("generate", END)
 ```
 
-> [!IMPORTANT]
-> `with_structured_output` de `langchain-anthropic` usa por defecto **tool calling forzado**, que `claude-opus-5-5` rechaza. Pasá `method="json_schema"` para usar structured outputs nativos.
 
 == LangChain
 Retrieval como tool de un agente con `create_agent`. La descripción de la tool le dice al modelo qué cubre la base y que busque una vez por sub-pregunta.

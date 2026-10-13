@@ -36,7 +36,7 @@ for chunk, meta in agent.stream(inputs, stream_mode="messages"):
         print(chunk.text, end="", flush=True)
 ```
 
-Con `version="v2"` cada evento llega como dict uniforme `{"type", "ns", "data"}`, más cómodo para reenviar a un frontend. Todo existe también en async (`astream`).
+Todo existe también en async (`astream`).
 
 ## Subgrafos
 

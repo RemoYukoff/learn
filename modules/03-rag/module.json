@@ -11,6 +11,8 @@
     "vector-db",
     "hybrid-search",
     "reranking",
+    "openai",
+    "hugging-face",
     "pinecone",
     "chroma",
     "weaviate",
@@ -24,8 +26,8 @@
     "02-orquestacion-agentes"
   ],
   "versions": {
-    "fastembed": "0.9.0",
-    "bm25s": "0.3.13",
+    "openai": "3.29.0",
+    "sentence-transformers": "6.1.0",
     "chromadb": "1.5.9",
     "pinecone": "10.0.0",
     "weaviate-client": "4.23.1",

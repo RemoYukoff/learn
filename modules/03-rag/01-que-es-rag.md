@@ -63,19 +63,18 @@ Las mediciones que aparecen en los capítulos se hicieron sobre un corpus de pru
 
 ## Cómo se ve en código
 
-Un RAG mínimo entra en una pantalla: partir por secciones, embeber con un modelo local (FastEmbed), buscar por similitud coseno con numpy y responder con Claude.
+Un RAG mínimo entra en una pantalla: partir por secciones, embeber con un modelo abierto de Hugging Face (sentence-transformers), buscar por similitud coseno y responder con Claude.
 
 ```python
-import numpy as np
-from fastembed import TextEmbedding
+from sentence_transformers import SentenceTransformer
 
-model = TextEmbedding("BAAI/bge-small-en-v1.5")
+model = SentenceTransformer("BAAI/bge-small-en-v1.5")
 chunks = [...]                                                     # 1. chunking: list of section texts
-matrix = np.array(list(model.passage_embed(chunks)))               # 2. embeddings (indexing, offline)
+matrix = model.encode_document(chunks)                             # 2. embeddings (indexing, offline)
 
-q = np.array(next(iter(model.query_embed(question))))              # 3. retrieval, per question
-scores = (matrix / np.linalg.norm(matrix, axis=1, keepdims=True)) @ (q / np.linalg.norm(q))
-top = np.argsort(-scores)[:3]
+q = model.encode_query([question])                                 # 3. retrieval, per question
+scores = model.similarity(q, matrix)[0]                            # cosine similarity
+top = scores.argsort(descending=True)[:3].tolist()
 
 context = "\n\n".join(f'<source id="{i}">\n{chunks[i]}\n</source>' for i in top)   # 4. generation
 response = client.messages.create(
@@ -86,7 +85,7 @@ response = client.messages.create(
 ```
 
 > [!NOTE]
-> Para unos miles de chunks, numpy con fuerza bruta alcanza y sobra. Las bases vectoriales importan por escala, filtros, actualizaciones y operación, no porque el cálculo sea difícil.
+> Para unos miles de chunks, comparar contra todos (fuerza bruta) alcanza y sobra. Las bases vectoriales importan por escala, filtros, actualizaciones y operación, no porque el cálculo sea difícil.
 
 ## Errores comunes
 

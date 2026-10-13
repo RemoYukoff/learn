@@ -4,14 +4,12 @@
   "order": 4,
   "level": "intermedio",
   "status": "ready",
-  "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de trayectorias, tracing con OpenTelemetry y monitoreo en producción.",
+  "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
   "tags": [
     "evals",
     "llm-as-judge",
     "langsmith",
     "deepeval",
-    "promptfoo",
-    "ragas",
     "langfuse",
     "opentelemetry"
   ],
@@ -21,12 +19,8 @@
   "versions": {
     "langsmith": "0.14.8",
     "deepeval": "4.2.8",
-    "promptfoo": "0.124.1",
-    "ragas": "0.4.3",
-    "openevals": "0.2.0",
     "langfuse": "4.17.0",
     "opentelemetry-sdk": "1.45.1",
-    "opentelemetry-instrumentation-anthropic": "0.62.4",
     "anthropic": "1.13.0"
   }
 }

@@ -67,8 +67,6 @@ supervisor = create_agent(model, tools=[ask_accounts, ask_tickets],
 
 **Pipeline y jerárquico.** Un pipeline son aristas fijas entre nodos-agente. Un jerárquico son subgrafos: un supervisor compilado se agrega como nodo de otro grafo.
 
-> [!NOTE]
-> Existen `langgraph-supervisor` y `langgraph-swarm` como paquetes prearmados. La documentación actual de LangChain recomienda el enfoque de agentes como tools para el supervisor, que da más control sobre qué contexto recibe cada especialista.
 == CrewAI
 El multi-agente es el modelo nativo de CrewAI: varios `Agent`, varias `Task` y un `Process`.
 

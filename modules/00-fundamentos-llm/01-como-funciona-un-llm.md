@@ -22,7 +22,7 @@ Lo que importa para integrarlo:
 
 ### Tokenización
 
-Los tokenizers son distintos por proveedor y por generación de modelo. La misma frase puede costar un 30% más en un modelo nuevo. Nunca estimes con un tokenizer de otro proveedor (por ejemplo `tiktoken` para Claude): usá el endpoint de conteo del proveedor.
+Cada proveedor (y cada familia de modelos) parte el texto a su manera, así que la misma frase cuesta distinta cantidad de tokens según el modelo. Para contar, se usa el conteo del propio proveedor.
 
 ```text
 "tokenización"  →  ["token", "ización"]        (ejemplo ilustrativo)
@@ -37,18 +37,14 @@ El modelo devuelve probabilidades; el **sampler** elige. Los parámetros clásic
 - **temperature**: aplana (alto) o afila (bajo) la distribución. `0` ≈ elegir siempre el más probable.
 - **top_p / top_k**: recortan la cola de tokens poco probables antes de elegir.
 
-> [!WARNING]
-> En los modelos más recientes de Claude (Opus 5.5, Sonnet 5.5, Fable) `temperature`, `top_p` y `top_k` **ya no se aceptan** y devuelven 400. El control de calidad/costo pasó a `effort`. En modelos de OpenAI y Gemini (vía OpenRouter) siguen existiendo. Si una búsqueda o entrevista pregunta por temperature, explicá qué hace y aclaralo.
-
 Determinismo: aun con `temperature=0` la salida no es 100% reproducible (batching y punto flotante en GPU). Para tests, compará propiedades de la salida, no strings exactos.
 
 ### Razonamiento (thinking) y effort
 
 Los modelos actuales "piensan" antes de responder: generan tokens de razonamiento que se cobran como salida pero normalmente no se muestran.
 
-- En Claude Opus 5.5 el razonamiento es **adaptativo y siempre activo**: el modelo decide cuánto pensar.
-- Lo controlás con `output_config={"effort": "low" | "medium" | "high" | "xhigh" | "max"}`. Más effort = mejor en problemas difíciles, más tokens y más latencia. El default en Opus 5.5 es `medium`.
-- En OpenAI el equivalente es `reasoning_effort`; en OpenRouter, `reasoning`.
+- El razonamiento es **adaptativo**: el modelo decide cuánto pensar según la dificultad.
+- Lo regulás con un nivel de **effort** (`low` a `max`): más effort = mejor en problemas difíciles, más tokens y más latencia. En Anthropic va en `output_config={"effort": ...}`; en OpenAI se llama `reasoning_effort`.
 
 Regla práctica: clasificación, extracción y chat simple con `low`; agentes y código con `high` o `xhigh`. Medí antes de subirlo.
 
@@ -84,11 +80,11 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
 - No mirar `stop_reason`: parsear un JSON que quedó cortado por `max_tokens`.
 - `max_tokens` demasiado bajo con effort alto: el razonamiento se come el presupuesto y no queda para la respuesta.
 - Asumir que el modelo "recuerda" la conversación anterior sin reenviarla.
-- Estimar costos con palabras o con un tokenizer de otro proveedor.
+- Estimar costos con palabras en vez de tokens.
 
 ## En una entrevista
 
 - **¿Qué es la ventana de contexto y qué pasa si la superás?** El máximo de tokens que el modelo procesa por llamada. Si la superás, la API devuelve error; antes de eso, la calidad baja porque la información relevante se diluye. Se maneja con truncado, resumen o retrieval.
-- **¿Para qué sirve temperature?** Controla la aleatoriedad del sampling. Bajo para tareas deterministas (extracción), alto para creatividad. En modelos nuevos de Claude se reemplazó por `effort`.
+- **¿Para qué sirve temperature?** Controla la aleatoriedad del sampling. Bajo para tareas deterministas (extracción), alto para creatividad.
 - **¿Cómo detectás una respuesta truncada?** `stop_reason == "max_tokens"` (o `finish_reason == "length"`).
 - **¿Por qué una API de LLM es stateless y qué implica?** Escala mejor y no guarda datos; implica que el cliente arma y manda el historial, y que el costo crece con cada turno.

@@ -31,13 +31,17 @@ Para agentes que actúan sobre sistemas, la mejor verificación es mirar el mund
 
 Exigir trayectoria estricta en un agente abierto genera falsos negativos: hay varios caminos válidos. Combiná "superset de lo obligatorio" con "subset de lo permitido" y un tope de pasos.
 
+### Por qué medir más de una capa
+
+Las capas fallan de forma independiente. Un agente puede llamar exactamente a las tools que pedía la referencia (paso y trayectoria aprueban) y aun así no completar la tarea: por ejemplo, reembolsa pero nunca cierra el ticket porque la referencia no incluía ese paso. Al revés, puede llegar al resultado correcto por un camino de 15 pasos que cuesta cinco veces más. Medir solo una capa esconde la otra falla.
+
 ### Métricas de agentes en producción
 
 Tasa de tareas completadas, pasos promedio por tarea, tasa de errores por tool, tasa de escalamiento a humano, costo y latencia por tarea. Son las que aparecen en las búsquedas como "tasa de éxito de tool calls".
 
 ### Simulación de usuarios
 
-Para agentes conversacionales, un segundo LLM hace de usuario con un objetivo y una personalidad, y conversa con el agente durante varios turnos. Después se evalúa la conversación completa. DeepEval y openevals traen simuladores; también se escribe en pocas líneas.
+Para agentes conversacionales, un segundo LLM hace de usuario con un objetivo y una personalidad, y conversa con el agente durante varios turnos. Después se evalúa la conversación completa. DeepEval trae un simulador; también se escribe en pocas líneas.
 
 ## Cómo se implementa
 
@@ -45,28 +49,30 @@ Caso común a todos los tabs: "Acme fue cobrado dos veces (49 USD): reembolsá y
 
 :::tabs
 == LangSmith
-openevals (del equipo de LangChain) trae evaluadores de trayectoria que comparan mensajes en formato OpenAI, deterministas y sin llamar a ningún modelo. Se usan como evaluadores en `evaluate()` o en el plugin de pytest.
+En LangSmith un evaluador es una función común: recibe lo que devolvió el agente y la referencia del dataset, y devuelve un puntaje. Para trayectorias alcanza con comparar conjuntos de nombres de tools: lo obligatorio tiene que estar, lo prohibido no.
 
 ```python
-from openevals.trajectory.match import create_trajectory_match_evaluator
+from langsmith import evaluate
 
-must_do = create_trajectory_match_evaluator(
-    trajectory_match_mode="superset",      # did at least these steps
-    tool_args_match_mode="ignore",         # only compare tool names here
-)
-reference = [
-    {"role": "user", "content": task},
-    {"role": "assistant", "content": "", "tool_calls": [
-        {"function": {"name": "find_customer", "arguments": "{}"}},
-        {"function": {"name": "issue_refund", "arguments": "{}"}},
-        {"function": {"name": "update_ticket_status", "arguments": "{}"}},
-    ]},
-]
-result = must_do(outputs=agent_messages, reference_outputs=reference)
-# {'key': 'trajectory_superset_match', 'score': True, ...}
+def target(inputs: dict) -> dict:
+    result = run_agent(inputs["task"])          # your agent: final answer + tool calls made
+    return {"answer": result.answer, "tools": [call.name for call in result.tool_calls]}
+
+def required_tools(outputs: dict, reference_outputs: dict) -> dict:
+    missing = set(reference_outputs["required_tools"]) - set(outputs["tools"])
+    return {"key": "required_tools", "score": not missing, "comment": f"missing: {sorted(missing)}"}
+
+def no_forbidden_tools(outputs: dict, reference_outputs: dict) -> bool:
+    return not set(outputs["tools"]) & set(reference_outputs.get("forbidden_tools", []))
+
+def step_budget(outputs: dict) -> bool:
+    return len(outputs["tools"]) <= 6
+
+evaluate(target, data="agent-refunds",
+         evaluators=[required_tools, no_forbidden_tools, step_budget])
 ```
 
-`tool_args_match_overrides` permite reglas por tool (por ejemplo, comparar `amount_usd` exacto y el `reason` ignorando mayúsculas). openevals también tiene `create_trajectory_llm_as_judge`; ese usa `with_structured_output` de LangChain y necesita un juez que acepte `tool_choice` forzado (ver capítulo 3).
+Cada ejemplo del dataset `agent-refunds` guarda en sus outputs de referencia `required_tools` (por ejemplo `find_customer`, `issue_refund`, `update_ticket_status`) y `forbidden_tools`. El resultado final se evalúa con otro evaluador: un juez como el del capítulo 3, o un chequeo del estado del sistema.
 == DeepEval
 `LLMTestCase` acepta `tools_called` y `expected_tools`. `ToolCorrectnessMetric` compara las tools (opcionalmente argumentos y orden); `TaskCompletionMetric` usa un juez para decidir si la tarea se completó.
 
@@ -89,33 +95,6 @@ assert_test(case, [
     TaskCompletionMetric(model=judge, threshold=0.8),
 ])
 ```
-== ragas
-ragas representa la conversación con sus propios tipos de mensaje. `ToolCallAccuracy` compara las tool calls contra una referencia; `AgentGoalAccuracyWithReference` usa un juez para decidir si se alcanzó el objetivo.
-
-```python
-from ragas.messages import AIMessage, HumanMessage, ToolCall, ToolMessage
-from ragas.metrics.collections import AgentGoalAccuracyWithReference, ToolCallAccuracy
-
-conversation = [
-    HumanMessage(content=task),
-    AIMessage(content="", tool_calls=[ToolCall(name="find_customer", args={"name": "Acme"})]),
-    ToolMessage(content='[{"id": "C-100"}]'),
-    AIMessage(content="", tool_calls=[ToolCall(name="issue_refund",
-              args={"customer_id": "C-100", "amount_usd": 49, "reason": "Duplicate charge T-1"})]),
-    ToolMessage(content='{"id": "R-1"}'),
-    AIMessage(content="Refunded 49 USD and closed T-1."),
-]
-tools = await ToolCallAccuracy(strict_order=False).ascore(
-    user_input=conversation,
-    reference_tool_calls=[ToolCall(name="find_customer", args={"name": "Acme"}),
-                          ToolCall(name="issue_refund", args={"customer_id": "C-100", "amount_usd": 49,
-                                                               "reason": "Duplicate charge T-1"})],
-)
-goal = await AgentGoalAccuracyWithReference(llm=llm).ascore(
-    user_input=conversation, reference="The customer is refunded 49 USD and the ticket is closed.")
-```
-
-En este ejemplo el agente nunca llama a `update_ticket_status`: `ToolCallAccuracy` pasa (hizo lo que la referencia pide) pero el juez de objetivo debería fallar, porque el ticket no quedó cerrado. Es el tipo de diferencia que justifica medir las dos capas.
 :::
 
 ## Errores comunes

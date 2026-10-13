@@ -29,7 +29,7 @@ trace  (un request de usuario)
 
 ### OpenTelemetry GenAI
 
-OpenTelemetry tiene **convenciones semánticas para GenAI**: nombres estándar de atributos y métricas para llamadas a modelos. Usarlas hace que cualquier backend (Langfuse, LangSmith, Datadog, Grafana, Honeycomb, Arize Phoenix) entienda los datos.
+OpenTelemetry tiene **convenciones semánticas para GenAI**: nombres estándar de atributos y métricas para llamadas a modelos. Usarlas hace que cualquier backend (Langfuse, LangSmith, Grafana, Datadog) entienda los datos.
 
 | Atributo / métrica | Contenido |
 |---|---|
@@ -42,8 +42,6 @@ OpenTelemetry tiene **convenciones semánticas para GenAI**: nombres estándar d
 | `gen_ai.tool.name`, `gen_ai.tool.call.id` | Tool ejecutada |
 | `gen_ai.client.operation.duration` | Métrica: duración de llamadas |
 | `gen_ai.client.token.usage` | Métrica: tokens usados |
-
-Las convenciones GenAI todavía están marcadas como en desarrollo: los nombres cambiaron entre versiones (por ejemplo `gen_ai.system` pasó a `gen_ai.provider.name`). Fijá la versión de la instrumentación.
 
 ### Qué no loguear
 
@@ -62,7 +60,7 @@ Mismo caso en todos los tabs: una función `answer(question)` que llama a Claude
 
 :::tabs
 == LangSmith
-`wrap_anthropic` envuelve el cliente para que cada llamada se registre como span de LLM; `@traceable` convierte cualquier función en span. Se activa con variables de entorno (`LANGSMITH_TRACING`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`).
+`wrap_anthropic` envuelve el cliente para que cada llamada se registre como span de LLM; `@traceable` convierte cualquier función en span.
 
 ```python
 import anthropic
@@ -89,14 +87,14 @@ from langsmith import Client
 Client().create_feedback(run_id=run_id, key="user_thumbs", score=0, comment="Wrong refund limit")
 ```
 == Langfuse
-Langfuse (open source, self-hostable) está construido sobre OpenTelemetry. `@observe` crea spans; las llamadas a Anthropic se capturan con una instrumentación OTel (OpenLLMetry) que Langfuse recibe automáticamente.
+Langfuse (open source, self-hostable) está construido sobre OpenTelemetry. `@observe` crea spans; las llamadas a Anthropic se capturan con la instrumentación OpenTelemetry para Anthropic y llegan a Langfuse como spans de tipo generación.
 
 ```python
 from langfuse import get_client, observe
 from opentelemetry.instrumentation.anthropic import AnthropicInstrumentor
 
 AnthropicInstrumentor().instrument()   # every Anthropic call becomes a generation span
-langfuse = get_client()                # LANGFUSE_PUBLIC_KEY / SECRET_KEY / BASE_URL
+langfuse = get_client()
 
 @observe(as_type="retriever")
 def search_handbook(query: str) -> list[dict]:
@@ -116,9 +114,9 @@ langfuse.create_score(name="user_thumbs", value=0, trace_id=trace_id, data_type=
                       comment="Wrong refund limit")
 ```
 
-`as_type` acepta `generation`, `agent`, `tool`, `retriever`, `evaluator`, `guardrail`, entre otros, y cambia cómo se muestra el span.
+`as_type` acepta `generation`, `agent`, `tool`, `retriever`, `evaluator`, `guardrail`: le dice a Langfuse qué tipo de paso es cada span.
 == OpenTelemetry
-Sin plataforma específica: el SDK de OpenTelemetry con la instrumentación de Anthropic emite spans con atributos `gen_ai.*` y los exporta por OTLP a cualquier backend (Grafana Tempo, Jaeger, Datadog, Honeycomb, Langfuse, Phoenix).
+Sin plataforma específica: el SDK de OpenTelemetry con la instrumentación de Anthropic emite spans con atributos `gen_ai.*` y los exporta por OTLP (el protocolo estándar de OpenTelemetry) a cualquier backend: Grafana, Datadog, Langfuse.
 
 ```python
 from opentelemetry import trace
@@ -129,7 +127,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 provider = TracerProvider(resource=Resource.create({"service.name": "support-bot"}))
-provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))   # OTEL_EXPORTER_OTLP_ENDPOINT
+provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))   # send spans to the backend
 trace.set_tracer_provider(provider)
 AnthropicInstrumentor().instrument()
 

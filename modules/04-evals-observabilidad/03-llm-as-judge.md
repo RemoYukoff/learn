@@ -46,16 +46,13 @@ El juez es un test que también hay que testear:
 3. Medí acuerdo (porcentaje de coincidencia, o Cohen's kappa) y mirá los desacuerdos.
 4. Ajustá la rúbrica hasta que el acuerdo sea aceptable. Recién ahí usalo en CI.
 
-> [!WARNING]
-> Varias librerías piden la salida estructurada del juez con **tool calling forzado** (`tool_choice` a una tool concreta). Claude Opus 5.5 y Sonnet 5.5 rechazan ese modo con un 400. Pasa con ragas (vía instructor) y con openevals (vía `with_structured_output` de LangChain). Con esas librerías, el juez tiene que ser un modelo que acepte `tool_choice` forzado (Claude Opus 5 o anteriores, u otro proveedor). DeepEval y promptfoo usan structured outputs (`output_config.format`) y funcionan con los modelos nuevos.
-
 ## Cómo se implementa
 
 Mismo juez en todos los tabs: ¿la respuesta de un bot de soporte es correcta comparada con la referencia?
 
 :::tabs
 == Anthropic
-Sin librería: un prompt con rúbrica y salida estructurada. Es lo que hacen todas las librerías por dentro.
+Sin librería: un prompt con rúbrica y salida estructurada.
 
 ```python
 from typing import Literal
@@ -81,7 +78,7 @@ def judge(question: str, answer: str, reference: str) -> Verdict:
     return response.parsed_output
 ```
 == DeepEval
-`GEval` arma el juez desde un criterio en lenguaje natural: genera pasos de evaluación y devuelve un score entre 0 y 1 con su razón. El modelo juez es configurable; `AnthropicModel` usa structured outputs y omite `temperature` en modelos que no la aceptan.
+`GEval` arma el juez desde un criterio en lenguaje natural: genera pasos de evaluación y devuelve un score entre 0 y 1 con su razón. El modelo juez se elige con `model`.
 
 ```python
 from deepeval.metrics import GEval
@@ -100,31 +97,6 @@ case = LLMTestCase(input=question, actual_output=answer, expected_output=referen
 correctness.measure(case)
 print(correctness.score, correctness.reason)
 ```
-
-`SingleTurnParams` es el nombre actual de lo que antes era `LLMTestCaseParams` (sigue existiendo como alias).
-== ragas
-ragas 0.4 tiene métricas predefinidas (`Faithfulness`, `AnswerCorrectness`, `ToolCallAccuracy`...) y métricas propias con `DiscreteMetric`, cuyo prompt usa variables con llaves.
-
-```python
-from anthropic import AsyncAnthropic
-from ragas.llms import llm_factory
-from ragas.metrics import DiscreteMetric
-
-# instructor forces tool_choice with Anthropic: use a judge model that accepts it
-llm = llm_factory("claude-opus-5", provider="anthropic", client=AsyncAnthropic())
-
-correctness = DiscreteMetric(
-    name="correctness",
-    allowed_values=["pass", "fail"],
-    prompt="Question: {question}\nReference: {reference}\nAnswer: {response}\n"
-           "Return pass if the answer states the same facts as the reference, otherwise fail.",
-)
-result = correctness.score(llm=llm, question=question, reference=reference, response=answer)
-print(result.value, result.reason)
-```
-
-> [!NOTE]
-> ragas no publica versiones desde enero de 2026 y su repo tiene poca actividad. La 0.4.3 falla al importar con `langchain-community` 0.4.2 (le falta `chat_models.vertexai`); funciona fijando `langchain-community==0.4.1`. Sigue apareciendo en búsquedas y entrevistas, pero para proyectos nuevos DeepEval o promptfoo están más mantenidos.
 :::
 
 ## Errores comunes

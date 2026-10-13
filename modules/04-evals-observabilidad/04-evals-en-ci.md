@@ -37,10 +37,8 @@ evaluadores ──▶ puntajes ──▶ comparar con umbral y versión anterior
 
 | Herramienta | Forma | Fuerte en | Detalle |
 |---|---|---|---|
-| **LangSmith** | Plataforma (SaaS / self-host) + SDK | Datasets, experimentos comparables, tracing integrado, plugin de pytest | Pago por uso; integra natural con LangChain/LangGraph pero sirve sin ellos |
-| **DeepEval** | Librería Python, estilo pytest | 50+ métricas listas, `assert_test`, agentes, RAG | Open source; plataforma opcional (Confident AI) |
-| **promptfoo** | CLI de Node + YAML | Comparar prompts y modelos en matriz, red teaming, GitHub Action | Configuración declarativa; no necesitás escribir Python |
-| **ragas** | Librería Python | Métricas de RAG y agentes | Poco mantenimiento en 2026 (ver capítulo 3) |
+| **LangSmith** | Plataforma (SaaS / self-host) + SDK | Datasets, experimentos comparables, tracing integrado, plugin de pytest | Integra natural con LangChain/LangGraph pero sirve sin ellos |
+| **DeepEval** | Librería Python, estilo pytest | 50+ métricas listas, `assert_test`, agentes, RAG | Open source |
 | **Langfuse** | Plataforma open source | Datasets y experimentos sobre tracing | Self-hostable; ver capítulo 6 |
 
 ## Cómo se implementa
@@ -86,7 +84,7 @@ def test_refund_limit():
     assert "200" in answer
 ```
 == DeepEval
-Estilo pytest: cada caso es un `LLMTestCase` y `assert_test` falla si alguna métrica queda bajo su umbral. Se corre con `deepeval test run`, que agrega reporte y paralelismo.
+Estilo pytest: cada caso es un `LLMTestCase` y `assert_test` falla si alguna métrica queda bajo su umbral.
 
 ```python
 import pytest
@@ -103,7 +101,7 @@ correctness = GEval(
     name="Correctness",
     criteria="The actual output states the same facts as the expected output.",
     evaluation_params=[SingleTurnParams.ACTUAL_OUTPUT, SingleTurnParams.EXPECTED_OUTPUT],
-    model=AnthropicModel(model="claude-opus-5-5"),   # otherwise the judge comes from DeepEval config (OpenAI by default)
+    model=AnthropicModel(model="claude-opus-5-5"),
     threshold=0.7,
 )
 
@@ -113,53 +111,6 @@ def test_support_bot(golden: Golden):
                        expected_output=golden.expected_output)
     assert_test(case, [correctness])
 ```
-== promptfoo
-Declarativo: un YAML con prompts, proveedores, casos y asserts. El mismo archivo compara varios modelos o versiones de prompt en matriz. `promptfoo eval` sale con código distinto de cero si fallan asserts, así que sirve directo como paso de CI (hay una GitHub Action oficial).
-
-```yaml
-# promptfooconfig.yaml
-prompts:
-  - file://prompts/support_v7.txt
-providers:
-  - id: anthropic:messages:claude-opus-5-5
-    config: {max_tokens: 1024, effort: low}
-  - id: anthropic:messages:claude-sonnet-5-5
-defaultTest:
-  options:
-    provider: anthropic:messages:claude-opus-5-5   # grader for llm-rubric
-  assert:
-    - type: latency
-      threshold: 8000
-tests:
-  - vars: {question: "How much can an agent refund alone?"}
-    assert:
-      - type: icontains
-        value: "200"
-      - type: llm-rubric
-        value: States that agents can refund up to 200 USD without approval
-```
-
-Asserts útiles: `contains`/`icontains`, `regex`, `is-json`, `javascript`/`python` (función propia), `llm-rubric`, `factuality`, `context-faithfulness`, `latency`, `cost`. promptfoo también tiene un modo de **red teaming** que genera ataques (injection, jailbreaks, PII) contra tu app.
-== ragas
-ragas 0.4 organiza la corrida como **experimento**: una función decorada con `@experiment` que procesa cada fila del dataset y devuelve un registro con las métricas.
-
-```python
-from ragas import Dataset, experiment
-
-dataset = Dataset(name="support_golden", backend="local/csv", root_dir="evals")
-dataset.append({"question": "How much can an agent refund alone?", "reference": "Up to 200 USD."})
-
-@experiment()
-async def run_eval(row):
-    answer = support_bot(row["question"])
-    verdict = await correctness.ascore(llm=llm, question=row["question"],
-                                       reference=row["reference"], response=answer)
-    return {**row, "answer": answer, "correctness": verdict.value}
-
-results = await run_eval.arun(dataset)
-```
-
-`correctness` y `llm` son la `DiscreteMetric` y el juez del capítulo 3. El gate (por ejemplo, ≥ 90% `pass`) lo escribís vos sobre los resultados.
 :::
 
 ## Errores comunes
@@ -173,5 +124,5 @@ results = await run_eval.arun(dataset)
 ## En una entrevista
 
 - **¿Cómo integrás evals en CI/CD?** Dataset versionado, target que ejecuta el sistema, evaluadores deterministas y LLM, umbrales por métrica y por casos críticos; subset en PR y suite completa nightly; resultados guardados como experimentos para comparar.
-- **¿LangSmith, DeepEval o promptfoo?** LangSmith si querés plataforma con datasets, experimentos y tracing juntos; DeepEval si el equipo vive en pytest; promptfoo para comparar prompts y modelos de forma declarativa y para red teaming.
+- **¿LangSmith o DeepEval?** LangSmith si querés una plataforma con datasets, experimentos comparables y tracing juntos; DeepEval si el equipo vive en pytest y querés métricas listas para usar.
 - **¿Cómo controlás el costo de las evals?** Cache, subsets, jueces más baratos donde alcanza, y checks deterministas primero.
