@@ -1,0 +1,31 @@
+{
+  "slug": "03-rag",
+  "title": "RAG",
+  "order": 3,
+  "level": "intermedio",
+  "status": "pending",
+  "summary": "Retrieval-Augmented Generation de punta a punta: chunking, embeddings, bases vectoriales, búsqueda híbrida, reranking y evaluación del retrieval.",
+  "tags": [
+    "rag",
+    "embeddings",
+    "vector-db",
+    "pgvector",
+    "chroma",
+    "pinecone",
+    "elasticsearch"
+  ],
+  "prereqs": [
+    "00-fundamentos-llm",
+    "02-orquestacion-agentes"
+  ],
+  "versions": {},
+  "planned_chapters": [
+    "Qué es RAG y cuándo conviene",
+    "Chunking",
+    "Embeddings",
+    "Bases vectoriales (tabs: pgvector / Chroma / Pinecone / Weaviate / FAISS / Milvus / Elasticsearch)",
+    "Búsqueda híbrida y reranking",
+    "Evaluar el retrieval",
+    "RAG dentro de un grafo de agente"
+  ]
+}

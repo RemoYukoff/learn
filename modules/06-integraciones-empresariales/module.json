@@ -1,0 +1,29 @@
+{
+  "slug": "06-integraciones-empresariales",
+  "title": "Integraciones empresariales",
+  "order": 6,
+  "level": "intermedio",
+  "status": "pending",
+  "summary": "Conectar agentes a sistemas reales: OAuth2, webhooks, rate limits, paginación, CRMs y ERPs, exponer agentes por API y automatizar con n8n.",
+  "tags": [
+    "oauth2",
+    "webhooks",
+    "fastapi",
+    "hubspot",
+    "salesforce",
+    "odoo",
+    "n8n"
+  ],
+  "prereqs": [
+    "01-tool-use"
+  ],
+  "versions": {},
+  "planned_chapters": [
+    "OAuth2 para agentes",
+    "Webhooks",
+    "Rate limits, paginación y reintentos",
+    "APIs de CRM y ERP (tabs: HubSpot / Salesforce / Odoo)",
+    "Exponer un agente por API con FastAPI",
+    "n8n y agentes"
+  ]
+}

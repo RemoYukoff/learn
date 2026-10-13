@@ -1,0 +1,27 @@
+{
+  "slug": "07-deploy-produccion",
+  "title": "Deploy y producción",
+  "order": 7,
+  "level": "avanzado",
+  "status": "pending",
+  "summary": "Llevar un agente a producción: contenedores, serverless en AWS, Bedrock, guardrails y prompt injection, control de costos, logging y auditoría.",
+  "tags": [
+    "docker",
+    "aws-lambda",
+    "bedrock",
+    "guardrails",
+    "seguridad"
+  ],
+  "prereqs": [
+    "06-integraciones-empresariales"
+  ],
+  "versions": {},
+  "planned_chapters": [
+    "Empaquetar un agente con Docker",
+    "Serverless: Lambda, API Gateway, Step Functions",
+    "Claude en Bedrock",
+    "Guardrails y prompt injection",
+    "Costos y límites",
+    "Logging y auditoría de acciones"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "04-evals-observabilidad",
+  "title": "Evals y observabilidad",
+  "order": 4,
+  "level": "intermedio",
+  "status": "pending",
+  "summary": "Medir la calidad de un sistema LLM: datasets, evals offline y online, LLM-as-judge, tracing y monitoreo en producción.",
+  "tags": [
+    "evals",
+    "langsmith",
+    "ragas",
+    "promptfoo",
+    "opentelemetry"
+  ],
+  "prereqs": [
+    "01-tool-use"
+  ],
+  "versions": {},
+  "planned_chapters": [
+    "Por qué evaluar LLMs es distinto a testear",
+    "Datasets y métricas",
+    "LLM-as-judge",
+    "Evals en CI (tabs: LangSmith / ragas / promptfoo)",
+    "Tracing y observabilidad (tabs: LangSmith / OpenTelemetry)",
+    "Monitoreo en producción: latencia, costo, tasa de éxito de tool calls"
+  ]
+}
