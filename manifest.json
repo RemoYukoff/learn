@@ -1,6 +1,71 @@
 {
   "modules": [
     {
+      "slug": "deploy-produccion",
+      "title": "Deploy y producción",
+      "summary": "Llevar agentes y apps con LLM a producción: arquitectura con colas y workers, contenedores, serverless en AWS, modelos vía cloud, guardrails, resiliencia de costos y auditoría.",
+      "tags": [
+        "deploy",
+        "produccion",
+        "docker",
+        "aws",
+        "lambda",
+        "step-functions",
+        "bedrock",
+        "guardrails",
+        "prompt-injection",
+        "auditoria"
+      ],
+      "versions": {
+        "anthropic": "1.13.0",
+        "boto3": "1.43.112",
+        "aws-lambda-powertools": "3.35.0",
+        "aws-cdk-lib": "2.273.0",
+        "fastapi": "0.143.0",
+        "redis": "8.1.0"
+      },
+      "recommended": [
+        "tool-use"
+      ],
+      "chapters": [
+        {
+          "file": "01-arquitectura-en-produccion.md",
+          "title": "Arquitectura de un agente en producción",
+          "order": 1
+        },
+        {
+          "file": "02-contenedores.md",
+          "title": "Empaquetar un agente en contenedores",
+          "order": 2
+        },
+        {
+          "file": "03-serverless-en-aws.md",
+          "title": "Serverless en AWS",
+          "order": 3
+        },
+        {
+          "file": "04-modelos-via-cloud.md",
+          "title": "Modelos vía cloud",
+          "order": 4
+        },
+        {
+          "file": "05-guardrails-y-prompt-injection.md",
+          "title": "Guardrails y prompt injection",
+          "order": 5
+        },
+        {
+          "file": "06-costos-limites-y-resiliencia.md",
+          "title": "Costos, límites y resiliencia",
+          "order": 6
+        },
+        {
+          "file": "07-logging-y-auditoria.md",
+          "title": "Logging y auditoría de acciones",
+          "order": 7
+        }
+      ]
+    },
+    {
       "slug": "evals-observabilidad",
       "title": "Evals y observabilidad",
       "summary": "Medir la calidad de sistemas LLM y agentes: datasets, métricas, LLM-as-judge, evals en CI, evaluación de agentes, tracing y monitoreo en producción.",
@@ -19,48 +84,45 @@
         "opentelemetry-sdk": "1.45.1",
         "anthropic": "1.13.0"
       },
+      "recommended": [
+        "fundamentos-llm",
+        "tool-use"
+      ],
       "chapters": [
         {
           "file": "01-por-que-evaluar-llms.md",
           "title": "Por qué evaluar LLMs es distinto a testear",
-          "order": 1,
-          "type": "concepto"
+          "order": 1
         },
         {
           "file": "02-datasets-y-metricas.md",
           "title": "Datasets y métricas",
-          "order": 2,
-          "type": "concepto"
+          "order": 2
         },
         {
           "file": "03-llm-as-judge.md",
           "title": "LLM-as-judge",
-          "order": 3,
-          "type": "implementacion"
+          "order": 3
         },
         {
           "file": "04-evals-en-ci.md",
           "title": "Evals en CI",
-          "order": 4,
-          "type": "implementacion"
+          "order": 4
         },
         {
           "file": "05-evaluar-agentes.md",
           "title": "Evaluar agentes",
-          "order": 5,
-          "type": "implementacion"
+          "order": 5
         },
         {
           "file": "06-tracing-y-observabilidad.md",
           "title": "Tracing y observabilidad",
-          "order": 6,
-          "type": "implementacion"
+          "order": 6
         },
         {
           "file": "07-monitoreo-en-produccion.md",
           "title": "Monitoreo en producción",
-          "order": 7,
-          "type": "concepto"
+          "order": 7
         }
       ]
     },
@@ -79,42 +141,211 @@
         "openai": "3.29.0",
         "pydantic": "2.14.1"
       },
+      "recommended": [],
       "chapters": [
         {
           "file": "01-como-funciona-un-llm.md",
           "title": "Cómo funciona un LLM (desde el lado de quien lo integra)",
-          "order": 1,
-          "type": "concepto"
+          "order": 1
         },
         {
           "file": "02-prompt-engineering.md",
           "title": "Prompt engineering",
-          "order": 2,
-          "type": "concepto"
+          "order": 2
         },
         {
           "file": "03-salida-estructurada.md",
           "title": "Salida estructurada",
-          "order": 3,
-          "type": "implementacion"
+          "order": 3
         },
         {
           "file": "04-sdks-en-python.md",
           "title": "SDKs en Python y multi-proveedor",
-          "order": 4,
-          "type": "implementacion"
+          "order": 4
         },
         {
           "file": "05-streaming.md",
           "title": "Streaming",
-          "order": 5,
-          "type": "implementacion"
+          "order": 5
         },
         {
           "file": "06-costos-rate-limits-y-caching.md",
           "title": "Costos, rate limits y caching",
-          "order": 6,
-          "type": "concepto"
+          "order": 6
+        }
+      ]
+    },
+    {
+      "slug": "integraciones-empresariales",
+      "title": "Integraciones empresariales",
+      "summary": "Conectar agentes y LLMs a sistemas de terceros: OAuth2, webhooks, rate limits y paginación, CRMs y ERPs, exponer un agente como API y automatizar con n8n.",
+      "tags": [
+        "integraciones",
+        "oauth2",
+        "webhooks",
+        "rate-limits",
+        "hubspot",
+        "salesforce",
+        "odoo",
+        "fastapi",
+        "sse",
+        "n8n"
+      ],
+      "versions": {
+        "authlib": "1.8.0",
+        "httpx": "0.28.1",
+        "tenacity": "9.2.1",
+        "simple-salesforce": "1.12.10",
+        "fastapi": "0.143.0"
+      },
+      "recommended": [
+        "tool-use"
+      ],
+      "chapters": [
+        {
+          "file": "01-oauth2.md",
+          "title": "OAuth2 para integraciones",
+          "order": 1
+        },
+        {
+          "file": "02-webhooks.md",
+          "title": "Webhooks",
+          "order": 2
+        },
+        {
+          "file": "03-rate-limits-paginacion-reintentos.md",
+          "title": "Rate limits, paginación y reintentos",
+          "order": 3
+        },
+        {
+          "file": "04-apis-crm-erp.md",
+          "title": "APIs de CRM y ERP",
+          "order": 4
+        },
+        {
+          "file": "05-agente-como-api-fastapi.md",
+          "title": "Exponer un agente como API con FastAPI",
+          "order": 5
+        },
+        {
+          "file": "06-n8n-y-agentes.md",
+          "title": "n8n y agentes",
+          "order": 6
+        }
+      ]
+    },
+    {
+      "slug": "mcp",
+      "title": "Model Context Protocol (MCP)",
+      "summary": "El protocolo estándar para conectar aplicaciones con LLMs a tools, datos y prompts externos: arquitectura, servidores, clientes, uso en agentes y seguridad.",
+      "tags": [
+        "mcp",
+        "model-context-protocol",
+        "tools",
+        "agentes",
+        "oauth",
+        "seguridad"
+      ],
+      "versions": {
+        "mcp": "2.3.0",
+        "anthropic": "1.13.0",
+        "langchain-mcp-adapters": "0.3.2",
+        "openai-agents": "0.23.1"
+      },
+      "recommended": [
+        "tool-use"
+      ],
+      "chapters": [
+        {
+          "file": "01-que-es-mcp.md",
+          "title": "Qué es MCP y qué resuelve",
+          "order": 1
+        },
+        {
+          "file": "02-arquitectura.md",
+          "title": "Arquitectura del protocolo",
+          "order": 2
+        },
+        {
+          "file": "03-escribir-un-servidor.md",
+          "title": "Escribir un servidor en Python",
+          "order": 3
+        },
+        {
+          "file": "04-cliente.md",
+          "title": "El cliente MCP",
+          "order": 4
+        },
+        {
+          "file": "05-mcp-en-agentes.md",
+          "title": "Conectar MCP a un agente",
+          "order": 5
+        },
+        {
+          "file": "06-seguridad.md",
+          "title": "Seguridad y permisos",
+          "order": 6
+        }
+      ]
+    },
+    {
+      "slug": "modelos-open-source",
+      "title": "Modelos open source",
+      "summary": "Modelos de pesos abiertos: familias, licencias, cuantización, cómo servirlos con Ollama y vLLM, Hugging Face, y fine-tuning con LoRA y QLoRA.",
+      "tags": [
+        "open-source",
+        "ollama",
+        "vllm",
+        "hugging-face",
+        "transformers",
+        "fine-tuning",
+        "lora",
+        "qlora",
+        "peft",
+        "trl"
+      ],
+      "versions": {
+        "ollama": "0.6.3",
+        "vllm": "0.31.0",
+        "transformers": "5.19.0",
+        "huggingface-hub": "2.2.0",
+        "peft": "0.21.2",
+        "trl": "1.15.0",
+        "openai": "3.29.0"
+      },
+      "recommended": [
+        "fundamentos-llm"
+      ],
+      "chapters": [
+        {
+          "file": "01-panorama-de-modelos-abiertos.md",
+          "title": "Panorama de modelos abiertos",
+          "order": 1
+        },
+        {
+          "file": "02-servir-modelos.md",
+          "title": "Servir modelos",
+          "order": 2
+        },
+        {
+          "file": "03-hugging-face.md",
+          "title": "Hugging Face",
+          "order": 3
+        },
+        {
+          "file": "04-cuando-fine-tunear.md",
+          "title": "Cuándo fine-tunear y cuándo no",
+          "order": 4
+        },
+        {
+          "file": "05-lora-y-qlora.md",
+          "title": "LoRA y QLoRA",
+          "order": 5
+        },
+        {
+          "file": "06-fine-tuning-vs-prompting.md",
+          "title": "Comparar fine-tuning contra prompting",
+          "order": 6
         }
       ]
     },
@@ -136,54 +367,49 @@
         "crewai": "1.15.27",
         "agent-framework": "1.21.0"
       },
+      "recommended": [
+        "tool-use"
+      ],
       "chapters": [
         {
           "file": "01-por-que-orquestar.md",
           "title": "Por qué orquestar",
-          "order": 1,
-          "type": "concepto"
+          "order": 1
         },
         {
           "file": "02-panorama-de-frameworks.md",
           "title": "Panorama de frameworks",
-          "order": 2,
-          "type": "concepto"
+          "order": 2
         },
         {
           "file": "03-langgraph-grafos-y-estado.md",
           "title": "LangGraph: grafos y estado",
-          "order": 3,
-          "type": "implementacion"
+          "order": 3
         },
         {
           "file": "04-agente-con-tools.md",
           "title": "Agente con tools",
-          "order": 4,
-          "type": "implementacion"
+          "order": 4
         },
         {
           "file": "05-memoria-y-persistencia.md",
           "title": "Memoria y persistencia",
-          "order": 5,
-          "type": "implementacion"
+          "order": 5
         },
         {
           "file": "06-human-in-the-loop.md",
           "title": "Human-in-the-loop",
-          "order": 6,
-          "type": "implementacion"
+          "order": 6
         },
         {
           "file": "07-patrones-multi-agente.md",
           "title": "Patrones multi-agente",
-          "order": 7,
-          "type": "implementacion"
+          "order": 7
         },
         {
           "file": "08-langgraph-streaming-y-subgrafos.md",
           "title": "LangGraph: streaming, subgrafos y time travel",
-          "order": 8,
-          "type": "implementacion"
+          "order": 8
         }
       ]
     },
@@ -219,54 +445,49 @@
         "elasticsearch": "9.5.1",
         "langgraph": "1.2.15"
       },
+      "recommended": [
+        "fundamentos-llm"
+      ],
       "chapters": [
         {
           "file": "01-que-es-rag.md",
           "title": "Qué es RAG y cuándo conviene",
-          "order": 1,
-          "type": "concepto"
+          "order": 1
         },
         {
           "file": "02-chunking.md",
           "title": "Chunking",
-          "order": 2,
-          "type": "concepto"
+          "order": 2
         },
         {
           "file": "03-embeddings.md",
           "title": "Embeddings",
-          "order": 3,
-          "type": "implementacion"
+          "order": 3
         },
         {
           "file": "04-bases-vectoriales.md",
           "title": "Bases vectoriales",
-          "order": 4,
-          "type": "implementacion"
+          "order": 4
         },
         {
           "file": "05-busqueda-hibrida-y-reranking.md",
           "title": "Búsqueda híbrida y reranking",
-          "order": 5,
-          "type": "implementacion"
+          "order": 5
         },
         {
           "file": "06-evaluar-el-retrieval.md",
           "title": "Evaluar un RAG",
-          "order": 6,
-          "type": "concepto"
+          "order": 6
         },
         {
           "file": "07-generacion-con-citas.md",
           "title": "Generación con citas",
-          "order": 7,
-          "type": "implementacion"
+          "order": 7
         },
         {
           "file": "08-rag-agentico.md",
           "title": "RAG agéntico",
-          "order": 8,
-          "type": "implementacion"
+          "order": 8
         }
       ]
     },
@@ -284,42 +505,39 @@
         "openai": "3.29.0",
         "pydantic": "2.14.1"
       },
+      "recommended": [
+        "fundamentos-llm"
+      ],
       "chapters": [
         {
           "file": "01-que-es-function-calling.md",
           "title": "Qué es function calling",
-          "order": 1,
-          "type": "concepto"
+          "order": 1
         },
         {
           "file": "02-definir-tools.md",
           "title": "Definir tools",
-          "order": 2,
-          "type": "implementacion"
+          "order": 2
         },
         {
           "file": "03-loop-de-agente.md",
           "title": "Loop de agente desde cero",
-          "order": 3,
-          "type": "implementacion"
+          "order": 3
         },
         {
           "file": "04-errores-reintentos-y-validacion.md",
           "title": "Errores, reintentos y validación",
-          "order": 4,
-          "type": "concepto"
+          "order": 4
         },
         {
           "file": "05-human-in-the-loop.md",
           "title": "Human-in-the-loop",
-          "order": 5,
-          "type": "concepto"
+          "order": 5
         },
         {
           "file": "06-contexto-y-memoria.md",
           "title": "Contexto y memoria del agente",
-          "order": 6,
-          "type": "concepto"
+          "order": 6
         }
       ]
     }

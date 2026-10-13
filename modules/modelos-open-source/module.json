@@ -1,0 +1,29 @@
+{
+  "slug": "modelos-open-source",
+  "title": "Modelos open source",
+  "summary": "Modelos de pesos abiertos: familias, licencias, cuantización, cómo servirlos con Ollama y vLLM, Hugging Face, y fine-tuning con LoRA y QLoRA.",
+  "tags": [
+    "open-source",
+    "ollama",
+    "vllm",
+    "hugging-face",
+    "transformers",
+    "fine-tuning",
+    "lora",
+    "qlora",
+    "peft",
+    "trl"
+  ],
+  "versions": {
+    "ollama": "0.6.3",
+    "vllm": "0.31.0",
+    "transformers": "5.19.0",
+    "huggingface-hub": "2.2.0",
+    "peft": "0.21.2",
+    "trl": "1.15.0",
+    "openai": "3.29.0"
+  },
+  "recommended": [
+    "fundamentos-llm"
+  ]
+}
