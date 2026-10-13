@@ -1,6 +1,6 @@
 ---
 title: Guardrails y prompt injection
-order: 5
+order: 4
 ---
 
 **Objetivo:** proteger un sistema con LLM de entradas maliciosas, salidas indebidas y acciones no autorizadas, con controles en capas que no dependan de que el modelo "obedezca".

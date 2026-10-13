@@ -1,26 +1,24 @@
 {
   "modules": [
     {
-      "slug": "deploy-produccion",
-      "title": "Deploy y producción",
-      "summary": "Llevar agentes y apps con LLM a producción: arquitectura con colas y workers, contenedores, serverless en AWS, modelos vía cloud, guardrails, resiliencia de costos y auditoría.",
+      "slug": "agentes-en-produccion",
+      "title": "Agentes en producción",
+      "summary": "Correr agentes y apps con LLM en producción: arquitectura para tareas largas, exponer un agente como API con streaming, modelos vía cloud, guardrails y prompt injection, costos y resiliencia, auditoría de acciones.",
       "tags": [
-        "deploy",
         "produccion",
-        "docker",
-        "aws",
-        "lambda",
-        "step-functions",
+        "agentes",
+        "streaming",
+        "sse",
         "bedrock",
+        "vertex",
         "guardrails",
         "prompt-injection",
+        "costos",
         "auditoria"
       ],
       "versions": {
         "anthropic": "1.13.0",
         "boto3": "1.43.112",
-        "aws-lambda-powertools": "3.35.0",
-        "aws-cdk-lib": "2.273.0",
         "fastapi": "0.143.0",
         "redis": "8.1.0"
       },
@@ -34,34 +32,29 @@
           "order": 1
         },
         {
-          "file": "02-contenedores.md",
-          "title": "Empaquetar un agente en contenedores",
+          "file": "02-agente-como-api.md",
+          "title": "Exponer un agente como API con FastAPI",
           "order": 2
         },
         {
-          "file": "03-serverless-en-aws.md",
-          "title": "Serverless en AWS",
+          "file": "03-modelos-via-cloud.md",
+          "title": "Modelos vía cloud",
           "order": 3
         },
         {
-          "file": "04-modelos-via-cloud.md",
-          "title": "Modelos vía cloud",
+          "file": "04-guardrails-y-prompt-injection.md",
+          "title": "Guardrails y prompt injection",
           "order": 4
         },
         {
-          "file": "05-guardrails-y-prompt-injection.md",
-          "title": "Guardrails y prompt injection",
+          "file": "05-costos-limites-y-resiliencia.md",
+          "title": "Costos, límites y resiliencia",
           "order": 5
         },
         {
-          "file": "06-costos-limites-y-resiliencia.md",
-          "title": "Costos, límites y resiliencia",
-          "order": 6
-        },
-        {
-          "file": "07-logging-y-auditoria.md",
+          "file": "06-logging-y-auditoria.md",
           "title": "Logging y auditoría de acciones",
-          "order": 7
+          "order": 6
         }
       ]
     },
@@ -171,65 +164,6 @@
         {
           "file": "06-costos-rate-limits-y-caching.md",
           "title": "Costos, rate limits y caching",
-          "order": 6
-        }
-      ]
-    },
-    {
-      "slug": "integraciones-empresariales",
-      "title": "Integraciones empresariales",
-      "summary": "Conectar agentes y LLMs a sistemas de terceros: OAuth2, webhooks, rate limits y paginación, CRMs y ERPs, exponer un agente como API y automatizar con n8n.",
-      "tags": [
-        "integraciones",
-        "oauth2",
-        "webhooks",
-        "rate-limits",
-        "hubspot",
-        "salesforce",
-        "odoo",
-        "fastapi",
-        "sse",
-        "n8n"
-      ],
-      "versions": {
-        "authlib": "1.8.0",
-        "httpx": "0.28.1",
-        "tenacity": "9.2.1",
-        "simple-salesforce": "1.12.10",
-        "fastapi": "0.143.0"
-      },
-      "recommended": [
-        "tool-use"
-      ],
-      "chapters": [
-        {
-          "file": "01-oauth2.md",
-          "title": "OAuth2 para integraciones",
-          "order": 1
-        },
-        {
-          "file": "02-webhooks.md",
-          "title": "Webhooks",
-          "order": 2
-        },
-        {
-          "file": "03-rate-limits-paginacion-reintentos.md",
-          "title": "Rate limits, paginación y reintentos",
-          "order": 3
-        },
-        {
-          "file": "04-apis-crm-erp.md",
-          "title": "APIs de CRM y ERP",
-          "order": 4
-        },
-        {
-          "file": "05-agente-como-api-fastapi.md",
-          "title": "Exponer un agente como API con FastAPI",
-          "order": 5
-        },
-        {
-          "file": "06-n8n-y-agentes.md",
-          "title": "n8n y agentes",
           "order": 6
         }
       ]

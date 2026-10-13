@@ -1,6 +1,6 @@
 ---
 title: Costos, límites y resiliencia
-order: 6
+order: 5
 ---
 
 **Objetivo:** mantener un servicio con LLM disponible y dentro de presupuesto cuando el proveedor falla, el tráfico sube o un agente entra en loop.

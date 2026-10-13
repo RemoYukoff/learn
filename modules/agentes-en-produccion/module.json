@@ -1,0 +1,26 @@
+{
+  "slug": "agentes-en-produccion",
+  "title": "Agentes en producción",
+  "summary": "Correr agentes y apps con LLM en producción: arquitectura para tareas largas, exponer un agente como API con streaming, modelos vía cloud, guardrails y prompt injection, costos y resiliencia, auditoría de acciones.",
+  "tags": [
+    "produccion",
+    "agentes",
+    "streaming",
+    "sse",
+    "bedrock",
+    "vertex",
+    "guardrails",
+    "prompt-injection",
+    "costos",
+    "auditoria"
+  ],
+  "versions": {
+    "anthropic": "1.13.0",
+    "boto3": "1.43.112",
+    "fastapi": "0.143.0",
+    "redis": "8.1.0"
+  },
+  "recommended": [
+    "tool-use"
+  ]
+}

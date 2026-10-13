@@ -1,6 +1,6 @@
 ---
 title: Modelos vía cloud
-order: 4
+order: 3
 ---
 
 **Objetivo:** entender por qué las empresas consumen modelos a través de su cloud (Amazon Bedrock, Google Vertex AI, Microsoft Foundry) y cómo cambia el código respecto de la API directa del proveedor.

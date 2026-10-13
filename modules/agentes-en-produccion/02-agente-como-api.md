@@ -1,9 +1,9 @@
 ---
 title: Exponer un agente como API con FastAPI
-order: 5
+order: 2
 ---
 
-**Objetivo:** publicar un agente como servicio HTTP que otros sistemas (un frontend, un CRM, n8n) puedan llamar: request/response, streaming, autenticación y trabajos largos.
+**Objetivo:** publicar un agente como servicio HTTP que otros sistemas (un frontend u otro servicio) puedan llamar: request/response, streaming, autenticación y trabajos largos.
 
 ## Idea
 
@@ -130,7 +130,7 @@ async def get_job(job_id: str, caller: Caller = Depends(authenticate)) -> dict:
     return job
 ```
 
-Un worker separado consume la cola, corre el agente, guarda el resultado y, si el cliente registró una URL, le manda un webhook firmado (ver el capítulo de Webhooks).
+Un worker separado consume la cola, corre el agente, guarda el resultado y, si el cliente registró una URL, le manda un webhook firmado.
 
 ## Errores comunes
 

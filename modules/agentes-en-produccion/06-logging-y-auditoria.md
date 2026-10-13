@@ -1,6 +1,6 @@
 ---
 title: Logging y auditoría de acciones
-order: 7
+order: 6
 ---
 
 **Objetivo:** registrar lo que hace un agente de forma que se pueda depurar, explicar a un cliente y auditar quién autorizó cada acción.
@@ -52,17 +52,19 @@ Un `job_id` (o `trace_id`) viaja en cada log, span y evento de auditoría. Con u
 
 ## Cómo se implementa
 
-Logs estructurados en JSON con ids de correlación, usando Powertools for AWS Lambda:
+Logs estructurados en JSON con ids de correlación: cada línea lleva el job, el trace y el tenant.
 
 ```python
-from aws_lambda_powertools import Logger
+import json
+import logging
 
-logger = Logger(service="agent-worker")
+log = logging.getLogger("agent-worker")
 
-@logger.inject_lambda_context(correlation_id_path="Records[0].messageAttributes.job_id.stringValue")
-def handler(event: dict, context) -> None:
-    logger.append_keys(tenant_id=tenant_of(event))
-    logger.info("tool call", extra={"tool": "issue_refund", "customer_id": "C-100", "amount_usd": 49})
+def log_event(job, message: str, **fields) -> None:
+    log.info(json.dumps({"msg": message, "job_id": job.id, "trace_id": job.trace_id,
+                         "tenant_id": job.tenant_id, **fields}))
+
+log_event(job, "tool call", tool="issue_refund", customer_id="C-100", amount_usd=49)
 ```
 
 Evento de auditoría inmutable en DynamoDB: la condición impide sobreescribir un evento existente, así que un reintento con el mismo id no duplica ni pisa.
@@ -92,21 +94,19 @@ def record_action(event_id: str, job, action: str, arguments: dict, result: dict
             raise                                   # already recorded: retry is a no-op
 ```
 
-Acciones con efecto idempotentes: si el worker reintenta el mismo job, la segunda ejecución devuelve el resultado guardado en vez de repetir el reembolso.
+Acciones con efecto idempotentes: si el worker reintenta el mismo job, la segunda ejecución devuelve el resultado guardado en vez de repetir el reembolso. La tabla de resultados tiene `action_id` como clave única.
 
 ```python
-from aws_lambda_powertools.utilities.idempotency import (
-    DynamoDBPersistenceLayer, IdempotencyConfig, idempotent_function,
-)
-
-persistence = DynamoDBPersistenceLayer(table_name="agent-idempotency")
-config = IdempotencyConfig(event_key_jmespath="action_id")
-
-@idempotent_function(data_keyword_argument="request", persistence_store=persistence, config=config)
-def execute_refund(request: dict) -> dict:
-    result = payments.refund(request["customer_id"], request["amount_usd"], request["reason"])
-    record_action(request["action_id"], current_job(), "issue_refund", request, result, request.get("approved_by"))
+def execute_once(action_id: str, action, **arguments) -> dict:
+    saved = results.get(action_id)            # durable key-value store keyed by action_id
+    if saved is not None:
+        return saved                          # retry: return the saved result, do not repeat
+    result = action(**arguments)
+    results.put(action_id, result)            # unique key: a concurrent duplicate fails here
+    record_action(action_id, current_job(), action.__name__, arguments, result, arguments.get("approved_by"))
     return result
+
+execute_once(f"{job.id}:refund", payments.refund, customer_id="C-100", amount_usd=49, reason="Duplicate charge")
 ```
 
 ## Errores comunes

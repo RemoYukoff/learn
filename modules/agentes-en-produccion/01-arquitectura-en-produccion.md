@@ -102,7 +102,7 @@ def worker_loop() -> None:
 ```
 
 > [!TIP]
-> El mismo diseño funciona con Celery o RQ sobre Redis, o con Lambda consumiendo la cola (capítulo de serverless). Lo que no cambia: API sin estado, cola, workers idempotentes y estado persistido.
+> El mismo diseño funciona con Celery o RQ sobre Redis, o con funciones serverless consumiendo la cola. Lo que no cambia: API sin estado, cola, workers idempotentes y estado persistido.
 
 ## Errores comunes
 
