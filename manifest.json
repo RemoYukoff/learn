@@ -63,7 +63,7 @@
       "title": "Tool use / function calling",
       "order": 1,
       "level": "intermedio",
-      "status": "pending",
+      "status": "ready",
       "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
       "tags": [
         "tool-use",
@@ -75,16 +75,46 @@
       ],
       "versions": {
         "anthropic": "1.13.0",
-        "openai": "3.29.0"
+        "openai": "3.29.0",
+        "pydantic": "2.14.1"
       },
-      "chapters": [],
-      "planned_chapters": [
-        "Qué es function calling",
-        "Definir tools (tabs: Anthropic / OpenAI)",
-        "Loop de agente desde cero",
-        "Errores, reintentos y validación",
-        "Human-in-the-loop",
-        "Contexto y memoria del agente"
+      "chapters": [
+        {
+          "file": "01-que-es-function-calling.md",
+          "title": "Qué es function calling",
+          "order": 1,
+          "type": "concepto"
+        },
+        {
+          "file": "02-definir-tools.md",
+          "title": "Definir tools",
+          "order": 2,
+          "type": "implementacion"
+        },
+        {
+          "file": "03-loop-de-agente.md",
+          "title": "Loop de agente desde cero",
+          "order": 3,
+          "type": "implementacion"
+        },
+        {
+          "file": "04-errores-reintentos-y-validacion.md",
+          "title": "Errores, reintentos y validación",
+          "order": 4,
+          "type": "concepto"
+        },
+        {
+          "file": "05-human-in-the-loop.md",
+          "title": "Human-in-the-loop",
+          "order": 5,
+          "type": "concepto"
+        },
+        {
+          "file": "06-contexto-y-memoria.md",
+          "title": "Contexto y memoria del agente",
+          "order": 6,
+          "type": "concepto"
+        }
       ]
     },
     {

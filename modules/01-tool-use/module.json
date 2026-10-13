@@ -3,7 +3,7 @@
   "title": "Tool use / function calling",
   "order": 1,
   "level": "intermedio",
-  "status": "pending",
+  "status": "ready",
   "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
   "tags": [
     "tool-use",
@@ -15,14 +15,7 @@
   ],
   "versions": {
     "anthropic": "1.13.0",
-    "openai": "3.29.0"
-  },
-  "planned_chapters": [
-    "Qué es function calling",
-    "Definir tools (tabs: Anthropic / OpenAI)",
-    "Loop de agente desde cero",
-    "Errores, reintentos y validación",
-    "Human-in-the-loop",
-    "Contexto y memoria del agente"
-  ]
+    "openai": "3.29.0",
+    "pydantic": "2.14.1"
+  }
 }
