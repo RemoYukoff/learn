@@ -426,6 +426,64 @@
       ]
     },
     {
+      "slug": "ragas",
+      "title": "Ragas",
+      "summary": "Evaluar sistemas RAG y agentes con Ragas: métricas de retrieval y de generación, cómo las calcula el juez, datasets sintéticos desde tus documentos, experimentos comparables y métricas propias.",
+      "tags": [
+        "ragas",
+        "evals",
+        "rag",
+        "faithfulness",
+        "context-precision",
+        "context-recall",
+        "llm-as-judge",
+        "testset",
+        "deepeval"
+      ],
+      "versions": {
+        "ragas": "0.4.3",
+        "openai": "3.3.0",
+        "deepeval": "4.3.1",
+        "anthropic": "2.2.0"
+      },
+      "recommended": [
+        "rag",
+        "evals-observabilidad"
+      ],
+      "chapters": [
+        {
+          "file": "01-que-es-ragas.md",
+          "title": "Qué es Ragas y cómo evalúa",
+          "order": 1
+        },
+        {
+          "file": "02-metricas-de-retrieval.md",
+          "title": "Métricas de retrieval",
+          "order": 2
+        },
+        {
+          "file": "03-metricas-de-generacion.md",
+          "title": "Métricas de generación",
+          "order": 3
+        },
+        {
+          "file": "04-datasets-sinteticos.md",
+          "title": "Datasets sintéticos desde tus documentos",
+          "order": 4
+        },
+        {
+          "file": "05-experimentos-y-metricas-propias.md",
+          "title": "Experimentos y métricas propias",
+          "order": 5
+        },
+        {
+          "file": "06-evaluar-agentes.md",
+          "title": "Evaluar agentes con Ragas",
+          "order": 6
+        }
+      ]
+    },
+    {
       "slug": "tool-use",
       "title": "Tool use / function calling",
       "summary": "El mecanismo que convierte un LLM en agente: definir tools, el loop de agente, errores, confirmación humana y manejo de contexto.",
